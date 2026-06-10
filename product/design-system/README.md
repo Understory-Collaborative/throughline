@@ -7,6 +7,13 @@ consistent, accessible, and warm.
 
 - `voice-and-tone.md` how we sound, and the writing rules in practice
 - `accessibility.md` the WCAG 2.2 AA commitment and working checklist
+- `tokens.md` the canvas for our own design tokens, still to design
+
+## A note on the exemplar
+
+`/design_system/example` holds the Intelligent Hoodlums design system. It is a
+reference for how thorough and opinionated a finished system can be. We are
+designing our own for Throughline. We do not reuse its look or its voice.
 
 ## Principles
 
@@ -21,9 +28,9 @@ consistent, accessible, and warm.
 
 ## Tokens
 
-Design tokens (color, type scale, spacing) will live alongside the Tailwind
-theme in `app/src/index.css` under the `@theme` block. As the system grows, keep
-this directory and that block in sync, and record any token decisions here.
+Design tokens (color, type scale, spacing) live in `tokens.md` and, once
+decided, in the Tailwind theme in `app/src/index.css` under the `@theme` block.
+Keep the two in sync.
 
-**To do:** define the color palette and type scale with the team, checked for
-contrast against WCAG 2.2 AA.
+**To do:** design the palette and type scale with the team and the community,
+with contrast checked against WCAG 2.2 AA. The token canvas is in `tokens.md`.
