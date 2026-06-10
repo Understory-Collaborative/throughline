@@ -10,6 +10,12 @@ consistent, accessible, and warm.
 - `accessibility.md` the WCAG 2.2 AA commitment and working checklist
 - `tokens.md` the canvas for our own design tokens, still to design
 
+## Living style guide
+
+The visual style guide is a real page in the app. Source is at
+`app/public/styleguide.html`. Run the app and open `/styleguide.html` to see the
+palette, type, and components together. It is a draft for review.
+
 ## A note on the exemplar
 
 `/design_system/example` holds the Intelligent Hoodlums design system. It is a
