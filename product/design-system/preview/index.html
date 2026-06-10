@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Throughline design system preview</title>
+
+    <!--
+      Working preview of the proposed Throughline design system. Draft for
+      review. Atkinson Hyperlegible loads from Google Fonts here for preview
+      convenience. In the app we will self-host subset woff2 with a system
+      fallback. Colors, type, shape, and components follow brand-direction.md
+      and tokens.md.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* Color */
+        --paper: #faf6ef;
+        --ink: #221e18;
+        --primary: #2c6e49;
+        --primary-press: #245c3d;
+        --accent: #c2722e;
+        --support: #5e574c;
+        --line: #e7dfd0;
+        --caution: #8a5a12;
+        --danger: #a23b2a;
+        --surface: #fffdf9;
+
+        /* Type */
+        --font-sans: 'Atkinson Hyperlegible', system-ui, -apple-system,
+          'Segoe UI', Roboto, sans-serif;
+
+        /* Radius (soft and airy) */
+        --radius-sm: 10px;
+        --radius-md: 14px;
+        --radius-lg: 24px;
+
+        /* Elevation */
+        --shadow-soft: 0 1px 2px rgba(34, 30, 24, 0.06),
+          0 6px 18px rgba(34, 30, 24, 0.07);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 18px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+      }
+
+      /* Type scale */
+      .display {
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1.15;
+        margin: 0;
+      }
+      .heading {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.25;
+        margin: 0;
+      }
+      .lead {
+        font-size: 20px;
+        line-height: 1.55;
+        margin: 0;
+      }
+      .small {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--support);
+      }
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--support);
+        margin: 0;
+      }
+
+      section {
+        margin-top: 56px;
+      }
+      h2.section-title {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--support);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin: 0 0 24px;
+      }
+
+      /* Nav */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: color-mix(in srgb, var(--paper) 88%, transparent);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-inner {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .brand .dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+        background: var(--primary);
+        position: relative;
+      }
+      .brand .dot::after {
+        content: '';
+        position: absolute;
+        inset: 6px 6px auto auto;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .nav-links {
+        margin-left: auto;
+        display: flex;
+        gap: 6px;
+      }
+      .nav-links a {
+        color: var(--ink);
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 16px;
+      }
+      .nav-links a.active {
+        background: color-mix(in srgb, var(--primary) 12%, transparent);
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .nav-links a:hover {
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+      }
+
+      /* Swatches */
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 14px;
+      }
+      .swatch {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .swatch .chip {
+        height: 76px;
+      }
+      .swatch .meta {
+        padding: 10px 12px;
+      }
+      .swatch .name {
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .swatch .hex {
+        font-size: 13px;
+        color: var(--support);
+      }
+
+      /* Buttons */
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        font-family: inherit;
+        font-size: 17px;
+        font-weight: 700;
+        border-radius: var(--radius-md);
+        padding: 14px 22px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        min-height: 48px;
+        transition: background 160ms ease-in-out, transform 160ms ease-in-out;
+      }
+      .btn:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 3px;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--primary-press);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+      .btn-secondary:hover {
+        background: color-mix(in srgb, var(--primary) 10%, transparent);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink);
+      }
+      .btn-ghost:hover {
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      /* Form controls */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 18px;
+        max-width: 460px;
+      }
+      label {
+        font-weight: 700;
+        font-size: 16px;
+      }
+      .hint {
+        font-size: 14px;
+        color: var(--support);
+      }
+      input[type='text'],
+      input[type='search'],
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: 17px;
+        color: var(--ink);
+        background: var(--surface);
+        border: 1px solid var(--support);
+        border-radius: var(--radius-sm);
+        padding: 13px 14px;
+        width: 100%;
+      }
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+        border-color: var(--primary);
+      }
+      .search {
+        position: relative;
+        max-width: 460px;
+      }
+      .search input {
+        padding-left: 44px;
+      }
+      .search svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--support);
+      }
+
+      /* Cards */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        box-shadow: var(--shadow-soft);
+      }
+      .card .heading {
+        margin-bottom: 6px;
+      }
+
+      /* Progress, celebrate what is done */
+      .steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+      }
+      .step .mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .step.done {
+        background: color-mix(in srgb, var(--primary) 9%, var(--surface));
+        border-color: color-mix(in srgb, var(--primary) 30%, var(--line));
+      }
+      .step.done .mark {
+        background: var(--primary);
+        color: #fff;
+      }
+      .step.next .mark {
+        background: color-mix(in srgb, var(--accent) 18%, transparent);
+        color: var(--accent);
+        border: 2px solid var(--accent);
+      }
+      .step .label {
+        font-weight: 700;
+      }
+      .step .label span {
+        display: block;
+        font-weight: 400;
+        font-size: 14px;
+        color: var(--support);
+      }
+      .pill {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--accent) 16%, transparent);
+        color: var(--caution);
+      }
+
+      footer {
+        margin-top: 64px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--support);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Preview navigation">
+      <div class="nav-inner">
+        <span class="brand"><span class="dot" aria-hidden="true"></span> Throughline</span>
+        <div class="nav-links">
+          <a href="#" class="active">Steps</a>
+          <a href="#">Documents</a>
+          <a href="#">Help</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="wrap">
+      <section>
+        <p class="eyebrow">Design system preview</p>
+        <h1 class="display">A calm, warm path back.</h1>
+        <p class="lead" style="margin-top: 12px; max-width: 640px">
+          This page shows the proposed colors, type, and components together.
+          Draft for review.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Color</h2>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: #faf6ef; border-bottom: 1px solid #e7dfd0"></div>
+            <div class="meta"><div class="name">Paper</div><div class="hex">#FAF6EF</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #221e18"></div>
+            <div class="meta"><div class="name">Ink</div><div class="hex">#221E18</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #2c6e49"></div>
+            <div class="meta"><div class="name">Primary</div><div class="hex">#2C6E49</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #c2722e"></div>
+            <div class="meta"><div class="name">Accent</div><div class="hex">#C2722E</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #5e574c"></div>
+            <div class="meta"><div class="name">Support</div><div class="hex">#5E574C</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #e7dfd0"></div>
+            <div class="meta"><div class="name">Line</div><div class="hex">#E7DFD0</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #8a5a12"></div>
+            <div class="meta"><div class="name">Caution</div><div class="hex">#8A5A12</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #a23b2a"></div>
+            <div class="meta"><div class="name">Danger</div><div class="hex">#A23B2A</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Type, Atkinson Hyperlegible</h2>
+        <p class="display">Display, 34 / 700</p>
+        <p class="heading" style="margin-top: 16px">Heading, 24 / 700</p>
+        <p class="lead" style="margin-top: 16px">Lead, 20. A key sentence that sets up a step.</p>
+        <p style="margin-top: 16px">
+          Body, 18. Bring one paper that shows where you live. Here is what counts,
+          and what to do if you do not have it yet. Plain words, easy to read under
+          stress.
+        </p>
+        <p class="small" style="margin-top: 16px">Small, 15. Helper text and captions.</p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Buttons</h2>
+        <div class="row">
+          <button class="btn btn-primary">Continue</button>
+          <button class="btn btn-secondary">Save for later</button>
+          <button class="btn btn-ghost">Go back</button>
+          <button class="btn btn-primary" disabled>Disabled</button>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Form controls</h2>
+
+        <div class="field">
+          <label for="name">What should we call you? (optional)</label>
+          <span class="hint">We do not save your real name.</span>
+          <input type="text" id="name" placeholder="A first name or a nickname" />
+        </div>
+
+        <div class="field">
+          <label for="county">Which county are you in?</label>
+          <select id="county">
+            <option>Tarrant</option>
+            <option>Dallas</option>
+            <option>Harris</option>
+            <option>Bexar</option>
+            <option>Travis</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="find">Find a document or step</label>
+          <div class="search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+              <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <input type="search" id="find" placeholder="Search, like birth certificate" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Cards</h2>
+        <div class="cards">
+          <div class="card">
+            <p class="heading">What to bring</p>
+            <p class="small">Your plain list for the DPS office, built from your answers.</p>
+          </div>
+          <div class="card">
+            <p class="heading">Where to go</p>
+            <p class="small">The nearest office, hours, and what a visit costs in time.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Progress, we celebrate what is done</h2>
+        <ul class="steps">
+          <li class="step done">
+            <span class="mark" aria-hidden="true">&#10003;</span>
+            <span class="label">Social Security card <span>You have this. Nice work.</span></span>
+          </li>
+          <li class="step done">
+            <span class="mark" aria-hidden="true">&#10003;</span>
+            <span class="label">Proof of where you live <span>Your sister's lease letter counts.</span></span>
+          </li>
+          <li class="step next">
+            <span class="mark" aria-hidden="true">&#8594;</span>
+            <span class="label">Birth certificate <span class="pill">Next step</span></span>
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        Throughline design system preview. Draft, needs community review. Colors,
+        type, and shape follow brand-direction.md and tokens.md.
+      </footer>
+    </main>
+  </body>
+</html>
