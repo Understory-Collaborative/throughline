@@ -73,6 +73,27 @@ We meet **WCAG 2.2 AA**. Details and the working checklist are in
 keyboard support, visible focus, sufficient contrast, labels on every control,
 and content that survives text scaling up to 200 percent.
 
+## Engineering practices
+
+- **Test-driven development.** Write a failing test first, make it pass, then
+  refactor. New behavior arrives with tests. Bug fixes start with a test that
+  reproduces the bug. We use Vitest and React Testing Library. Run `npm test`.
+- **Modern best practices.** Favor current, well-supported patterns over clever
+  or dated ones.
+- **Event-driven.** React to events. Do not poll when an event or subscription
+  can tell you what changed.
+- **No padding sleeps.** Never add a `sleep` or `wait` to pad a response time or
+  to dodge a collision between calls. Fix the ordering or use a real
+  synchronization primitive instead.
+- **Async where it fits.** Use async approaches for I/O and anything that would
+  otherwise block. Keep work non-blocking.
+- **Avoid unnecessary calls.** No needless polling, no repeat calls for data you
+  already have. Cache and reuse. Coalesce where you can.
+- **Steward the person's resources.** Be careful with their data, privacy,
+  security, and bandwidth. Send less, store less, ask for less. This matters
+  more for our audience, who often have limited data and good reason to guard
+  their information.
+
 ## How we commit
 
 - Small, logical commits. One idea per commit.
