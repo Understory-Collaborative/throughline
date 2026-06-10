@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); padding: 24px; }
+.note { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-bottom: 10px; }
+.rule { height: 1px; background: var(--hm-ink); margin: 18px 0; opacity: 0.12; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+/* Base button */
+.btn {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 10px 20px; border: 2px solid var(--hm-ink);
+  cursor: pointer; display: inline-block;
+  transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  text-decoration: none;
+}
+
+/* Primary — Prussian */
+.btn-primary { background: var(--hm-prussian); color: var(--hm-bone); border-color: var(--hm-prussian); }
+.btn-primary:hover { background: #2A4465; box-shadow: 3px 3px 0 var(--hm-ink); }
+
+/* Accent — Rufous */
+.btn-accent { background: var(--hm-rufous); color: var(--hm-bone); border-color: var(--hm-rufous); }
+.btn-accent:hover { box-shadow: 3px 3px 0 var(--hm-ink); }
+
+/* Ghost */
+.btn-ghost { background: transparent; color: var(--hm-ink); border-color: var(--hm-ink); }
+.btn-ghost:hover { background: var(--hm-prussian); color: var(--hm-bone); border-color: var(--hm-prussian); }
+
+/* Bone on dark */
+.btn-inverse { background: var(--hm-bone); color: var(--hm-prussian); border-color: var(--hm-bone); }
+
+/* Small */
+.btn-sm { font-size: 10px; padding: 6px 14px; letter-spacing: 0.08em; }
+
+/* Tag / label button */
+.btn-tag {
+  font-family: var(--font-mono); font-weight: 100;
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 10px; border: 1px solid var(--hm-tuscany);
+  color: var(--hm-tuscany); background: transparent;
+  cursor: pointer;
+}
+
+.dark-row { background: var(--hm-prussian); padding: 16px; margin-top: 8px; display: flex; gap: 12px; align-items: center; }
+</style>
+</head><body>
+<div class="note">Buttons · Primary states</div>
+<div class="row">
+  <button class="btn btn-primary">Design. Disrupt. Deliver.</button>
+  <button class="btn btn-accent">Ship It</button>
+  <button class="btn btn-ghost">Read the Case</button>
+</div>
+<div class="rule"></div>
+<div class="note">Buttons · On Prussian bg</div>
+<div class="dark-row">
+  <button class="btn btn-inverse">Trust a Hoodlum</button>
+  <button class="btn btn-ghost" style="color:var(--hm-bone);border-color:var(--hm-bone);">Learn More</button>
+</div>
+<div class="rule"></div>
+<div class="note">Buttons · Small + Tag variants</div>
+<div class="row">
+  <button class="btn btn-primary btn-sm">Design</button>
+  <button class="btn btn-ghost btn-sm">Disrupt</button>
+  <button class="btn-tag">Case Study · 2024</button>
+  <button class="btn-tag" style="border-color:var(--hm-prussian);color:var(--hm-prussian);">Vol.01 · Issue 001</button>
+</div>
+</body></html>

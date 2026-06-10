@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); padding: 20px; display: flex; gap: 20px; }
+.col { flex: 1; }
+.note { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-bottom: 8px; }
+
+/* Title Plate light */
+.title-plate-light {
+  padding: 20px;
+  border: 1px solid var(--hm-ink);
+}
+.chapter-tag {
+  font-family: var(--font-body); font-weight: 400;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--hm-tuscany); margin-bottom: 6px;
+}
+.plate-title { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.1; color: var(--hm-ink); letter-spacing: 0.01em; margin-bottom: 12px; }
+.rufous-rule { height: 3px; background: var(--hm-rufous); width: 40px; }
+
+/* Title Plate dark */
+.title-plate-dark {
+  padding: 20px;
+  background: var(--hm-prussian);
+  border: 1px solid var(--hm-ink);
+}
+.title-plate-dark .plate-title { color: var(--hm-bone); }
+.title-plate-dark .chapter-tag { color: var(--hm-tuscany); }
+
+/* Caption strip */
+.caption-strip {
+  border-top: 1px solid var(--hm-ink);
+  border-bottom: 1px solid var(--hm-ink);
+  padding: 7px 0;
+  margin-top: 16px;
+  display: flex; gap: 20px;
+}
+.cs-label { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--hm-tuscany); }
+.cs-value { font-family: var(--font-mono); font-weight: 100; font-size: 9px; color: var(--hm-ink); }
+</style>
+</head><body>
+<div class="col">
+  <div class="note">04 · Title Plate · Light</div>
+  <div class="title-plate-light">
+    <div class="chapter-tag">Chapter · 07</div>
+    <div class="plate-title">The Three<br>Pillars</div>
+    <div class="rufous-rule"></div>
+  </div>
+  <div class="caption-strip">
+    <div><div class="cs-label">School</div><div class="cs-value">Ridgewood MS</div></div>
+    <div><div class="cs-label">Duration</div><div class="cs-value">3 weeks</div></div>
+    <div><div class="cs-label">Outcome</div><div class="cs-value">Shipped. Used. Renewed.</div></div>
+  </div>
+  <div class="note" style="margin-top:6px;">03 · Caption Strip</div>
+</div>
+<div class="col">
+  <div class="note">04 · Title Plate · Dark (Prussian)</div>
+  <div class="title-plate-dark">
+    <div class="chapter-tag">Chapter · 11</div>
+    <div class="plate-title">The Badge</div>
+    <div class="rufous-rule"></div>
+  </div>
+</div>
+</body></html>

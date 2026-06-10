@@ -1,0 +1,69 @@
+/* ============================================================
+   HM PATTERN TILES
+   The Intelligent Hoodlums · Brand Kit Vol.01
+   Apply at 30–60% opacity over Bone or Prussian backgrounds.
+   Usage: add .hm-tile-* to a position:absolute overlay element.
+   ============================================================ */
+
+/* 01 · Halftone — circular ben-day dots, 8px grid */
+.hm-tile-halftone {
+  background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+}
+
+/* 02 · Ben-Day — offset rows, 12px grid, comic-book register */
+.hm-tile-benday {
+  background-image:
+    radial-gradient(circle, currentColor 2px, transparent 2px),
+    radial-gradient(circle, currentColor 2px, transparent 2px);
+  background-size: 12px 12px;
+  background-position: 0 0, 6px 6px;
+}
+
+/* 03 · Scanline — horizontal rules, 5px pitch, press/CRT feel */
+.hm-tile-scanline {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    currentColor 0px,
+    currentColor 1px,
+    transparent 1px,
+    transparent 5px
+  );
+}
+
+/* 04 · Kraft — diagonal crosshatch, paper/grain texture */
+.hm-tile-kraft {
+  background-image:
+    repeating-linear-gradient(
+       45deg, currentColor 0px, currentColor 1px,
+      transparent 1px, transparent 9px
+    ),
+    repeating-linear-gradient(
+      -45deg, currentColor 0px, currentColor 1px,
+      transparent 1px, transparent 9px
+    );
+}
+
+/* ── USAGE EXAMPLES ─────────────────────────────────────────
+   On Bone (Ink dots):
+     <div style="position:relative; background:#F2E8D5;">
+       <div class="hm-tile-halftone"
+            style="position:absolute;inset:0;color:#0F1419;opacity:0.35;pointer-events:none;">
+       </div>
+       ...content...
+     </div>
+
+   On Prussian (Bone dots):
+     <div style="position:relative; background:#0B2545;">
+       <div class="hm-tile-benday"
+            style="position:absolute;inset:0;color:#F2E8D5;opacity:0.25;pointer-events:none;">
+       </div>
+       ...content...
+     </div>
+
+   Recommended opacities:
+     Halftone  — 30–45% on Bone · 25–35% on Prussian
+     Ben-Day   — 35–50% on Bone · 25–35% on Prussian
+     Scanline  — 50–65% on Bone · 12–20% on Prussian
+     Kraft     — 60–80% on Bone · 8–15%  on Prussian
+   ============================================================ */

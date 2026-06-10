@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<title>HM Pattern Tiles</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F2E8D5; font-family: 'Avocado Sans', sans-serif; padding: 24px; }
+
+/* ── TILE DEFINITIONS ───────────────────────────────── */
+
+/* 01 · Halftone — circular ben-day dots */
+.tile-halftone {
+  --dot-color: #0F1419;
+  --dot-size: 5px;
+  --grid: 10px;
+  background-image: radial-gradient(circle, var(--dot-color) var(--dot-size), transparent var(--dot-size));
+  background-size: var(--grid) var(--grid);
+}
+
+/* 02 · Ben-Day — offset rows for comic-book feel */
+.tile-benday {
+  --dot-color: #0F1419;
+  background-image:
+    radial-gradient(circle, var(--dot-color) 2.5px, transparent 2.5px),
+    radial-gradient(circle, var(--dot-color) 2.5px, transparent 2.5px);
+  background-size: 12px 12px;
+  background-position: 0 0, 6px 6px;
+}
+
+/* 03 · Scanline — thin horizontal rules */
+.tile-scanline {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(15,20,25,0.15) 0px,
+    rgba(15,20,25,0.15) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+}
+
+/* 04 · Kraft grain — diagonal crosshatch */
+.tile-kraft {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(15,20,25,0.07) 0px,
+      rgba(15,20,25,0.07) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(15,20,25,0.07) 0px,
+      rgba(15,20,25,0.07) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+}
+</style>
+</head><body>
+<!-- This file is the source for the tile CSS classes.
+     Import into any page and apply classes to overlay elements.
+     Recommended: wrap in a div with position:relative, then add
+     a child with position:absolute; inset:0; opacity:0.3 and the tile class. -->
+
+<p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#E0A458;margin-bottom:8px;">HM Pattern Tiles — CSS source</p>
+<p style="font-size:11px;color:#8CA3B5;font-weight:100;">Apply tile classes at 30–60% opacity over Bone or Prussian.</p>
+</body></html>

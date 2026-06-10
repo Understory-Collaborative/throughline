@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); font-family: var(--font-body); padding: 20px; }
+.row { display: flex; gap: 0; }
+.swatch { flex: 1; height: 80px; position: relative; }
+.swatch-info { padding: 8px 10px; border: 1px solid rgba(15,20,25,0.15); border-top: none; }
+.swatch-name { font-family: var(--font-mono); font-weight: 100; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--hm-ink); }
+.swatch-hex  { font-family: var(--font-mono); font-weight: 100; font-size: 10px; color: var(--hm-prussian-80); }
+.tag { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-top: 2px; }
+.ratio { display: flex; height: 8px; margin-top: 16px; }
+.ratio div { height: 100%; }
+</style>
+</head><body>
+<div class="row">
+  <div>
+    <div class="swatch" style="background:#0B2545;"></div>
+    <div class="swatch-info">
+      <div class="swatch-name">HM-01 Prussian</div>
+      <div class="swatch-hex">#0B2545</div>
+      <div class="tag">Primary · 25%</div>
+    </div>
+  </div>
+  <div>
+    <div class="swatch" style="background:#B7280F;"></div>
+    <div class="swatch-info">
+      <div class="swatch-name">HM-02 Rufous</div>
+      <div class="swatch-hex">#B7280F</div>
+      <div class="tag">Accent · 3%</div>
+    </div>
+  </div>
+  <div>
+    <div class="swatch" style="background:#E0A458;"></div>
+    <div class="swatch-info">
+      <div class="swatch-name">HM-03 Tuscany</div>
+      <div class="swatch-hex">#E0A458</div>
+      <div class="tag">Crew marker · 2%</div>
+    </div>
+  </div>
+  <div>
+    <div class="swatch" style="background:#F2E8D5; border: 1px solid #D4C09A;"></div>
+    <div class="swatch-info">
+      <div class="swatch-name">HM-04 Bone Ivory</div>
+      <div class="swatch-hex">#F2E8D5</div>
+      <div class="tag">Paper · 60%</div>
+    </div>
+  </div>
+  <div>
+    <div class="swatch" style="background:#8CA3B5;"></div>
+    <div class="swatch-info">
+      <div class="swatch-name">HM-05 Cadet Blue</div>
+      <div class="swatch-hex">#8CA3B5</div>
+      <div class="tag">Charts · mid-tone</div>
+    </div>
+  </div>
+  <div>
+    <div class="swatch" style="background:#0F1419;"></div>
+    <div class="swatch-info">
+      <div class="swatch-name">HM-06 Ink</div>
+      <div class="swatch-hex">#0F1419</div>
+      <div class="tag">Type · rules · 10%</div>
+    </div>
+  </div>
+</div>
+<div class="ratio" style="margin-top:16px;">
+  <div style="flex:60;background:#F2E8D5;border:1px solid #ccc;"></div>
+  <div style="flex:25;background:#0B2545;"></div>
+  <div style="flex:10;background:#0F1419;"></div>
+  <div style="flex:3;background:#B7280F;"></div>
+  <div style="flex:2;background:#E0A458;"></div>
+</div>
+<div style="font-family:'Avocado Sans',sans-serif;font-weight:100;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--hm-tuscany);margin-top:4px;">Default ratio: 60 bone / 25 prussian / 10 ink / 3 rufous / 2 tuscany</div>
+</body></html>

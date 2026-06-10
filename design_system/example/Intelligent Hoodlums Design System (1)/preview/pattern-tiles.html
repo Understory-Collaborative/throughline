@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+@font-face { font-family: 'Avocado Sans'; src: url('../fonts/AvocadoSans-Bold.otf') format('opentype'); font-weight: 700; }
+@font-face { font-family: 'Avocado Sans'; src: url('../fonts/AvocadoSans-Regular.otf') format('opentype'); font-weight: 400; }
+@font-face { font-family: 'Avocado Sans'; src: url('../fonts/AvocadoSans-Thin.otf') format('opentype'); font-weight: 100; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F2E8D5; padding: 24px; font-family: 'Avocado Sans', sans-serif; }
+
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.tile-card { border: 1px solid #0F1419; box-shadow: 3px 3px 0 #0F1419; }
+.tile-swatch { height: 110px; position: relative; overflow: hidden; }
+.tile-info { padding: 8px 12px; background: #F2E8D5; border-top: 1px solid rgba(15,20,25,0.15); }
+.tile-name { font-weight: 700; font-size: 11px; letter-spacing: 0.06em; color: #0F1419; text-transform: uppercase; }
+.tile-desc { font-weight: 100; font-size: 9px; letter-spacing: 0.06em; color: #8CA3B5; margin-top: 3px; }
+.tile-class { font-weight: 100; font-size: 9px; letter-spacing: 0.08em; color: #E0A458; text-transform: uppercase; margin-top: 4px; }
+
+/* ── THE FOUR TILES ─────────────────────────────────── */
+
+/* 01 · Halftone — circular ben-day dots, standard */
+.hm-tile-halftone {
+  background-image: radial-gradient(circle, #0F1419 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+}
+
+/* 02 · Ben-Day — offset rows, comic book register */
+.hm-tile-benday {
+  background-image:
+    radial-gradient(circle, #0F1419 2px, transparent 2px),
+    radial-gradient(circle, #0F1419 2px, transparent 2px);
+  background-size: 12px 12px;
+  background-position: 0 0, 6px 6px;
+}
+
+/* 03 · Scanline — thin horizontal rules, CRT / press feel */
+.hm-tile-scanline {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(15,20,25,0.25) 0px,
+    rgba(15,20,25,0.25) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+}
+
+/* 04 · Kraft — diagonal crosshatch, paper / grain texture */
+.hm-tile-kraft {
+  background-image:
+    repeating-linear-gradient(45deg,  rgba(15,20,25,0.12) 0px, rgba(15,20,25,0.12) 1px, transparent 1px, transparent 9px),
+    repeating-linear-gradient(-45deg, rgba(15,20,25,0.12) 0px, rgba(15,20,25,0.12) 1px, transparent 1px, transparent 9px);
+}
+
+/* Variants on Prussian */
+.on-prussian { background-color: #0B2545; }
+.on-prussian .hm-tile-halftone { background-image: radial-gradient(circle, rgba(242,232,213,0.35) 1.5px, transparent 1.5px); background-size: 8px 8px; }
+.on-prussian .hm-tile-benday {
+  background-image:
+    radial-gradient(circle, rgba(242,232,213,0.3) 2px, transparent 2px),
+    radial-gradient(circle, rgba(242,232,213,0.3) 2px, transparent 2px);
+  background-size: 12px 12px; background-position: 0 0, 6px 6px;
+}
+.on-prussian .hm-tile-scanline {
+  background-image: repeating-linear-gradient(to bottom, rgba(242,232,213,0.15) 0px, rgba(242,232,213,0.15) 1px, transparent 1px, transparent 5px);
+}
+.on-prussian .hm-tile-kraft {
+  background-image:
+    repeating-linear-gradient(45deg,  rgba(242,232,213,0.1) 0px, rgba(242,232,213,0.1) 1px, transparent 1px, transparent 9px),
+    repeating-linear-gradient(-45deg, rgba(242,232,213,0.1) 0px, rgba(242,232,213,0.1) 1px, transparent 1px, transparent 9px);
+}
+</style>
+</head><body>
+
+<!-- Section label -->
+<div style="font-weight:100;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:#E0A458;margin-bottom:12px;">
+  HM Pattern Tiles · 30–60% opacity over Bone or Prussian
+</div>
+
+<!-- On Bone -->
+<div style="font-weight:100;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#8CA3B5;margin-bottom:8px;">On Bone Ivory</div>
+<div class="grid" style="margin-bottom:20px;">
+  <div class="tile-card">
+    <div class="tile-swatch" style="background:#F2E8D5;">
+      <div class="hm-tile-halftone" style="position:absolute;inset:0;opacity:0.45;"></div>
+    </div>
+    <div class="tile-info">
+      <div class="tile-name">Halftone</div>
+      <div class="tile-desc">Circular dots · 8px grid · Comic base</div>
+      <div class="tile-class">.hm-tile-halftone</div>
+    </div>
+  </div>
+  <div class="tile-card">
+    <div class="tile-swatch" style="background:#F2E8D5;">
+      <div class="hm-tile-benday" style="position:absolute;inset:0;opacity:0.45;"></div>
+    </div>
+    <div class="tile-info">
+      <div class="tile-name">Ben-Day</div>
+      <div class="tile-desc">Offset rows · 12px grid · Comic register</div>
+      <div class="tile-class">.hm-tile-benday</div>
+    </div>
+  </div>
+  <div class="tile-card">
+    <div class="tile-swatch" style="background:#F2E8D5;">
+      <div class="hm-tile-scanline" style="position:absolute;inset:0;opacity:0.6;"></div>
+    </div>
+    <div class="tile-info">
+      <div class="tile-name">Scanline</div>
+      <div class="tile-desc">Horizontal rules · 5px pitch · Press/CRT</div>
+      <div class="tile-class">.hm-tile-scanline</div>
+    </div>
+  </div>
+  <div class="tile-card">
+    <div class="tile-swatch" style="background:#F2E8D5;">
+      <div class="hm-tile-kraft" style="position:absolute;inset:0;opacity:0.8;"></div>
+    </div>
+    <div class="tile-info">
+      <div class="tile-name">Kraft</div>
+      <div class="tile-desc">Diagonal crosshatch · Paper / grain</div>
+      <div class="tile-class">.hm-tile-kraft</div>
+    </div>
+  </div>
+</div>
+
+<!-- On Prussian -->
+<div style="font-weight:100;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:#8CA3B5;margin-bottom:8px;">On Prussian Blue</div>
+<div class="grid on-prussian" style="padding:16px;border:1px solid #0F1419;">
+  <div class="tile-card" style="border-color:rgba(242,232,213,0.2);box-shadow:3px 3px 0 rgba(242,232,213,0.1);">
+    <div class="tile-swatch" style="background:#0B2545;">
+      <div class="hm-tile-halftone" style="position:absolute;inset:0;"></div>
+    </div>
+    <div class="tile-info" style="background:#0B2545;border-top-color:rgba(242,232,213,0.1);">
+      <div class="tile-name" style="color:#F2E8D5;">Halftone</div>
+      <div class="tile-desc">Bone on Prussian · 35% opacity</div>
+      <div class="tile-class">.hm-tile-halftone</div>
+    </div>
+  </div>
+  <div class="tile-card" style="border-color:rgba(242,232,213,0.2);box-shadow:3px 3px 0 rgba(242,232,213,0.1);">
+    <div class="tile-swatch" style="background:#0B2545;">
+      <div class="hm-tile-benday" style="position:absolute;inset:0;"></div>
+    </div>
+    <div class="tile-info" style="background:#0B2545;border-top-color:rgba(242,232,213,0.1);">
+      <div class="tile-name" style="color:#F2E8D5;">Ben-Day</div>
+      <div class="tile-desc">Bone on Prussian · 30% opacity</div>
+      <div class="tile-class">.hm-tile-benday</div>
+    </div>
+  </div>
+  <div class="tile-card" style="border-color:rgba(242,232,213,0.2);box-shadow:3px 3px 0 rgba(242,232,213,0.1);">
+    <div class="tile-swatch" style="background:#0B2545;">
+      <div class="hm-tile-scanline" style="position:absolute;inset:0;"></div>
+    </div>
+    <div class="tile-info" style="background:#0B2545;border-top-color:rgba(242,232,213,0.1);">
+      <div class="tile-name" style="color:#F2E8D5;">Scanline</div>
+      <div class="tile-desc">Bone on Prussian · 15% opacity</div>
+      <div class="tile-class">.hm-tile-scanline</div>
+    </div>
+  </div>
+  <div class="tile-card" style="border-color:rgba(242,232,213,0.2);box-shadow:3px 3px 0 rgba(242,232,213,0.1);">
+    <div class="tile-swatch" style="background:#0B2545;">
+      <div class="hm-tile-kraft" style="position:absolute;inset:0;"></div>
+    </div>
+    <div class="tile-info" style="background:#0B2545;border-top-color:rgba(242,232,213,0.1);">
+      <div class="tile-name" style="color:#F2E8D5;">Kraft</div>
+      <div class="tile-desc">Bone on Prussian · 10% opacity</div>
+      <div class="tile-class">.hm-tile-kraft</div>
+    </div>
+  </div>
+</div>
+
+</body></html>

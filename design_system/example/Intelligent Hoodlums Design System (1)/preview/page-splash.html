@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-ink); }
+.splash-panel {
+  background: var(--hm-ink);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  text-align: center;
+  position: relative;
+}
+/* Halftone overlay */
+.splash-panel::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(242,232,213,0.18) 1px, transparent 1px);
+  background-size: 7px 7px;
+  pointer-events: none;
+}
+.tagline {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 36px; line-height: 1.05; letter-spacing: 0.02em;
+  text-transform: uppercase; color: var(--hm-bone);
+  position: relative;
+}
+.sub {
+  font-family: var(--font-mono); font-weight: 100;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--hm-tuscany); margin-top: 16px; position: relative;
+}
+.badge-img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 16px; position: relative; }
+</style>
+</head><body>
+<div class="splash-panel">
+  <img class="badge-img" src="../assets/HM-badge-full.png" alt="Hoodlums Badge">
+  <div class="tagline">When in Doubt,<br>Trust a Hoodlum.</div>
+  <div class="sub">Design · Disrupt · Deliver · LV · EST 2014 · NV</div>
+</div>
+</body></html>

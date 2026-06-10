@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); padding: 20px; }
+.tag { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-bottom: 8px; }
+.rule { height: 1px; background: var(--hm-ink); margin: 14px 0; opacity: 0.12; }
+.space-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.space-bar { background: var(--hm-prussian); height: 8px; }
+.space-label { font-family: var(--font-mono); font-weight: 100; font-size: 9px; color: var(--hm-ink); letter-spacing: 0.05em; width: 120px; flex-shrink: 0; }
+.cols { display: flex; gap: 24px; }
+.col { flex: 1; }
+.shadow-demo { padding: 16px; background: var(--hm-bone); border: 1px solid var(--hm-ink); }
+.shadow-hard { box-shadow: 3px 3px 0 var(--hm-ink); }
+.shadow-lift { box-shadow: 5px 5px 0 var(--hm-prussian); }
+.radius-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.radius-box { width: 40px; height: 40px; background: var(--hm-prussian); }
+</style>
+</head><body>
+<div class="cols">
+  <div class="col">
+    <div class="tag">Spacing Scale</div>
+    <div class="space-row"><div class="space-label">--space-1 · 4px</div><div class="space-bar" style="width:4px"></div></div>
+    <div class="space-row"><div class="space-label">--space-2 · 8px</div><div class="space-bar" style="width:8px"></div></div>
+    <div class="space-row"><div class="space-label">--space-3 · 12px</div><div class="space-bar" style="width:12px"></div></div>
+    <div class="space-row"><div class="space-label">--space-4 · 16px</div><div class="space-bar" style="width:16px"></div></div>
+    <div class="space-row"><div class="space-label">--space-5 · 24px</div><div class="space-bar" style="width:24px"></div></div>
+    <div class="space-row"><div class="space-label">--space-6 · 32px</div><div class="space-bar" style="width:32px"></div></div>
+    <div class="space-row"><div class="space-label">--space-7 · 48px</div><div class="space-bar" style="width:48px"></div></div>
+    <div class="space-row"><div class="space-label">--space-8 · 64px</div><div class="space-bar" style="width:64px"></div></div>
+  </div>
+  <div class="col">
+    <div class="tag">Shadows · Hard offset, no blur</div>
+    <div class="shadow-demo shadow-hard" style="margin-bottom:16px;">
+      <div style="font-family:var(--font-mono);font-weight:100;font-size:10px;color:var(--hm-ink);">--shadow-card<br>3px 3px 0 Ink</div>
+    </div>
+    <div class="shadow-demo shadow-lift">
+      <div style="font-family:var(--font-mono);font-weight:100;font-size:10px;color:var(--hm-ink);">--shadow-lift<br>5px 5px 0 Prussian</div>
+    </div>
+    <div class="rule"></div>
+    <div class="tag">Radius · 0px default · print aesthetic</div>
+    <div class="radius-row">
+      <div><div class="radius-box" style="border-radius:0px"></div><div style="font-family:var(--font-mono);font-weight:100;font-size:9px;color:var(--hm-tuscany);margin-top:3px">0px</div></div>
+      <div><div class="radius-box" style="border-radius:2px"></div><div style="font-family:var(--font-mono);font-weight:100;font-size:9px;color:var(--hm-tuscany);margin-top:3px">2px sm</div></div>
+      <div><div class="radius-box" style="border-radius:999px;width:64px;height:20px;margin-top:10px"></div><div style="font-family:var(--font-mono);font-weight:100;font-size:9px;color:var(--hm-tuscany);margin-top:3px">pill</div></div>
+    </div>
+  </div>
+</div>
+</body></html>

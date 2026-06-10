@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligent Hoodlums — Brand UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F2E8D5; }
+#root { min-height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="Hero.jsx"></script>
+<script type="text/babel" src="PillarCards.jsx"></script>
+<script type="text/babel" src="CaseStudy.jsx"></script>
+<script type="text/babel" src="Footer.jsx"></script>
+
+<script type="text/babel">
+// Page state — simulates a multi-section brand site
+const PAGES = ['home', 'case-studies', 'the-bond'];
+
+const BondPage = () => (
+  <section style={{ background: '#F2E8D5', padding: '80px 64px', fontFamily: "'DM Sans', sans-serif", minHeight: 400 }}>
+    <div style={{ maxWidth: 680 }}>
+      <div style={{ fontWeight: 100, fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#E0A458', marginBottom: 8 }}>Chapter · 06</div>
+      <h1 style={{ fontWeight: 700, fontSize: 64, lineHeight: 1.0, letterSpacing: '0.01em', color: '#0F1419', margin: '0 0 20px' }}>The Bond.</h1>
+      <div style={{ width: 48, height: 3, background: '#B7280F', marginBottom: 32 }} />
+      <p style={{ fontWeight: 400, fontSize: 18, lineHeight: 1.65, color: '#0F1419', marginBottom: 24 }}>
+        We show up ready. We do the work. We leave something that runs without us.
+      </p>
+      <p style={{ fontWeight: 400, fontSize: 18, lineHeight: 1.65, color: '#0F1419', marginBottom: 32 }}>
+        Every engagement ends with a handoff that works. No dependency. No maintenance contract. No reason to call us back unless you want to.
+      </p>
+      <blockquote style={{
+        borderLeft: '3px solid #B7280F', paddingLeft: 24, marginLeft: 0,
+        fontWeight: 700, fontSize: 24, color: '#0B2545', lineHeight: 1.2,
+      }}>
+        "When in doubt, trust a Hoodlum."
+      </blockquote>
+      <div style={{ marginTop: 40, display: 'flex', gap: 12 }}>
+        <button style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+          fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase',
+          padding: '12px 24px', background: '#0B2545', color: '#F2E8D5',
+          border: '2px solid #0B2545', cursor: 'pointer',
+        }}>Start the Engagement</button>
+        <button style={{
+          fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+          fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase',
+          padding: '12px 24px', background: 'transparent', color: '#0F1419',
+          border: '2px solid #0F1419', cursor: 'pointer',
+        }}>Read the Case Studies</button>
+      </div>
+    </div>
+  </section>
+);
+
+const App = () => {
+  const [page, setPage] = React.useState(
+    () => localStorage.getItem('hm-kit-page') || 'home'
+  );
+
+  const goTo = (p) => {
+    setPage(p);
+    localStorage.setItem('hm-kit-page', p);
+  };
+
+  return (
+    <div>
+      <Header activePage={page} />
+      {page === 'home' && (
+        <>
+          <Hero onCtaClick={() => goTo('the-bond')} />
+          <PillarCards />
+          <CaseStudy />
+        </>
+      )}
+      {page === 'case-studies' && (
+        <>
+          <CaseStudy />
+          <PillarCards />
+        </>
+      )}
+      {page === 'the-bond' && <BondPage />}
+      <Footer />
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

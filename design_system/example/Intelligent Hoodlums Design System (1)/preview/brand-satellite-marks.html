@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0F1419; padding: 20px; font-family: 'Avocado Sans', sans-serif; }
+.grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.mark { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.mark-frame {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; aspect-ratio: 1;
+  border: 1px solid rgba(242,232,213,0.15);
+}
+.mark-frame img { width: 100%; height: 100%; object-fit: contain; }
+.mark-label { font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: #E0A458; text-align: center; }
+.mark-spec { font-weight: 100; font-size: 8px; letter-spacing: 0.06em; color: #8CA3B5; text-align: center; }
+</style>
+</head><body>
+<div class="grid">
+  <!-- Social Avatar: badge scaled to fill square -->
+  <div class="mark">
+    <div class="mark-frame" style="background:#0F1419; overflow:hidden;">
+      <img src="../assets/HM-badge-full.png" alt="Avatar"
+        style="width:88%; height:88%; object-fit:contain;">
+    </div>
+    <div class="mark-label">Social Avatar</div>
+    <div class="mark-spec">1080×1080 · Badge · Ink bg</div>
+  </div>
+
+  <!-- Badge Clean -->
+  <div class="mark">
+    <div class="mark-frame" style="background:#0F1419;">
+      <img src="../assets/HM-badge-clean.png" alt="Badge Clean">
+    </div>
+    <div class="mark-label">Badge Clean</div>
+    <div class="mark-spec">428×428 · General use</div>
+  </div>
+
+  <!-- Favicon: badge scaled small -->
+  <div class="mark">
+    <div class="mark-frame" style="background:#0F1419; aspect-ratio:1;">
+      <img src="../assets/HM-badge-full.png" alt="Favicon"
+        style="width:56px; height:56px; object-fit:contain;">
+    </div>
+    <div class="mark-label">Favicon</div>
+    <div class="mark-spec">64×64 · Badge · Browser tabs</div>
+  </div>
+
+  <!-- Single Color -->
+  <div class="mark">
+    <div class="mark-frame" style="background:#0F1419;">
+      <img src="../assets/HM-single-color-bone-on-ink.png" alt="Single Color">
+    </div>
+    <div class="mark-label">Single Color</div>
+    <div class="mark-spec">Bone on Ink · Embroidery</div>
+  </div>
+
+  <!-- Wordmark Strip: full image contained -->
+  <div class="mark">
+    <div class="mark-frame" style="background:#0F1419; aspect-ratio:3/1; overflow:hidden;">
+      <img src="../assets/HM-wordmark-strip.png" alt="Wordmark Strip"
+        style="width:100%; height:100%; object-fit:contain; object-position:center center;">
+    </div>
+    <div class="mark-label">Wordmark Strip</div>
+    <div class="mark-spec">1200×400 · Email · Decks</div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,341 @@
+/* ============================================================
+   THE INTELLIGENT HOODLUMS — COLORS & TYPE
+   Brand Kit Vol.01 · LV · EST 2014 · NV
+   ============================================================ */
+
+/* ── FONTS ─────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Avocado Sans';
+  src: url('./fonts/AvocadoSans-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Avocado Sans';
+  src: url('./fonts/AvocadoSans-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Avocado Sans';
+  src: url('./fonts/AvocadoSans-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+/* ── COLOR PRIMITIVES ───────────────────────────────────────── */
+:root {
+  /* Brand palette */
+  --hm-prussian:    #0B2545;   /* HM-01 — primary, authority */
+  --hm-rufous:      #B7280F;   /* HM-02 — accent/alert, use sparingly */
+  --hm-tuscany:     #E0A458;   /* HM-03 — secondary, crew marker */
+  --hm-bone:        #F2E8D5;   /* HM-04 — paper, background default */
+  --hm-cadet:       #8CA3B5;   /* HM-05 — charts, mid-tone support */
+  --hm-ink:         #0F1419;   /* HM-06 — type, rules, deep black */
+
+  /* Tints / derived */
+  --hm-prussian-80: #2A4465;
+  --hm-prussian-40: #6A87A3;
+  --hm-bone-dark:   #E8D8BC;
+  --hm-bone-darker: #D4C09A;
+  --hm-rufous-light:#D94A2A;
+  --hm-tuscany-dark:#C4883A;
+
+  /* ── SEMANTIC COLOR VARS ──────────────────────────────────── */
+  --color-bg:          var(--hm-bone);
+  --color-bg-dark:     var(--hm-prussian);
+  --color-bg-deepest:  var(--hm-ink);
+  --color-surface:     #FFFFFF;
+  --color-surface-alt: var(--hm-bone-dark);
+
+  --color-text-primary:   var(--hm-ink);
+  --color-text-secondary: var(--hm-prussian-80);
+  --color-text-muted:     var(--hm-cadet);
+  --color-text-inverse:   var(--hm-bone);
+  --color-text-accent:    var(--hm-rufous);
+  --color-text-marker:    var(--hm-tuscany);
+
+  --color-border:         var(--hm-ink);
+  --color-border-light:   var(--hm-bone-darker);
+  --color-rule-accent:    var(--hm-rufous);
+  --color-rule-marker:    var(--hm-tuscany);
+
+  --color-interactive:    var(--hm-prussian);
+  --color-interactive-hover: var(--hm-prussian-80);
+  --color-callout:        var(--hm-tuscany);
+}
+
+/* ── TYPE SCALE (SCREEN) ────────────────────────────────────── */
+:root {
+  /* Role: Display — Avocado Sans Bold, headlines / pull quotes */
+  --font-display:         'Avocado Sans', sans-serif;
+  --font-display-weight:  700;
+  --font-display-tracking: 0.015em; /* +15/1000 */
+
+  /* Role: Splash — ALL CAPS only, masthead / cover wordmark */
+  --font-splash:          'Avocado Sans', sans-serif;
+  --font-splash-weight:   700;
+  --font-splash-tracking: 0.06em; /* +60/1000 */
+  --font-splash-transform: uppercase;
+
+  /* Role: Condensed — section labels, taglines, credits */
+  /* NOTE: No condensed variant in supplied files — using Regular at
+     tighter tracking as a stand-in. Flag: request Condensed OTF. */
+  --font-condensed:         'Avocado Sans', sans-serif;
+  --font-condensed-weight:  400;
+  --font-condensed-tracking: 0.09em; /* +90/1000 */
+  --font-condensed-transform: uppercase;
+
+  /* Role: Body — Avocado Sans Regular */
+  --font-body:            'Avocado Sans', sans-serif;
+  --font-body-weight:     400;
+  --font-body-size:       17px;
+  --font-body-leading:    1.6;
+
+  /* Role: Mono — Avocado Sans Thin (Crew Talk) */
+  --font-mono:            'Avocado Sans', sans-serif;
+  --font-mono-weight:     100;
+  --font-mono-size:       12px;
+  --font-mono-leading:    1.55;
+
+  /* Scale */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 17px;
+  --text-md:   20px;
+  --text-lg:   26px;
+  --text-xl:   36px;
+  --text-2xl:  52px;
+  --text-3xl:  72px;
+  --text-4xl:  96px;
+}
+
+/* ── SEMANTIC TYPE ELEMENTS ─────────────────────────────────── */
+:root {
+  /* h1 — Display, large */
+  --h1-font:    var(--font-display);
+  --h1-weight:  var(--font-display-weight);
+  --h1-size:    var(--text-3xl);
+  --h1-leading: 1.05;
+  --h1-tracking: var(--font-display-tracking);
+
+  /* h2 — Display */
+  --h2-size:    var(--text-2xl);
+  --h2-leading: 1.1;
+
+  /* h3 — Display or Condensed */
+  --h3-size:    var(--text-xl);
+  --h3-leading: 1.2;
+
+  /* label / chapter tag — Condensed ALL CAPS */
+  --label-font:     var(--font-condensed);
+  --label-weight:   var(--font-condensed-weight);
+  --label-tracking: var(--font-condensed-tracking);
+  --label-transform: var(--font-condensed-transform);
+  --label-size:     var(--text-sm);
+
+  /* caption / footnote — Mono (Thin) */
+  --caption-font:   var(--font-mono);
+  --caption-weight: var(--font-mono-weight);
+  --caption-size:   var(--text-xs);
+  --caption-leading: var(--font-mono-leading);
+}
+
+/* ── BASE ELEMENT STYLES ────────────────────────────────────── */
+body {
+  font-family: var(--font-body);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-leading);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+
+h1 {
+  font-family: var(--h1-font);
+  font-weight: var(--h1-weight);
+  font-size: var(--h1-size);
+  line-height: var(--h1-leading);
+  letter-spacing: var(--h1-tracking);
+}
+h2 {
+  font-family: var(--font-display);
+  font-weight: var(--font-display-weight);
+  font-size: var(--h2-size);
+  line-height: var(--h2-leading);
+  letter-spacing: var(--font-display-tracking);
+}
+h3 {
+  font-family: var(--font-display);
+  font-weight: var(--font-display-weight);
+  font-size: var(--h3-size);
+  line-height: var(--h3-leading);
+  letter-spacing: var(--font-display-tracking);
+}
+
+/* Label / chapter tag */
+.label, .chapter-tag {
+  font-family: var(--label-font);
+  font-weight: var(--label-weight);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: var(--label-transform);
+  color: var(--color-text-marker);
+}
+
+/* Mono / Crew Talk */
+.mono, .crew-talk, caption, figcaption {
+  font-family: var(--font-mono);
+  font-weight: var(--font-mono-weight);
+  font-size: var(--caption-size);
+  line-height: var(--caption-leading);
+}
+
+/* Splash / Masthead */
+.splash {
+  font-family: var(--font-splash);
+  font-weight: var(--font-splash-weight);
+  letter-spacing: var(--font-splash-tracking);
+  text-transform: var(--font-splash-transform);
+}
+
+/* ── PAGE KIT MODULES ───────────────────────────────────────── */
+
+/* 01 · MASTHEAD — full-width Prussian band, Bone type */
+.masthead {
+  background-color: var(--hm-prussian);
+  color: var(--hm-bone);
+  padding: 10px 24px;
+  font-family: var(--font-mono);
+  font-weight: var(--font-mono-weight);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* 02 · SPLASH PANEL — full-bleed Ink bg */
+.splash-panel {
+  background-color: var(--hm-ink);
+  color: var(--hm-bone);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  text-align: center;
+}
+
+/* 03 · CAPTION STRIP — Bone field, Mono, Tuscany label */
+.caption-strip {
+  background-color: var(--hm-bone);
+  border-top: 1px solid var(--hm-ink);
+  border-bottom: 1px solid var(--hm-ink);
+  padding: 8px 24px;
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-weight: var(--font-mono-weight);
+  font-size: var(--text-xs);
+}
+.caption-strip .cs-label { color: var(--hm-tuscany); text-transform: uppercase; letter-spacing: 0.08em; }
+.caption-strip .cs-value { color: var(--hm-ink); }
+
+/* 04 · TITLE PLATE — Condensed chapter tag + Bold title + Rufous rule */
+.title-plate {
+  padding: 32px 24px 24px;
+}
+.title-plate .chapter-tag {
+  display: block;
+  margin-bottom: 8px;
+}
+.title-plate h2 {
+  margin: 0 0 16px;
+}
+.title-plate .rufous-rule {
+  height: 3px;
+  background-color: var(--hm-rufous);
+  width: 48px;
+  border: none;
+  margin: 0;
+}
+
+/* Dark variant */
+.title-plate.dark {
+  background-color: var(--hm-prussian);
+  color: var(--hm-bone);
+}
+.title-plate.dark h2 { color: var(--hm-bone); }
+
+/* 05 · CREDITS BOX */
+.credits-box {
+  font-family: var(--font-mono);
+  font-weight: var(--font-mono-weight);
+  font-size: var(--text-xs);
+  line-height: 2;
+  text-align: left;
+}
+.credits-box .cr-label { color: var(--hm-tuscany); text-transform: uppercase; letter-spacing: 0.08em; }
+.credits-box .cr-value { color: var(--hm-bone); }
+
+/* 06 · HALFTONE FIELD — utility class, composited over bg */
+.halftone-field {
+  position: relative;
+}
+.halftone-field::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--hm-ink) 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* ── SPACING TOKENS ─────────────────────────────────────────── */
+:root {
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+  --space-10: 128px;
+}
+
+/* ── BORDER RADIUS ──────────────────────────────────────────── */
+:root {
+  /* Hoodlums style: mostly 0 (hard edges, print aesthetic) */
+  --radius-none: 0px;
+  --radius-sm:   2px;   /* subtle softening, internal only */
+  --radius-pill: 999px; /* medallion / badge oval elements */
+}
+
+/* ── SHADOW / ELEVATION ─────────────────────────────────────── */
+:root {
+  /* NO drop shadows on type (The Bars, rule 06) */
+  /* Minimal elevation — ink on paper aesthetic */
+  --shadow-none: none;
+  --shadow-rule: inset 0 -2px 0 0 var(--hm-rufous); /* underline accent */
+  --shadow-card: 3px 3px 0px var(--hm-ink);          /* hard offset, no blur */
+  --shadow-lift: 5px 5px 0px var(--hm-prussian);
+}
+
+/* ── UTILITY CLASSES ────────────────────────────────────────── */
+.bg-prussian  { background-color: var(--hm-prussian); }
+.bg-rufous    { background-color: var(--hm-rufous); }
+.bg-tuscany   { background-color: var(--hm-tuscany); }
+.bg-bone      { background-color: var(--hm-bone); }
+.bg-cadet     { background-color: var(--hm-cadet); }
+.bg-ink       { background-color: var(--hm-ink); }
+
+.text-prussian { color: var(--hm-prussian); }
+.text-rufous   { color: var(--hm-rufous); }
+.text-tuscany  { color: var(--hm-tuscany); }
+.text-bone     { color: var(--hm-bone); }
+.text-cadet    { color: var(--hm-cadet); }
+.text-ink      { color: var(--hm-ink); }

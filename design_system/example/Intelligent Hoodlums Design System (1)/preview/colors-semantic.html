@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); font-family: var(--font-body); padding: 20px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.token { display: flex; align-items: center; gap: 8px; }
+.dot { width: 24px; height: 24px; border: 1px solid rgba(0,0,0,0.12); flex-shrink: 0; }
+.tname { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--hm-ink); }
+.tval  { font-family: var(--font-mono); font-weight: 100; font-size: 9px; color: var(--hm-cadet); }
+.section-label { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin: 12px 0 6px; }
+</style>
+</head><body>
+<div class="section-label">Backgrounds</div>
+<div class="grid">
+  <div class="token"><div class="dot" style="background:var(--color-bg)"></div><div><div class="tname">--color-bg</div><div class="tval">Bone Ivory</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-bg-dark)"></div><div><div class="tname">--color-bg-dark</div><div class="tval">Prussian</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-bg-deepest)"></div><div><div class="tname">--color-bg-deepest</div><div class="tval">Ink</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-surface-alt)"></div><div><div class="tname">--color-surface-alt</div><div class="tval">Bone Dark</div></div></div>
+</div>
+<div class="section-label">Text</div>
+<div class="grid">
+  <div class="token"><div class="dot" style="background:var(--color-text-primary)"></div><div><div class="tname">--color-text-primary</div><div class="tval">Ink</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-text-secondary)"></div><div><div class="tname">--color-text-secondary</div><div class="tval">Prussian-80</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-text-muted)"></div><div><div class="tname">--color-text-muted</div><div class="tval">Cadet</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-text-accent)"></div><div><div class="tname">--color-text-accent</div><div class="tval">Rufous</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-text-marker)"></div><div><div class="tname">--color-text-marker</div><div class="tval">Tuscany</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-text-inverse);border-color:#999"></div><div><div class="tname">--color-text-inverse</div><div class="tval">Bone</div></div></div>
+</div>
+<div class="section-label">Borders &amp; Rules</div>
+<div class="grid">
+  <div class="token"><div class="dot" style="background:var(--color-border)"></div><div><div class="tname">--color-border</div><div class="tval">Ink</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-rule-accent)"></div><div><div class="tname">--color-rule-accent</div><div class="tval">Rufous</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-rule-marker)"></div><div><div class="tname">--color-rule-marker</div><div class="tval">Tuscany</div></div></div>
+  <div class="token"><div class="dot" style="background:var(--color-interactive)"></div><div><div class="tname">--color-interactive</div><div class="tval">Prussian</div></div></div>
+</div>
+</body></html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); padding: 24px; display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap; }
+.note { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-bottom: 8px; }
+.badge-on-bone img { width: 140px; height: 140px; object-fit: contain; }
+.badge-on-prussian { background: var(--hm-prussian); padding: 20px; display: inline-flex; }
+.badge-on-prussian img { width: 120px; height: 120px; object-fit: contain; }
+.badge-on-ink { background: var(--hm-ink); padding: 20px; display: inline-flex; }
+.badge-on-ink img { width: 120px; height: 120px; object-fit: contain; }
+.col { display: flex; flex-direction: column; }
+</style>
+</head><body>
+<div class="col">
+  <div class="note">Primary badge · Bone bg</div>
+  <div class="badge-on-bone"><img src="../assets/HM-badge-full.png" alt="Badge"></div>
+</div>
+<div class="col">
+  <div class="note">Primary badge · Prussian bg</div>
+  <div class="badge-on-prussian"><img src="../assets/HM-badge-full.png" alt="Badge"></div>
+</div>
+<div class="col">
+  <div class="note">Primary badge · Ink bg</div>
+  <div class="badge-on-ink"><img src="../assets/HM-badge-full.png" alt="Badge"></div>
+</div>
+</body></html>

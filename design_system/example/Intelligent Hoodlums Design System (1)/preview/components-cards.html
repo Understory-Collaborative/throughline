@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--hm-bone); padding: 24px; display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.note { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-bottom: 8px; }
+
+/* Pillar card */
+.pillar-card {
+  width: 160px; border: 1px solid var(--hm-ink); background: var(--hm-bone);
+  box-shadow: 3px 3px 0 var(--hm-ink);
+}
+.pillar-card .card-header {
+  background: var(--hm-prussian); padding: 10px 14px;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 20px; letter-spacing: 0.01em; color: var(--hm-bone);
+}
+.pillar-card .card-body {
+  padding: 12px 14px;
+  font-family: var(--font-body); font-weight: 400;
+  font-size: 12px; line-height: 1.55; color: var(--hm-ink);
+}
+.pillar-card .card-tag {
+  font-family: var(--font-mono); font-weight: 100; font-size: 9px;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany);
+  padding: 0 14px 10px;
+}
+
+/* Case study card */
+.case-card {
+  width: 200px; border: 1px solid var(--hm-ink); background: var(--hm-bone);
+}
+.case-card .case-stripe { height: 4px; background: var(--hm-rufous); }
+.case-card .case-inner { padding: 14px; }
+.case-card .case-label { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--hm-tuscany); margin-bottom: 6px; }
+.case-card .case-title { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--hm-ink); line-height: 1.2; margin-bottom: 10px; }
+.case-card .case-stats { display: flex; gap: 12px; }
+.case-card .stat-val { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--hm-prussian); }
+.case-card .stat-label { font-family: var(--font-mono); font-weight: 100; font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--hm-cadet); }
+</style>
+</head><body>
+<div>
+  <div class="note">Pillar Cards</div>
+  <div style="display:flex;gap:12px;">
+    <div class="pillar-card">
+      <div class="card-header">Design.</div>
+      <div class="card-body">Instruction, assessment, and curriculum pressure-tested by people who've taught it.</div>
+      <div class="card-tag">01 · Pillar</div>
+    </div>
+    <div class="pillar-card">
+      <div class="card-header">Disrupt.</div>
+      <div class="card-body">Audits, critique, and the questions vendors and admins avoid asking.</div>
+      <div class="card-tag">02 · Pillar</div>
+    </div>
+    <div class="pillar-card">
+      <div class="card-header">Deliver.</div>
+      <div class="card-body">Workshops, coaching, produced artifacts — decks, playbooks, micro-courses.</div>
+      <div class="card-tag">03 · Pillar</div>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="note">Case Study Card</div>
+  <div class="case-card">
+    <div class="case-stripe"></div>
+    <div class="case-inner">
+      <div class="case-label">Case Study · 2024</div>
+      <div class="case-title">Ridgewood MS — PD That Survived Monday</div>
+      <div class="case-stats">
+        <div><div class="stat-val">6</div><div class="stat-label">Teachers</div></div>
+        <div><div class="stat-val">3wk</div><div class="stat-label">Duration</div></div>
+        <div><div class="stat-val">✓</div><div class="stat-label">Renewed</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

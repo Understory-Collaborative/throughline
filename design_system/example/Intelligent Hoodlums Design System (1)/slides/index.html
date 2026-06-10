@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligent Hoodlums — Slide Kit</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="deck-stage.js"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; }
+  deck-stage section {
+    width: 1920px; height: 1080px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+</style>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome. The Intelligent Hoodlums — instructional design and learning consultancy out of Las Vegas. We design with teachers, never at them. We disrupt anything that wastes their time. We deliver work that survives Monday morning.",
+  "Two founders. Mike Lang — retired educator, instructional designer across Clark County. Webs — curriculum architecture, workshop facilitation, the coaching that doesn't require a binder. Together: Design. Disrupt. Deliver.",
+  "If it can't survive a Tuesday morning at 7:42, it's not a strategy. It's a slide deck. That's the filter. Everything we make runs through it before it ships.",
+  "Ridgewood MS. Six teachers. Three weeks. Shipped. Used. Renewed. That's the whole story — and the whole standard. Not binders. Not laminated frameworks. Work that actually gets used.",
+  "Three pillars. Design: curriculum and PL pressure-tested in real classrooms. Disrupt: audits and the uncomfortable questions vendors avoid. Deliver: workshops, coaching, produced artifacts that get used — not shelved.",
+  "House Rules aren't values on a wall. They're the filter every project runs through. We design with teachers, never at them. We refuse to sell temporal solutions. We speak plain. We dress sharp. We move quiet.",
+  "This is the CFL playbook — and it's been running in schools for decades. Forty-thousand-dollar PD days. One laminated handout. We name the enemy. We don't punch down. Teachers aren't the problem.",
+  "Twelve-plus years in classrooms. Six teachers per cohort — small by design, deep by default. Three-week average engagement. Zero maintenance contracts. The handoff runs without us. Every time.",
+  "This is what a Tuesday looks like. Eight AM: the diagnosis — what isn't working, named. The framework, the work session, the handoff protocol. Every page turns. In conclusion is forbidden.",
+  "Not binders. Curriculum design, professional learning, produced artifacts. Unit maps, coaching protocols, playbooks, micro-courses. Work that gets used. Not shelved.",
+  "When in doubt, trust a Hoodlum. Every engagement ends with a handoff that works. No dependency. No maintenance contract. No reason to call us back — unless you want to."
+]
+</script>
+</head>
+<body>
+
+<script type="text/babel" src="SlideBase.jsx"></script>
+<script type="text/babel" src="CoverSlide.jsx"></script>
+<script type="text/babel" src="SectionOpenerSlide.jsx"></script>
+<script type="text/babel" src="BigQuoteSlide.jsx"></script>
+<script type="text/babel" src="CaseStudySlide.jsx"></script>
+<script type="text/babel" src="PillarsSlide.jsx"></script>
+<script type="text/babel" src="BodySlide.jsx"></script>
+<script type="text/babel" src="ComparisonSlide.jsx"></script>
+<script type="text/babel" src="StatsSlide.jsx"></script>
+<script type="text/babel" src="AgendaSlide.jsx"></script>
+<script type="text/babel" src="TwoColumnSlide.jsx"></script>
+<script type="text/babel" src="CreditsSlide.jsx"></script>
+
+<script type="text/babel">
+const slides = [
+  {
+    label: '01 Cover',
+    component: <CoverSlide />,
+  },
+  {
+    label: '02 Section Opener',
+    component: (
+      <SectionOpenerSlide
+        chapter="02"
+        title="Who's Behind the Mask"
+        tag="The Personnel"
+        lede="Mike Lang & Webs — two instructional designers who'd seen too many schools sold temporal solutions by people who'd never set foot in a classroom on a Tuesday."
+      />
+    ),
+  },
+  {
+    label: '03 Big Quote',
+    component: (
+      <BigQuoteSlide
+        quote="If it can't survive a Tuesday, it's not a strategy."
+        attribution="The Voice · Crew Talk"
+        context="Every framework, every deck, every workshop — it runs through this filter before it leaves the studio."
+        dark={true}
+      />
+    ),
+  },
+  {
+    label: '04 Case Study',
+    component: (
+      <CaseStudySlide
+        label="Case Study · 2024"
+        school="Ridgewood MS"
+        district="Clark County School District"
+        teachers={6}
+        weeks={3}
+        outcome="Shipped. Used. Renewed."
+        body="Everything we make is pressure-tested by people who've taught it, in classrooms that didn't cooperate, at schools where Tuesday is the hardest day."
+      />
+    ),
+  },
+  {
+    label: '05 Pillars',
+    component: <PillarsSlide />,
+  },
+  {
+    label: '06 Body',
+    component: (
+      <BodySlide
+        chapter="05"
+        tag="House Rules"
+        title={"The Filter Every\nProject Runs Through"}
+        items={[
+          'We design with teachers, never at them.',
+          'We disrupt anything that wastes their time.',
+          'We deliver work that survives Monday morning.',
+          'We refuse to sell temporal solutions.',
+          'We speak plain. We dress sharp. We move quiet.',
+          'We are the hoodlums in the room.',
+        ]}
+      />
+    ),
+  },
+  {
+    label: '07 Comparison',
+    component: (
+      <ComparisonSlide
+        leftLabel="The CFL Playbook"
+        rightLabel="The Hoodlums Way"
+        leftItems={[
+          '$40k PD day. One laminated handout.',
+          'Three-day retreat. Nothing by Monday.',
+          '"World-class" frameworks. Untested.',
+          '"Best-in-breed" solutions. Off the shelf.',
+          'Vendor dependency built in.',
+          "Consultants who've never taught Tuesday.",
+        ]}
+        rightItems={[
+          'Six teachers. Three weeks. Shipped.',
+          'Work that survives Monday morning.',
+          'Pressure-tested in real classrooms.',
+          "Built for the context it'll live in.",
+          'Every handoff runs without us.',
+          'Practitioners. Always in the room.',
+        ]}
+      />
+    ),
+  },
+  {
+    label: '08 Stats',
+    component: (
+      <StatsSlide
+        chapter="03"
+        tag="The Backstory"
+        headline={"The Numbers That\nDon't Lie."}
+        stats={[
+          { val: '12+', label: 'Years in Classrooms',    caption: 'Founded 2014 · Still in the room' },
+          { val: '6',   label: 'Teachers Per Cohort',    caption: 'Small by design. Deep by default.' },
+          { val: '3wk', label: 'Average Engagement',     caption: 'Pressure-tested. Not padded.' },
+          { val: '0',   label: 'Maintenance Contracts',  caption: 'The handoff runs without us.' },
+        ]}
+      />
+    ),
+  },
+  {
+    label: '09 Agenda',
+    component: (
+      <AgendaSlide
+        workshopTitle="Workshop Agenda"
+        date="Tuesday Morning · 8:00–11:30"
+        items={[
+          { time: '8:00',  duration: '30 min', title: 'The Diagnosis',        note: "Where are we? What isn't working? Name it." },
+          { time: '8:30',  duration: '60 min', title: 'The Framework',        note: "Structure that survives contact. Build, don't buy." },
+          { time: '9:30',  duration: '15 min', title: 'Break',                note: 'Get coffee. Come back ready.' },
+          { time: '9:45',  duration: '45 min', title: 'The Work Session',     note: 'Practitioner-led. Peer-pressure-tested.' },
+          { time: '10:30', duration: '45 min', title: 'The Handoff Protocol', note: 'What runs without us? Every artifact. Every time.' },
+          { time: '11:15', duration: '15 min', title: 'The Hook',             note: "What's next? Every page turns." },
+        ]}
+      />
+    ),
+  },
+  {
+    label: '10 Two Column',
+    component: (
+      <TwoColumnSlide
+        chapter="07"
+        tag="The Three Pillars"
+        title={"What We\nActually Build."}
+        leftBody="Not binders. Not laminated frameworks. Not a three-day retreat that leaves teachers with one handout and a pen."
+        sections={[
+          { label: 'Curriculum Design',    items: ['Unit maps', 'Lesson frameworks', 'Assessment architecture', 'Scope & sequence'] },
+          { label: 'Professional Learning', items: ['Workshop facilitation', 'Coaching protocols', 'PLC structure', 'Observation tools'] },
+          { label: 'Produced Artifacts',   items: ['Slide decks', 'Playbooks', 'Micro-courses', 'Video modules'] },
+        ]}
+      />
+    ),
+  },
+  {
+    label: '11 Credits',
+    component: <CreditsSlide />,
+  },
+];
+
+// Mount each slide as a <section> inside <deck-stage>
+const stage = document.querySelector('deck-stage');
+
+slides.forEach(({ label, component }) => {
+  const section = document.createElement('section');
+  section.setAttribute('data-screen-label', label);
+  section.setAttribute('data-om-validate', 'true');
+  stage.appendChild(section);
+  const root = ReactDOM.createRoot(section);
+  root.render(component);
+});
+</script>
+
+<deck-stage></deck-stage>
+
+</body>
+</html>
