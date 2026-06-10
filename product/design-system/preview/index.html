@@ -55,6 +55,20 @@
         box-sizing: border-box;
       }
 
+      html {
+        /* WCAG 2.2 2.4.11: keep a focused element clear of the sticky header */
+        scroll-padding-top: 88px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+        }
+      }
+
       body {
         margin: 0;
         color: var(--ink);
@@ -210,6 +224,10 @@
       .nav-links a:hover {
         background: color-mix(in srgb, var(--ink) 6%, transparent);
       }
+      .nav-links a:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+      }
 
       /* Hero */
       .hero {
@@ -334,6 +352,11 @@
         outline-offset: 2px;
         border-color: var(--primary);
       }
+      ::placeholder {
+        /* Support color keeps placeholders above 4.5:1 on the surface */
+        color: var(--support);
+        opacity: 1;
+      }
       .search {
         position: relative;
         max-width: 460px;
@@ -371,7 +394,7 @@
         color: #f7ecdd;
       }
       .card.dark .small {
-        color: rgba(247, 236, 221, 0.8);
+        color: #ecdfce;
       }
       .card.dark .tag {
         background: rgba(247, 236, 221, 0.16);
@@ -638,10 +661,11 @@
         </ul>
       </section>
 
-      <footer>
-        Throughline design system preview. Draft, needs community review. Warm,
-        worn-in, unhurried. Follows brand-direction.md and tokens.md.
-      </footer>
     </main>
+
+    <footer class="wrap" role="contentinfo">
+      Throughline design system preview. Draft, needs community review. Warm,
+      worn-in, unhurried. Follows brand-direction.md and tokens.md.
+    </footer>
   </body>
 </html>
