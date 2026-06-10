@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 /**
  * First Step Out starting screen.
@@ -15,11 +15,9 @@ import { useEffect, useState } from 'react'
 const PROGRESS_KEY = 'throughline.firstStepOut.startedAt'
 
 function App() {
-  const [returning, setReturning] = useState(false)
-
-  useEffect(() => {
-    setReturning(Boolean(localStorage.getItem(PROGRESS_KEY)))
-  }, [])
+  // Read on-device progress once, when the component first mounts. This app is
+  // client-only, so localStorage is available synchronously here.
+  const [returning] = useState(() => Boolean(localStorage.getItem(PROGRESS_KEY)))
 
   function handleStart() {
     if (!localStorage.getItem(PROGRESS_KEY)) {
