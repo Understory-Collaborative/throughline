@@ -5,6 +5,7 @@ consistent, accessible, and warm.
 
 ## Contents
 
+- `brand-direction.md` the belief, the feel, and the look in words
 - `voice-and-tone.md` how we sound, and the writing rules in practice
 - `accessibility.md` the WCAG 2.2 AA commitment and working checklist
 - `tokens.md` the canvas for our own design tokens, still to design
