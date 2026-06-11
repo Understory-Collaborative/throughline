@@ -78,6 +78,32 @@ describe('First Step Out flow', () => {
 
     expect(exited).toBe(true)
   })
+
+  it('clears real picks when "None of these" is chosen, and the reverse', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    await user.click(screen.getByRole('radio', { name: /Texas state facility or on parole/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /my own place/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+
+    const utility = screen.getByRole('checkbox', { name: /utility or phone bill/i })
+    const none = screen.getByRole('checkbox', { name: /none of these right now/i })
+
+    await user.click(utility)
+    expect(utility).toBeChecked()
+
+    // Choosing "None of these" clears the real pick.
+    await user.click(none)
+    expect(none).toBeChecked()
+    expect(utility).not.toBeChecked()
+
+    // Choosing a real document again clears "None of these".
+    await user.click(utility)
+    expect(utility).toBeChecked()
+    expect(none).not.toBeChecked()
+  })
 })
 
 describe('First Step Out analytics', () => {

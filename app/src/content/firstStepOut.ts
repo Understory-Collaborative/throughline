@@ -38,6 +38,13 @@ export interface Option {
   title: string
   sub?: string
   icon: IconName
+  /**
+   * Set on a "none of these" answer in a multi-select question. Choosing it
+   * clears every other pick, and choosing any other option clears it. This
+   * keeps a person out of the contradictory "I have documents and I have none"
+   * state.
+   */
+  exclusive?: boolean
 }
 
 export interface Question {
@@ -157,6 +164,7 @@ export const questions: Question[] = [
         title: 'None of these right now',
         sub: 'That is okay. There are other options',
         icon: 'minusCircle',
+        exclusive: true,
       },
     ],
   },
@@ -189,7 +197,7 @@ export const questions: Question[] = [
         title: 'I have a current car, home, or renters insurance policy',
         icon: 'shield',
       },
-      { value: 'none2', title: 'None of these apply to me', icon: 'minusCircle' },
+      { value: 'none2', title: 'None of these apply to me', icon: 'minusCircle', exclusive: true },
     ],
   },
 ]

@@ -65,9 +65,20 @@ export function QuestionScreen({
     const next = new Set(selected)
     if (next.has(optionValue)) {
       next.delete(optionValue)
-    } else {
-      next.add(optionValue)
+      onChange([...next])
+      return
     }
+
+    // Keep the "none of these" answer mutually exclusive with the real ones.
+    const isExclusive = question.options.find((o) => o.value === optionValue)?.exclusive
+    if (isExclusive) {
+      onChange([optionValue])
+      return
+    }
+    for (const option of question.options) {
+      if (option.exclusive) next.delete(option.value)
+    }
+    next.add(optionValue)
     onChange([...next])
   }
 
