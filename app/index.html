@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="First Step Out helps you get your Texas ID back after leaving TDCJ. Plain steps, no account needed."
+    />
+    <title>Throughline</title>
+
+    <!--
+      Fonts: Fraunces for headings (warm soul), Atkinson Hyperlegible for body
+      (built for legibility). Loaded from Google Fonts for now. Self-hosting
+      subset woff2 is a planned follow-up to cut the third-party request.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Pendo product analytics. Anonymous by default. We do not pass any
+      personally identifying information into Pendo for this audience.
+      See /product/design-system and CLAUDE.md for our privacy stance.
+    -->
+    <script>
+      (function (apiKey) {
+        ;(function (p, e, n, d, o) {
+          var v, w, x, y, z
+          o = p[d] = p[d] || {}
+          o._q = o._q || []
+          v = ['initialize', 'identify', 'updateOptions', 'pageLoad', 'track', 'trackAgent']
+          for (w = 0, x = v.length; w < x; ++w)
+            (function (m) {
+              o[m] =
+                o[m] ||
+                function () {
+                  o._q[m === v[0] ? 'unshift' : 'push']([m].concat([].slice.call(arguments, 0)))
+                }
+            })(v[w])
+          y = e.createElement(n)
+          y.async = !0
+          y.src = 'https://cdn.pendo.io/agent/static/' + apiKey + '/pendo.js'
+          z = e.getElementsByTagName(n)[0]
+          z.parentNode.insertBefore(y, z)
+        })(window, document, 'script', 'pendo')
+      })('f0d7ce1d-cf9d-4d9b-accb-fa7c1115ccee')
+
+      // Anonymous visitor. Empty id lets the SDK resolve from local storage if
+      // present, otherwise it creates a fresh anonymous visitor. No PII.
+      pendo.initialize({ visitor: { id: '' } })
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

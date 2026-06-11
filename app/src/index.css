@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+/*
+  Throughline theme. Tokens follow product/design-system/brand-direction.md and
+  tokens.md. Warm, sun-faded, worn-in. The living style guide is at
+  /styleguide.html.
+*/
+
+@theme {
+  --color-paper: #f5eedf;
+  --color-surface: #fbf7ec;
+  --color-ink: #2a2019;
+  --color-primary: #41705a;
+  --color-primary-press: #355d4a;
+  --color-mahogany: #6e3b2a;
+  --color-leather: #b5895c;
+  --color-honey: #ce8c36;
+  --color-lilac: #9e8fb5;
+  --color-rain: #6f86a0;
+  --color-support: #6e5b49;
+  --color-line: #e4d8c2;
+  --color-danger: #b0503d;
+
+  --font-sans: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Keep a focused element clear of any sticky header (WCAG 2.2 2.4.11). */
+  scroll-padding-top: 80px;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* Golden-hour glow: warm light pooling from the top, faded paper below. */
+  background-color: var(--color-paper);
+  background-image: radial-gradient(
+      120% 80% at 80% -10%,
+      rgba(206, 140, 54, 0.2),
+      rgba(206, 140, 54, 0) 60%
+    ),
+    radial-gradient(
+      90% 70% at 5% 0%,
+      rgba(181, 137, 92, 0.16),
+      rgba(181, 137, 92, 0) 55%
+    ),
+    linear-gradient(180deg, #f7f0e2 0%, #f1e7d3 100%);
+  background-attachment: fixed;
+}
+
+/* Faint film grain for a worn, vintage feel. No asset, light on bandwidth. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

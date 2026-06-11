@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Throughline design system preview</title>
+
+    <!--
+      Working preview of the proposed Throughline design system. Draft for
+      review. Vintage, sun-faded, worn-in: a porch in late light, mahogany and
+      leather, Leon Bridges playing. Fonts load from Google Fonts for preview
+      convenience. In the app we self-host subset woff2 with a system fallback.
+      Follows brand-direction.md and tokens.md.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* Color, sun-faded and warm */
+        --paper: #f5eedf;
+        --surface: #fbf7ec;
+        --ink: #2a2019;
+        --primary: #41705a;
+        --primary-press: #355d4a;
+        --mahogany: #6e3b2a;
+        --leather: #b5895c;
+        --honey: #ce8c36;
+        --lilac: #9e8fb5;
+        --rain: #6f86a0;
+        --support: #6e5b49;
+        --line: #e4d8c2;
+        --danger: #b0503d;
+
+        /* Type */
+        --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+        --font-sans: 'Atkinson Hyperlegible', system-ui, -apple-system,
+          'Segoe UI', Roboto, sans-serif;
+
+        /* Radius, soft and worn */
+        --radius-sm: 12px;
+        --radius-md: 16px;
+        --radius-lg: 26px;
+
+        /* Elevation, warm and soft */
+        --shadow-soft: 0 1px 2px rgba(72, 45, 28, 0.08),
+          0 10px 28px rgba(72, 45, 28, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        /* WCAG 2.2 2.4.11: keep a focused element clear of the sticky header */
+        scroll-padding-top: 88px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+        }
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: var(--font-sans);
+        font-size: 18px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        /* Golden-hour glow: warm light pooling from the top, faded paper below */
+        background-color: var(--paper);
+        background-image: radial-gradient(
+            120% 80% at 75% -10%,
+            rgba(206, 140, 54, 0.22),
+            rgba(206, 140, 54, 0) 60%
+          ),
+          radial-gradient(
+            90% 70% at 10% 0%,
+            rgba(181, 137, 92, 0.18),
+            rgba(181, 137, 92, 0) 55%
+          ),
+          linear-gradient(180deg, #f7f0e2 0%, #f1e7d3 100%);
+        background-attachment: fixed;
+      }
+
+      /* Faint film grain, no asset, very light for bandwidth */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.05;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 2;
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+      }
+
+      /* Type scale */
+      .display {
+        font-family: var(--font-display);
+        font-size: 38px;
+        font-weight: 500;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        margin: 0;
+      }
+      .heading {
+        font-family: var(--font-display);
+        font-size: 25px;
+        font-weight: 500;
+        line-height: 1.2;
+        margin: 0;
+      }
+      .lead {
+        font-size: 20px;
+        line-height: 1.55;
+        margin: 0;
+      }
+      .small {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--support);
+      }
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--mahogany);
+        margin: 0;
+      }
+
+      section {
+        margin-top: 56px;
+      }
+      h2.section-title {
+        font-family: var(--font-display);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--mahogany);
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin: 0 0 24px;
+      }
+
+      /* Nav */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: color-mix(in srgb, var(--paper) 85%, transparent);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-inner {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 20px;
+      }
+      .brand .dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        background: var(--primary);
+        position: relative;
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+      }
+      .brand .dot::after {
+        content: '';
+        position: absolute;
+        inset: 6px 6px auto auto;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--honey);
+      }
+      .nav-links {
+        margin-left: auto;
+        display: flex;
+        gap: 6px;
+      }
+      .nav-links a {
+        color: var(--ink);
+        text-decoration: none;
+        padding: 8px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 16px;
+      }
+      .nav-links a.active {
+        background: color-mix(in srgb, var(--primary) 14%, transparent);
+        color: var(--primary-press);
+        font-weight: 700;
+      }
+      .nav-links a:hover {
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+      }
+      .nav-links a:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+      }
+
+      /* Hero */
+      .hero {
+        padding-top: 8px;
+      }
+      .hero .display {
+        max-width: 13ch;
+      }
+
+      /* Swatches */
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 14px;
+      }
+      .swatch {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        background: var(--surface);
+        box-shadow: var(--shadow-soft);
+      }
+      .swatch .chip {
+        height: 72px;
+      }
+      .swatch .meta {
+        padding: 10px 12px;
+      }
+      .swatch .name {
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .swatch .hex {
+        font-size: 13px;
+        color: var(--support);
+      }
+
+      /* Buttons */
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        font-family: inherit;
+        font-size: 17px;
+        font-weight: 700;
+        border-radius: var(--radius-md);
+        padding: 14px 22px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        min-height: 48px;
+        transition: background 240ms ease, transform 240ms ease,
+          box-shadow 240ms ease;
+      }
+      .btn:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 3px;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff7ec;
+        box-shadow: 0 2px 0 rgba(53, 93, 74, 0.5);
+      }
+      .btn-primary:hover {
+        background: var(--primary-press);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--primary-press);
+        border-color: var(--primary);
+      }
+      .btn-secondary:hover {
+        background: color-mix(in srgb, var(--primary) 10%, transparent);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink);
+      }
+      .btn-ghost:hover {
+        background: color-mix(in srgb, var(--ink) 6%, transparent);
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      /* Form controls */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 18px;
+        max-width: 460px;
+      }
+      label {
+        font-weight: 700;
+        font-size: 16px;
+      }
+      .hint {
+        font-size: 14px;
+        color: var(--support);
+      }
+      input[type='text'],
+      input[type='search'],
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: 17px;
+        color: var(--ink);
+        background: var(--surface);
+        border: 1px solid var(--support);
+        border-radius: var(--radius-sm);
+        padding: 13px 14px;
+        width: 100%;
+      }
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+        border-color: var(--primary);
+      }
+      ::placeholder {
+        /* Support color keeps placeholders above 4.5:1 on the surface */
+        color: var(--support);
+        opacity: 1;
+      }
+      .search {
+        position: relative;
+        max-width: 460px;
+      }
+      .search input {
+        padding-left: 44px;
+      }
+      .search svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--support);
+      }
+
+      /* Cards */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        box-shadow: var(--shadow-soft);
+      }
+      .card .heading {
+        margin-bottom: 6px;
+      }
+      .card.dark {
+        background: var(--mahogany);
+        border-color: transparent;
+        color: #f7ecdd;
+      }
+      .card.dark .small {
+        color: #ecdfce;
+      }
+      .card.dark .tag {
+        background: rgba(247, 236, 221, 0.16);
+        color: #f7ecdd;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--lilac) 28%, transparent);
+        color: #4a3f63;
+        margin-bottom: 12px;
+      }
+      .note-rain {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        background: color-mix(in srgb, var(--rain) 14%, transparent);
+        border: 1px solid color-mix(in srgb, var(--rain) 40%, transparent);
+        font-size: 15px;
+      }
+
+      /* Progress, celebrate what is done */
+      .steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+      }
+      .step .mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .step.done {
+        background: color-mix(in srgb, var(--primary) 10%, var(--surface));
+        border-color: color-mix(in srgb, var(--primary) 32%, var(--line));
+      }
+      .step.done .mark {
+        background: var(--primary);
+        color: #fff7ec;
+      }
+      .step.next {
+        border-color: color-mix(in srgb, var(--honey) 55%, var(--line));
+        background: color-mix(in srgb, var(--honey) 10%, var(--surface));
+      }
+      .step.next .mark {
+        background: color-mix(in srgb, var(--honey) 22%, transparent);
+        color: #8a5a12;
+        border: 2px solid var(--honey);
+      }
+      .step .label {
+        font-weight: 700;
+      }
+      .step .label span {
+        display: block;
+        font-weight: 400;
+        font-size: 14px;
+        color: var(--support);
+      }
+      .pill {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--honey) 24%, transparent);
+        color: #8a5a12;
+      }
+
+      footer {
+        margin-top: 64px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--support);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nav" aria-label="Preview navigation">
+      <div class="nav-inner">
+        <span class="brand"><span class="dot" aria-hidden="true"></span> Throughline</span>
+        <div class="nav-links">
+          <a href="#" class="active">Steps</a>
+          <a href="#">Documents</a>
+          <a href="#">Help</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="wrap">
+      <section class="hero">
+        <p class="eyebrow">Design system preview</p>
+        <h1 class="display">You're headed somewhere. In your own time.</h1>
+        <p class="lead" style="margin-top: 14px; max-width: 620px">
+          A look at the colors, type, and pieces together. Warm, worn-in, and
+          unhurried. Draft for review.
+        </p>
+        <div class="row" style="margin-top: 22px">
+          <button class="btn btn-primary">Start when you're ready</button>
+          <button class="btn btn-ghost">Look around first</button>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Color</h2>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="chip" style="background: #f5eedf; border-bottom: 1px solid #e4d8c2"></div>
+            <div class="meta"><div class="name">Paper</div><div class="hex">#F5EEDF</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #2a2019"></div>
+            <div class="meta"><div class="name">Ink</div><div class="hex">#2A2019</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #41705a"></div>
+            <div class="meta"><div class="name">Primary green</div><div class="hex">#41705A</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #6e3b2a"></div>
+            <div class="meta"><div class="name">Mahogany</div><div class="hex">#6E3B2A</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #b5895c"></div>
+            <div class="meta"><div class="name">Leather</div><div class="hex">#B5895C</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #ce8c36"></div>
+            <div class="meta"><div class="name">Honey</div><div class="hex">#CE8C36</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #9e8fb5"></div>
+            <div class="meta"><div class="name">Lilac</div><div class="hex">#9E8FB5</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #6f86a0"></div>
+            <div class="meta"><div class="name">Rain</div><div class="hex">#6F86A0</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #6e5b49"></div>
+            <div class="meta"><div class="name">Support</div><div class="hex">#6E5B49</div></div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #b0503d"></div>
+            <div class="meta"><div class="name">Danger</div><div class="hex">#B0503D</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Type</h2>
+        <p class="small" style="margin: 0 0 12px">
+          Fraunces for headings, the warm soul. Atkinson Hyperlegible for body,
+          easy to read under stress.
+        </p>
+        <p class="display">Display, Fraunces 38</p>
+        <p class="heading" style="margin-top: 16px">Heading, Fraunces 25</p>
+        <p class="lead" style="margin-top: 16px">Lead, Atkinson 20. A key sentence that sets up a step.</p>
+        <p style="margin-top: 16px; max-width: 620px">
+          Body, Atkinson 18. Bring one paper that shows where you live. Here is
+          what counts, and what to do if you do not have it yet. Plain words, easy
+          to read under stress.
+        </p>
+        <p class="small" style="margin-top: 16px">Small, 15. Helper text and captions.</p>
+      </section>
+
+      <section>
+        <h2 class="section-title">Buttons</h2>
+        <div class="row">
+          <button class="btn btn-primary">Continue</button>
+          <button class="btn btn-secondary">Save for later</button>
+          <button class="btn btn-ghost">Go back</button>
+          <button class="btn btn-primary" disabled>Disabled</button>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Form controls</h2>
+
+        <div class="field">
+          <label for="name">What should we call you? (optional)</label>
+          <span class="hint">We do not save your real name.</span>
+          <input type="text" id="name" placeholder="A first name or a nickname" />
+        </div>
+
+        <div class="field">
+          <label for="county">Which county are you in?</label>
+          <select id="county">
+            <option>Tarrant</option>
+            <option>Dallas</option>
+            <option>Harris</option>
+            <option>Bexar</option>
+            <option>Travis</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="find">Find a document or step</label>
+          <div class="search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+              <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <input type="search" id="find" placeholder="Search, like birth certificate" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Cards</h2>
+        <div class="cards">
+          <div class="card">
+            <span class="tag">On the wind</span>
+            <p class="heading">What to bring</p>
+            <p class="small">Your plain list for the DPS office, built from your answers.</p>
+          </div>
+          <div class="card dark">
+            <span class="tag">Your path</span>
+            <p class="heading">Where to go</p>
+            <p class="small">The nearest office, hours, and what a visit costs in time.</p>
+          </div>
+        </div>
+        <div class="note-rain">
+          A cool rain is coming Thursday. Bring your papers in a bag. A welcome
+          rain, not a storm.
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Progress, we celebrate what is done</h2>
+        <ul class="steps">
+          <li class="step done">
+            <span class="mark" aria-hidden="true">&#10003;</span>
+            <span class="label">Social Security card <span>You have this. Nice work.</span></span>
+          </li>
+          <li class="step done">
+            <span class="mark" aria-hidden="true">&#10003;</span>
+            <span class="label">Proof of where you live <span>Your sister's lease letter counts.</span></span>
+          </li>
+          <li class="step next">
+            <span class="mark" aria-hidden="true">&#8594;</span>
+            <span class="label">Birth certificate <span class="pill">Next step</span></span>
+          </li>
+        </ul>
+      </section>
+
+    </main>
+
+    <footer class="wrap" role="contentinfo">
+      Throughline design system preview. Draft, needs community review. Warm,
+      worn-in, unhurried. Follows brand-direction.md and tokens.md.
+    </footer>
+  </body>
+</html>
