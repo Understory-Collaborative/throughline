@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Step Out — Texas ID Residency Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal-50: #E1F5EE;
+    --teal-100: #9FE1CB;
+    --teal-400: #1D9E75;
+    --teal-600: #0F6E56;
+    --teal-800: #085041;
+    --amber-50: #FAEEDA;
+    --amber-400: #EF9F27;
+    --amber-600: #BA7517;
+    --amber-800: #633806;
+    --gray-50: #F7F6F2;
+    --gray-100: #ECEAE3;
+    --gray-200: #D3D1C7;
+    --gray-500: #888780;
+    --gray-700: #444441;
+    --gray-900: #1A1A18;
+    --text: #1A1A18;
+    --text-muted: #5F5E5A;
+    --text-faint: #888780;
+    --border: rgba(0,0,0,0.1);
+    --border-mid: rgba(0,0,0,0.18);
+    --surface: #ffffff;
+    --bg: #F7F6F2;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .wordmark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    color: var(--teal-600);
+    letter-spacing: 0.01em;
+    margin-bottom: 2.5rem;
+    opacity: 0.85;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+  }
+
+  .progress-wrap { margin-bottom: 2rem; }
+  .progress-track {
+    height: 3px;
+    background: var(--gray-100);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--teal-400);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .step-label {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    letter-spacing: 0.03em;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .question {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .subtext {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .notice {
+    background: var(--teal-50);
+    border: 1px solid var(--teal-100);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .notice-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--teal-600);
+  }
+  .notice p {
+    font-size: 13px;
+    color: var(--teal-800);
+    line-height: 1.6;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+
+  .opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    width: 100%;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    position: relative;
+  }
+  .opt:hover { border-color: var(--border-mid); background: var(--gray-50); transform: translateY(-1px); }
+  .opt:active { transform: translateY(0); }
+  .opt.selected { border-color: var(--teal-400); background: var(--teal-50); }
+
+  .opt-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .opt.selected .opt-icon { background: var(--teal-100); }
+  .opt-icon svg { width: 18px; height: 18px; stroke: var(--text-muted); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .opt.selected .opt-icon svg { stroke: var(--teal-600); }
+
+  .opt-text { flex: 1; }
+  .opt-title { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .opt-sub { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
+  .opt.selected .opt-title { color: var(--teal-800); }
+  .opt.selected .opt-sub { color: var(--teal-600); }
+
+  .check-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gray-200);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .opt.selected .check-circle {
+    background: var(--teal-400);
+    border-color: var(--teal-400);
+  }
+  .check-circle svg { width: 10px; height: 10px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 0.15s; }
+  .opt.selected .check-circle svg { opacity: 1; }
+
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+  }
+
+  .btn-back {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-faint);
+    cursor: pointer;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.15s;
+  }
+  .btn-back:hover { color: var(--text-muted); }
+  .btn-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .btn-next {
+    background: var(--teal-400);
+    border: none;
+    border-radius: 10px;
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    color: white;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, opacity 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-next:hover:not(:disabled) { background: var(--teal-600); transform: translateY(-1px); }
+  .btn-next:active:not(:disabled) { transform: translateY(0); }
+  .btn-next:disabled { background: var(--gray-100); color: var(--text-faint); cursor: not-allowed; transform: none; }
+  .btn-next svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .result-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .result-header .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .result-header .sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  .result-section { margin-bottom: 1.5rem; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .result-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .result-item.have {
+    border-left: 3px solid var(--teal-400);
+    border-radius: 0 14px 14px 0;
+  }
+  .result-item.get {
+    border-left: 3px solid var(--amber-400);
+    border-radius: 0 14px 14px 0;
+  }
+  .result-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .result-item.have .result-item-icon { background: var(--teal-50); }
+  .result-item.get .result-item-icon { background: var(--amber-50); }
+  .result-item-icon svg { width: 16px; height: 16px; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .result-item.have .result-item-icon svg { stroke: var(--teal-600); }
+  .result-item.get .result-item-icon svg { stroke: var(--amber-600); }
+  .result-item-text .title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .result-item-text .detail { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  .restart-btn {
+    background: none;
+    border: 1px solid var(--border-mid);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted);
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .restart-btn:hover { background: var(--gray-50); color: var(--text); }
+
+  .footer {
+    margin-top: 2rem;
+    font-size: 12px;
+    color: var(--text-faint);
+    text-align: center;
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 560px) {
+    .card { padding: 2rem 1.5rem; border-radius: 16px; }
+    .question { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wordmark">First Step Out</div>
+
+<div class="card">
+
+  <div class="screen active" id="s0">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="p0" style="width:0%"></div></div>
+      <div class="step-label">Getting started</div>
+    </div>
+    <p class="question">Were you recently released from a Texas facility or are you currently on parole?</p>
+    <p class="subtext">Your answer changes which documents will work for you. There is no wrong answer here.</p>
+    <div class="notice">
+      <svg class="notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <p>If you were released from a TDCJ facility, your release paperwork may already cover this entire requirement.</p>
+    </div>
+    <div class="options" data-q="tdcj">
+      <button type="button" class="opt" data-val="yes" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 9h3M15 12h3M15 15h3"/></svg></div>
+        <div class="opt-text"><p class="opt-title">Yes — released from a Texas state facility or on parole</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="federal" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg></div>
+        <div class="opt-text"><p class="opt-title">Yes — but from a federal facility</p><p class="opt-sub">Federal Bureau of Prisons</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="no" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div class="opt-text"><p class="opt-title">No — that does not apply to me</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+    </div>
+    <div class="nav">
+      <span></span>
+      <button type="button" class="btn-next" id="next0" disabled onclick="goTo(1)">Continue <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="screen" id="s1">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" style="width:25%"></div></div>
+      <div class="step-label">Step 1 of 4</div>
+    </div>
+    <p class="question">Where are you staying right now?</p>
+    <p class="subtext">We will use this to figure out which documents are realistic for you to get quickly.</p>
+    <div class="options" data-q="housing">
+      <button type="button" class="opt" data-val="halfway" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 22V12h8v10"/></svg></div>
+        <div class="opt-text"><p class="opt-title">A halfway house or reentry facility</p><p class="opt-sub">Including residential reentry centers</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="family" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="opt-text"><p class="opt-title">With family or a friend</p><p class="opt-sub">At someone else's address</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="own" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+        <div class="opt-text"><p class="opt-title">My own place</p><p class="opt-sub">Apartment, house, or room I rent or own</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="unsure" onclick="select(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="opt-text"><p class="opt-title">Not sure yet</p><p class="opt-sub">Still figuring out my situation</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-back" onclick="goTo(0)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</button>
+      <button type="button" class="btn-next" id="next1" disabled onclick="goTo(2)">Continue <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="screen" id="s2">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
+      <div class="step-label">Step 2 of 4</div>
+    </div>
+    <p class="question">Do you have any of these coming to your address?</p>
+    <p class="subtext">Select everything that applies. These only count if they show your current Texas address and are dated within the last 6 months. Select all that apply.</p>
+    <div class="options" data-q="mail" data-multi="true">
+      <button type="button" class="opt" data-val="utility" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div class="opt-text"><p class="opt-title">A utility or phone bill</p><p class="opt-sub">Electric, water, gas, internet, cable, or cell</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="bank" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <div class="opt-text"><p class="opt-title">A bank or credit card statement</p><p class="opt-sub">Checking, savings, or investment account</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="govt" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div class="opt-text"><p class="opt-title">A letter from a government office</p><p class="opt-sub">Federal, state, county, or city agency</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="paystub" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg></div>
+        <div class="opt-text"><p class="opt-title">A pay stub or paycheck</p><p class="opt-sub">From your current employer</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="none" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+        <div class="opt-text"><p class="opt-title">None of these right now</p><p class="opt-sub">That is okay — there are other options</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-back" onclick="goTo(1)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</button>
+      <button type="button" class="btn-next" id="next2" disabled onclick="goTo(3)">Continue <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="screen" id="s3">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+      <div class="step-label">Step 3 of 4</div>
+    </div>
+    <p class="question">A couple more quick questions.</p>
+    <p class="subtext">These help us check a few more options that might apply to you. Select all that apply.</p>
+    <div class="options" data-q="extras" data-multi="true">
+      <button type="button" class="opt" data-val="vehicle" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg></div>
+        <div class="opt-text"><p class="opt-title">I own a vehicle registered in Texas</p><p class="opt-sub">Car, truck, or boat with current registration</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="voter" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <div class="opt-text"><p class="opt-title">I am a registered Texas voter and have my card</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="military" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <div class="opt-text"><p class="opt-title">I served in the US military or receive VA benefits</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="insurance" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="opt-text"><p class="opt-title">I have a current car, home, or renters insurance policy</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+      <button type="button" class="opt" data-val="none2" onclick="selectMulti(this)">
+        <div class="opt-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+        <div class="opt-text"><p class="opt-title">None of these apply to me</p></div>
+        <div class="check-circle"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </button>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-back" onclick="goTo(2)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</button>
+      <button type="button" class="btn-next" id="next3" disabled onclick="showResult()">See my documents <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+
+  <div class="screen" id="result">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+      <div class="step-label">Done</div>
+    </div>
+    <div class="result-header">
+      <p class="headline" id="result-headline">Here is what to bring.</p>
+      <p class="sub" id="result-subtext">You only need one document from this list to prove Texas residency at DPS.</p>
+    </div>
+    <div class="result-section" id="have-section">
+      <div class="section-label">You already have this</div>
+      <div id="have-items"></div>
+    </div>
+    <div class="result-section" id="get-section">
+      <div class="section-label">Other options to get quickly</div>
+      <div id="get-items"></div>
+    </div>
+    <button type="button" class="restart-btn" onclick="restart()">Start over</button>
+  </div>
+
+</div>
+
+<p class="footer">First Step Out is a free tool. Your answers are never stored or shared.<br>Built for the Mind the Product World Product Day Hackathon 2026.</p>
+
+<script>
+var answers = { tdcj: null, housing: null, mail: [], extras: [] };
+
+function select(btn) {
+  var group = btn.closest('[data-q]');
+  group.querySelectorAll('.opt').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  var q = group.dataset.q;
+  answers[q] = btn.dataset.val;
+  var screen = btn.closest('.screen').id;
+  var idx = screen.replace('s','');
+  var nb = document.getElementById('next' + idx);
+  if (nb) nb.disabled = false;
+}
+
+function selectMulti(btn) {
+  var group = btn.closest('[data-q]');
+  var q = group.dataset.q;
+  btn.classList.toggle('selected');
+  var selected = Array.from(group.querySelectorAll('.opt.selected')).map(function(b){ return b.dataset.val; });
+  answers[q] = selected;
+  var screen = btn.closest('.screen').id;
+  var idx = screen.replace('s','');
+  var nb = document.getElementById('next' + idx);
+  if (nb) nb.disabled = selected.length === 0;
+}
+
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('s' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function makeItem(cls, iconPath, title, detail) {
+  return '<div class="result-item ' + cls + '"><div class="result-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + iconPath + '</svg></div><div class="result-item-text"><p class="title">' + title + '</p>' + (detail ? '<p class="detail">' + detail + '</p>' : '') + '</div></div>';
+}
+
+function showResult() {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('result').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  var haveItems = [], getItems = [];
+  var tdcj = answers.tdcj;
+  var housing = answers.housing;
+  var mail = answers.mail || [];
+  var extras = answers.extras || [];
+
+  var docIcon = '<rect x="14" y="2" width="4" height="4"/><path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"/><path d="M8 10h8M8 14h4"/>';
+  var homeIcon = '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>';
+  var boltIcon = '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>';
+  var bankIcon = '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>';
+  var mailIcon = '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>';
+  var payIcon = '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>';
+  var carIcon = '<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>';
+  var shieldIcon = '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>';
+  var starIcon = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>';
+  var checkIcon = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+  var buildIcon = '<path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>';
+
+  if (tdcj === 'yes') {
+    haveItems.push(makeItem('have', docIcon, 'Your TDCJ release or parole paperwork', 'This alone covers the residency requirement. Bring the original document to DPS — no other proof needed.'));
+  }
+  if (tdcj === 'federal') {
+    haveItems.push(makeItem('have', buildIcon, 'Your federal release certificate', 'Federal release paperwork is accepted. Bring the original.'));
+  }
+  if (housing === 'own') {
+    haveItems.push(makeItem('have', homeIcon, 'Your lease, rental agreement, or mortgage statement', 'Any current document showing you live at a Texas address.'));
+  }
+  if (mail.includes('utility')) {
+    haveItems.push(makeItem('have', boltIcon, 'Your utility or phone bill', 'Dated within the last 6 months, showing your current Texas address.'));
+  }
+  if (mail.includes('bank')) {
+    haveItems.push(makeItem('have', bankIcon, 'Your bank or credit card statement', 'Dated within the last 6 months showing your current Texas address.'));
+  }
+  if (mail.includes('govt')) {
+    haveItems.push(makeItem('have', mailIcon, 'Your government agency letter', 'Any letter from a federal, state, county, or city office dated within the last 6 months.'));
+  }
+  if (mail.includes('paystub')) {
+    haveItems.push(makeItem('have', payIcon, 'Your pay stub', 'A pre-printed paycheck or stub from your employer dated within the last 6 months.'));
+  }
+  if (extras.includes('voter')) {
+    haveItems.push(makeItem('have', checkIcon, 'Your Texas voter registration card', 'The physical card must be valid and unexpired.'));
+  }
+  if (extras.includes('vehicle')) {
+    haveItems.push(makeItem('have', carIcon, 'Your Texas vehicle or boat registration', 'Current, unexpired registration or title in your name.'));
+  }
+  if (extras.includes('military')) {
+    haveItems.push(makeItem('have', starIcon, 'Your military or VA document', 'Any current document from the U.S. military or VA showing your Texas address.'));
+  }
+  if (extras.includes('insurance')) {
+    haveItems.push(makeItem('have', shieldIcon, 'Your insurance card or statement', 'Current car, home, or renters insurance showing your Texas address.'));
+  }
+  if (housing === 'halfway') {
+    getItems.push(makeItem('get', homeIcon, 'A letter from your reentry facility', 'Ask your case manager for a letter on facility letterhead confirming you are a current resident. Most can provide this the same day.'));
+  }
+  if (housing === 'family' || housing === 'unsure' || mail.includes('none')) {
+    if (haveItems.length === 0) {
+      getItems.push(makeItem('get', bankIcon, 'Open a bank account and get a statement sent to your address', 'Many banks offer free second-chance checking accounts with no credit check. Once open, request a paper statement at your address. It counts within 6 months.'));
+      getItems.push(makeItem('get', mailIcon, 'Apply for Medicaid or SNAP benefits', 'Once enrolled, letters from these agencies are sent to your address and count as government mail. Apply at Texas HHS online or in person at your county office.'));
+    }
+  }
+
+  var headline = document.getElementById('result-headline');
+  var subtext = document.getElementById('result-subtext');
+
+  if (haveItems.length > 0) {
+    headline.textContent = 'You are closer than you think.';
+    subtext.textContent = 'You already have what you need. You only need one item from the list below.';
+  } else {
+    headline.textContent = 'Here is your next step.';
+    subtext.textContent = 'You do not have a residency document yet, but these are straightforward to get. You only need one.';
+  }
+
+  var haveEl = document.getElementById('have-items');
+  var getEl = document.getElementById('get-items');
+  haveEl.innerHTML = haveItems.join('');
+  getEl.innerHTML = getItems.join('');
+
+  document.getElementById('have-section').style.display = haveItems.length ? 'block' : 'none';
+  document.getElementById('get-section').style.display = getItems.length ? 'block' : 'none';
+}
+
+function restart() {
+  answers = { tdcj: null, housing: null, mail: [], extras: [] };
+  document.querySelectorAll('.opt').forEach(function(b){ b.classList.remove('selected'); });
+  document.querySelectorAll('.btn-next').forEach(function(b){ b.disabled = true; });
+  goTo(0);
+}
+</script>
+</body>
+</html>
