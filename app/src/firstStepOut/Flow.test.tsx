@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Flow } from './Flow'
 
 function noop() {}
+
+type PendoWindow = typeof window & { pendo?: { track?: (...args: unknown[]) => void } }
 
 describe('First Step Out flow', () => {
   beforeEach(() => {
@@ -75,5 +77,64 @@ describe('First Step Out flow', () => {
     await userEvent.click(screen.getByRole('button', { name: /back/i }))
 
     expect(exited).toBe(true)
+  })
+})
+
+describe('First Step Out analytics', () => {
+  const w = window as PendoWindow
+  let pendoTrack: ReturnType<typeof vi.fn>
+
+  beforeEach(() => {
+    localStorage.clear()
+    pendoTrack = vi.fn()
+    w.pendo = { track: pendoTrack as (...args: unknown[]) => void }
+  })
+
+  afterEach(() => {
+    delete w.pendo
+  })
+
+  it('records reaching a step without recording the answer', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_step_view', { step: 'tdcj' })
+
+    await user.click(screen.getByRole('radio', { name: /Texas state facility or on parole/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_step_view', { step: 'housing' })
+
+    // The chosen value is never sent to Pendo.
+    const everyArg = JSON.stringify(pendoTrack.mock.calls)
+    expect(everyArg).not.toContain('parole')
+    expect(everyArg).not.toContain('yes')
+  })
+
+  it('records finishing the flow', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    await user.click(screen.getByRole('radio', { name: /Texas state facility or on parole/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /my own place/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /utility or phone bill/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /registered Texas voter/i }))
+    await user.click(screen.getByRole('button', { name: /see my documents/i }))
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_result_view', undefined)
+  })
+
+  it('records resuming saved progress', () => {
+    localStorage.setItem(
+      'throughline.firstStepOut.state',
+      JSON.stringify({ step: 1, answers: { tdcj: 'yes', housing: null, mail: [], extras: [] } }),
+    )
+
+    render(<Flow onExit={noop} />)
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_resume', undefined)
   })
 })

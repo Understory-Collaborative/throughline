@@ -3,6 +3,7 @@ import type { Result, ResultItem } from '../content/firstStepOut'
 import { Icon } from './Icon'
 import { Progress } from './Progress'
 import { scrollToTop } from './scrollToTop'
+import { track } from '../analytics'
 
 interface ResultScreenProps {
   result: Result
@@ -37,6 +38,7 @@ export function ResultScreen({ result, onBack, onRestart }: ResultScreenProps) {
   useEffect(() => {
     headingRef.current?.focus()
     scrollToTop()
+    track({ name: 'fso_result_view' })
   }, [])
 
   return (

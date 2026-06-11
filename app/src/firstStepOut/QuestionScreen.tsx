@@ -3,6 +3,7 @@ import type { Question } from '../content/firstStepOut'
 import { Icon } from './Icon'
 import { Progress } from './Progress'
 import { scrollToTop } from './scrollToTop'
+import { track } from '../analytics'
 
 interface QuestionScreenProps {
   question: Question
@@ -48,6 +49,7 @@ export function QuestionScreen({
   useEffect(() => {
     headingRef.current?.focus()
     scrollToTop()
+    track({ name: 'fso_step_view', step: question.id })
   }, [question.id])
 
   const selected = new Set(

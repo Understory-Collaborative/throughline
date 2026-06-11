@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   assembleResult,
   emptyAnswers,
@@ -8,6 +8,7 @@ import {
 } from '../content/firstStepOut'
 import { QuestionScreen } from './QuestionScreen'
 import { ResultScreen } from './ResultScreen'
+import { track } from '../analytics'
 
 /** Where the in-progress flow lives on the device. Selections only, no PII. */
 const STATE_KEY = 'throughline.firstStepOut.state'
@@ -40,10 +41,18 @@ interface FlowProps {
 export function Flow({ onExit }: FlowProps) {
   const [{ step, answers }, setState] = useState<SavedState>(loadState)
 
+  // Note once whether this mount restored earlier progress, before any
+  // navigation changes the step.
+  const resumed = useRef(step > 0)
+
   // Remember progress on the device so a person can pick up where they left off.
   useEffect(() => {
     localStorage.setItem(STATE_KEY, JSON.stringify({ step, answers }))
   }, [step, answers])
+
+  useEffect(() => {
+    if (resumed.current) track({ name: 'fso_resume' })
+  }, [])
 
   function setAnswer(id: QuestionId, value: string | string[]) {
     setState((prev) => ({ ...prev, answers: { ...prev.answers, [id]: value } }))
@@ -53,7 +62,17 @@ export function Flow({ onExit }: FlowProps) {
     setState((prev) => ({ ...prev, step: next }))
   }
 
+  function back(from: QuestionId) {
+    track({ name: 'fso_back', from })
+    if (step === 0) {
+      onExit()
+    } else {
+      goTo(step - 1)
+    }
+  }
+
   function restart() {
+    track({ name: 'fso_restart' })
     localStorage.removeItem(STATE_KEY)
     setState({ step: 0, answers: { ...emptyAnswers } })
   }
@@ -77,7 +96,7 @@ export function Flow({ onExit }: FlowProps) {
               question={question}
               value={answers[question.id]}
               onChange={(value) => setAnswer(question.id, value)}
-              onBack={() => (step === 0 ? onExit() : goTo(step - 1))}
+              onBack={() => back(question.id)}
               onContinue={() => goTo(step + 1)}
               continueLabel={isLast ? 'See my documents' : 'Continue'}
             />

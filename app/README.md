@@ -26,6 +26,10 @@ npm run lint     # run eslint
 ## Where things live
 
 - `src/` application code
+- `src/analytics.ts` the Pendo wrapper. It captures funnel shape only, which
+  screen a person reached and whether they finished. It never sends what a
+  person answered. The event union is the only way to call `track`, so there is
+  no field for answer content.
 - `index.html` page shell and the Pendo snippet
 - Product direction, personas, pillars, and the design system live in
   `../product`. Read those before changing copy or flow.
