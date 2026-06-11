@@ -5,18 +5,30 @@ import App from './App'
 
 const PROGRESS_KEY = 'throughline.firstStepOut.startedAt'
 
-describe('First Step Out starting screen', () => {
-  it('shows the Start action for a first-time visitor', () => {
+describe('Throughline landing page', () => {
+  it('has a single top-level heading', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: /first step out/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^start$/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+  })
+
+  it('names the product and the first feature', () => {
+    render(<App />)
+
+    expect(screen.getAllByText(/throughline/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/first step out/i).length).toBeGreaterThan(0)
+  })
+
+  it('offers a clear way to start for a first-time visitor', () => {
+    render(<App />)
+
+    expect(screen.getByRole('button', { name: /start first step out/i })).toBeInTheDocument()
   })
 
   it('records progress on the device when the visitor starts', async () => {
     render(<App />)
 
-    await userEvent.click(screen.getByRole('button', { name: /^start$/i }))
+    await userEvent.click(screen.getByRole('button', { name: /start first step out/i }))
 
     expect(localStorage.getItem(PROGRESS_KEY)).not.toBeNull()
   })
