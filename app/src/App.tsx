@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { Flow } from './firstStepOut/Flow'
 
 /**
  * Throughline landing page.
  *
  * Warm, worn-in, unhurried. The first feature is First Step Out, getting your
- * Texas ID back after leaving TDCJ. The guided flow mounts from the start
- * button in a later step.
+ * Texas ID back after leaving TDCJ. The guided question flow mounts from the
+ * start button.
  *
  * Data stance: anonymous, on-device only. We use localStorage to remember where
  * someone left off. No account, no login, no PII. See the root CLAUDE.md.
@@ -17,12 +18,37 @@ function App() {
   // Read on-device progress once. This app is client-only, so localStorage is
   // available synchronously here.
   const [returning] = useState(() => Boolean(localStorage.getItem(PROGRESS_KEY)))
+  const [started, setStarted] = useState(false)
 
   function handleStart() {
     if (!localStorage.getItem(PROGRESS_KEY)) {
       localStorage.setItem(PROGRESS_KEY, new Date().toISOString())
     }
-    // The guided flow will mount here in a later step.
+    setStarted(true)
+  }
+
+  if (started) {
+    return (
+      <div className="flex min-h-svh flex-col">
+        <header className="mx-auto flex w-full max-w-3xl items-center gap-3 px-5 py-5">
+          <span
+            aria-hidden="true"
+            className="relative inline-block h-6 w-6 rounded-lg bg-primary"
+          >
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-honey" />
+          </span>
+          <span className="font-display text-xl font-semibold text-ink">Throughline</span>
+        </header>
+        <main className="mx-auto w-full max-w-3xl flex-1 px-5 pb-16">
+          <Flow onExit={() => setStarted(false)} />
+        </main>
+        <footer className="border-t border-line">
+          <div className="mx-auto w-full max-w-3xl px-5 py-6 text-sm text-support">
+            First Step Out is a free tool. Your answers are never stored off your phone or shared.
+          </div>
+        </footer>
+      </div>
+    )
   }
 
   return (
