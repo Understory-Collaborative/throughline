@@ -102,7 +102,7 @@ export function ResultScreen({ result, onBack, onRestart }: ResultScreenProps) {
     track({ name: 'fso_share' })
     const shareData = {
       title: 'Throughline · First Step Out',
-      text: 'A plain-language guide to getting your Texas ID back.',
+      text: 'A plain-language guide to getting your Texas ID.',
       url: returnUrl,
     }
     try {

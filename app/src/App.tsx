@@ -5,8 +5,7 @@ import { Flow } from './firstStepOut/Flow'
  * Throughline landing page.
  *
  * Warm, worn-in, unhurried. The first feature is First Step Out, getting your
- * Texas ID back after leaving TDCJ. The guided question flow mounts from the
- * start button.
+ * Texas ID. The guided question flow mounts from the start button.
  *
  * We treat every visit as a first visit. There is no saved progress and no
  * "pick up where you left off", so the start is always the same and always
@@ -67,7 +66,7 @@ function App() {
           </h1>
           <p className="mt-5 max-w-xl text-xl leading-relaxed text-ink">
             Throughline walks with you through the first steps after leaving prison. We start with
-            getting your Texas ID back, in plain words, one step at a time.
+            getting your Texas ID, in plain words, one step at a time.
           </p>
           <p className="mt-3 max-w-xl text-base text-support">
             First Step Out covers Texas for now. More states are coming.
