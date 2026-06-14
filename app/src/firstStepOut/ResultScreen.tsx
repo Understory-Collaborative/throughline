@@ -60,25 +60,25 @@ function DocList({ items }: { items: string[] }) {
 const summaryClass =
   'inline-flex cursor-pointer list-none items-center gap-1 rounded-md text-sm font-semibold text-primary underline underline-offset-2 marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
 
-/** The papers DPS accepts here, opened in tiers so the long list stays calm. */
-function WhatCounts({ accepted }: { accepted: AcceptedDocs }) {
+/** The papers that can fill a slot, opened in tiers so the list stays calm. */
+function OptionsPanel({ options }: { options: AcceptedDocs }) {
   return (
-    <div className="mt-4 rounded-2xl border border-line bg-paper/50 p-4">
+    <div className="mt-2 rounded-2xl border border-line bg-paper/60 p-4">
       <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-support">
         Papers that count
       </p>
-      <DocList items={accepted.common} />
+      <DocList items={options.common} />
 
-      {accepted.more.length > 0 && (
+      {options.more.length > 0 && (
         <details className="mt-3">
           <summary className={summaryClass}>What else could I use?</summary>
           <div className="mt-3">
-            <DocList items={accepted.more} />
-            {accepted.rest.length > 0 && (
+            <DocList items={options.more} />
+            {options.rest.length > 0 && (
               <details className="mt-3">
                 <summary className={summaryClass}>Show me the full list</summary>
                 <div className="mt-3">
-                  <DocList items={accepted.rest} />
+                  <DocList items={options.rest} />
                 </div>
               </details>
             )}
@@ -143,14 +143,35 @@ function SlotCard({ slot }: { slot: Slot }) {
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-leather/60 bg-paper/30 p-3 text-support">
-      <span
-        aria-hidden="true"
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-leather/60 text-xl font-bold leading-none text-leather"
-      >
-        +
-      </span>
-      <span className="flex-1 text-base font-medium">{slot.needLabel}</span>
+    <li>
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-center gap-3 rounded-2xl border-2 border-dashed border-leather/60 bg-paper/30 p-3 text-support marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+          <span
+            aria-hidden="true"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-leather/60 text-xl font-bold leading-none text-leather"
+          >
+            +
+          </span>
+          <span className="flex-1 text-base font-medium">{slot.needLabel}</span>
+          <span className="shrink-0 text-sm font-semibold text-primary">
+            <span className="group-open:hidden">See options</span>
+            <span className="hidden group-open:inline">Hide</span>
+          </span>
+          <svg
+            viewBox="0 0 20 20"
+            className="h-4 w-4 shrink-0 text-primary transition-transform group-open:rotate-180"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="5,8 10,13 15,8" />
+          </svg>
+        </summary>
+        {slot.options && <OptionsPanel options={slot.options} />}
+      </details>
     </li>
   )
 }
@@ -183,8 +204,6 @@ function CategoryBlock({ category, index }: { category: Category; index: number 
           </ul>
         </>
       )}
-
-      {!category.met && <WhatCounts accepted={category.accepted} />}
     </section>
   )
 }

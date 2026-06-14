@@ -289,6 +289,8 @@ export interface Slot {
   doc?: ResultDoc
   /** A short label for what goes here, when the slot is empty. */
   needLabel?: string
+  /** Papers that can fill this slot, shown when a person taps the empty space. */
+  options?: AcceptedDocs
 }
 
 /**
@@ -392,9 +394,14 @@ export interface Category {
 }
 
 /** Build a row of slots that just needs a count, filling from what is held. */
-function countSlots(have: ResultDoc[], need: number, needLabel: string): Slot[] {
+function countSlots(
+  have: ResultDoc[],
+  need: number,
+  needLabel: string,
+  options: AcceptedDocs,
+): Slot[] {
   return Array.from({ length: need }, (_, i) =>
-    i < have.length ? { filled: true, doc: have[i] } : { filled: false, needLabel },
+    i < have.length ? { filled: true, doc: have[i] } : { filled: false, needLabel, options },
   )
 }
 
@@ -688,11 +695,16 @@ export function assembleResult(answers: Answers): Result {
   }
 
   // ---- Slots: a card hand per area, filled from what the person has ----
-  const citSlots = countSlots(citHave, 1, 'Add 1 paper')
-  const resSlots = countSlots(resHave, 2, 'Add a paper')
+  const citSlots = countSlots(citHave, 1, 'Add 1 paper', acceptedByCategory.citizenship)
+  const resSlots = countSlots(resHave, 2, 'Add a paper', acceptedByCategory.residency)
 
   // Identity is not a simple count. A passport stands alone. Otherwise the hand
-  // is a key paper plus 2 smaller papers.
+  // is a key paper plus 2 smaller papers, and each empty slot offers the right
+  // set of papers to fill it.
+  const idIdentity = acceptedByCategory.identity
+  const keyOptions: AcceptedDocs = { common: idIdentity.common, more: [], rest: [] }
+  const smallerOptions: AcceptedDocs = { common: idIdentity.more, more: idIdentity.rest, rest: [] }
+
   const passportDoc = idHave.find((d) => d.tag === 'Strong on its own')
   const birthDoc = idHave.find((d) => d.tag === 'Key paper')
   const smallerDocs = idHave.filter((d) => d.tag === 'Smaller paper')
@@ -701,13 +713,13 @@ export function assembleResult(answers: Answers): Result {
     : [
         birthDoc
           ? { filled: true, doc: birthDoc }
-          : { filled: false, needLabel: 'Add a key paper' },
+          : { filled: false, needLabel: 'Add a key paper', options: keyOptions },
         smallerDocs[0]
           ? { filled: true, doc: smallerDocs[0] }
-          : { filled: false, needLabel: 'Add a smaller paper' },
+          : { filled: false, needLabel: 'Add a smaller paper', options: smallerOptions },
         smallerDocs[1]
           ? { filled: true, doc: smallerDocs[1] }
-          : { filled: false, needLabel: 'Add a smaller paper' },
+          : { filled: false, needLabel: 'Add a smaller paper', options: smallerOptions },
       ]
 
   const categories: Category[] = [
