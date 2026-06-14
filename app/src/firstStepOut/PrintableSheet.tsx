@@ -31,6 +31,7 @@ function PrintCategory({ category, index }: { category: Category; index: number 
                 {doc.tag ? ` (${doc.tag})` : ''}.
               </span>{' '}
               {doc.detail}
+              {doc.href ? ` ${doc.href}` : ''}
             </span>
           </li>
         ))}

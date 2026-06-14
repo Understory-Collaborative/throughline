@@ -201,6 +201,13 @@ describe('assembleResult: residency', () => {
     expect(titles).toContainEqual(expect.stringMatching(/open a free checking account/i))
     expect(titles).toContainEqual(expect.stringMatching(/medicaid or snap/i))
   })
+
+  it('links the SNAP step straight to the Texas benefits site', () => {
+    const snap = category(assembleResult(answers({ housing: 'family' })), 'residency').get.find((d) =>
+      /medicaid or snap/i.test(d.title),
+    )
+    expect(snap?.href).toBe('https://yourtexasbenefits.com/Learn/Home')
+  })
 })
 
 describe('assembleResult: slots (the card hand)', () => {

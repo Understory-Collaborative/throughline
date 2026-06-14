@@ -273,6 +273,10 @@ export interface ResultDoc {
    * which papers carry the most weight.
    */
   tag?: string
+  /** An outside page that helps with this step. Opens in a new tab. */
+  href?: string
+  /** The plain words for the link, like "Apply at YourTexasBenefits.com". */
+  linkLabel?: string
 }
 
 export type CategoryId = 'citizenship' | 'identity' | 'residency'
@@ -690,7 +694,9 @@ export function assembleResult(answers: Answers): Result {
       icon: 'mail',
       title: 'Apply for Medicaid or SNAP',
       detail:
-        'When you sign up, letters from these offices come to your address and count. Apply with Texas HHS online or at your county office.',
+        'When you sign up, letters from these offices come to your address and count. You can apply online or at your county office.',
+      href: 'https://yourtexasbenefits.com/Learn/Home',
+      linkLabel: 'Apply at YourTexasBenefits.com',
     })
   }
 

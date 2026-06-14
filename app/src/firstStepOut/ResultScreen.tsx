@@ -39,6 +39,30 @@ function DocItem({ doc, tone }: { doc: ResultDoc; tone: 'have' | 'get' }) {
           )}
         </div>
         <p className="mt-1 text-sm leading-relaxed text-support">{doc.detail}</p>
+        {doc.href && (
+          <a
+            href={doc.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1 rounded-md text-sm font-semibold text-primary underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            {doc.linkLabel ?? 'Open the page'}
+            <span className="sr-only">(opens in a new tab)</span>
+            <svg
+              viewBox="0 0 20 20"
+              className="h-3.5 w-3.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M7 4H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2" />
+              <path d="M12 4h4v4M16 4l-7 7" />
+            </svg>
+          </a>
+        )}
       </div>
     </li>
   )
