@@ -29,8 +29,15 @@ function DocItem({ doc, tone }: { doc: ResultDoc; tone: 'have' | 'get' }) {
       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${iconWrap}`}>
         <Icon name={doc.icon} className="h-4 w-4" />
       </span>
-      <div>
-        <p className="text-base font-medium text-ink">{doc.title}</p>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <p className="text-base font-medium text-ink">{doc.title}</p>
+          {doc.tag && (
+            <span className="rounded-full bg-paper px-2 py-0.5 text-xs font-semibold text-support">
+              {doc.tag}
+            </span>
+          )}
+        </div>
         <p className="mt-1 text-sm leading-relaxed text-support">{doc.detail}</p>
       </div>
     </li>
@@ -38,10 +45,8 @@ function DocItem({ doc, tone }: { doc: ResultDoc; tone: 'have' | 'get' }) {
 }
 
 function CategoryBlock({ category, index }: { category: Category; index: number }) {
-  const chip = category.met
-    ? 'bg-primary/12 text-primary'
-    : 'bg-honey/15 text-mahogany'
-  const chipLabel = category.met ? 'You have this' : 'Still need this'
+  const chip = category.met ? 'bg-primary/12 text-primary' : 'bg-honey/15 text-mahogany'
+  const chipLabel = category.met ? 'You have this' : 'Not yet'
 
   return (
     <section className="mt-6" aria-labelledby={`cat-${category.id}`}>
@@ -51,16 +56,20 @@ function CategoryBlock({ category, index }: { category: Category; index: number 
         </h2>
         <span className={`rounded-full px-3 py-1 text-xs font-semibold ${chip}`}>{chipLabel}</span>
       </div>
-      <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-support">
-        {category.rule}
-      </p>
+      <p className="mt-1 text-sm text-support">{category.rule}</p>
+      <p className="mt-2 text-base font-medium leading-relaxed text-ink">{category.summary}</p>
 
       {category.have.length > 0 && (
-        <ul className="mt-3 flex flex-col gap-2">
-          {category.have.map((doc) => (
-            <DocItem key={doc.title} doc={doc} tone="have" />
-          ))}
-        </ul>
+        <>
+          <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-support">
+            What you already have
+          </p>
+          <ul className="flex flex-col gap-2">
+            {category.have.map((doc) => (
+              <DocItem key={doc.title} doc={doc} tone="have" />
+            ))}
+          </ul>
+        </>
       )}
 
       {category.get.length > 0 && (

@@ -70,8 +70,8 @@ describe('assembleResult: three DPS areas', () => {
       const r = assembleResult(ans)
       all.push(r.headline, r.subtext, r.nextStep.title, r.nextStep.detail)
       for (const c of r.categories) {
-        all.push(c.title, c.rule)
-        for (const d of [...c.have, ...c.get]) all.push(d.title, d.detail)
+        all.push(c.title, c.rule, c.summary)
+        for (const d of [...c.have, ...c.get]) all.push(d.title, d.detail, d.tag ?? '')
       }
     }
     expect(all.join(' ')).not.toContain('—')
@@ -106,6 +106,29 @@ describe('assembleResult: identity', () => {
   it('is not met by a birth certificate alone', () => {
     const result = assembleResult(answers({ birth: 'birth' }))
     expect(category(result, 'identity').met).toBe(false)
+  })
+
+  it('explains the gap when smaller papers are held but no key paper is', () => {
+    // Two smaller papers (TDCJ + Social Security) but no birth certificate.
+    const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
+    const identity = category(result, 'identity')
+
+    expect(identity.met).toBe(false)
+    expect(identity.summary).toMatch(/not enough by themselves/i)
+    expect(identity.summary).toMatch(/birth certificate or a u\.s\. passport/i)
+  })
+
+  it('labels each identity paper with its strength', () => {
+    const result = assembleResult(answers({ birth: 'passport', tdcj: 'parole', ssn: 'yes' }))
+    const tags = category(result, 'identity').have.map((d) => d.tag)
+
+    expect(tags).toContain('Strong on its own')
+    expect(tags).toContain('Smaller paper')
+  })
+
+  it('tells a passport holder they are set on identity', () => {
+    const result = assembleResult(answers({ birth: 'passport' }))
+    expect(category(result, 'identity').summary).toMatch(/on its own/i)
   })
 
   it('is met by a birth certificate plus two smaller papers', () => {

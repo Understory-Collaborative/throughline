@@ -267,6 +267,12 @@ export interface ResultDoc {
   icon: IconName
   title: string
   detail: string
+  /**
+   * A short strength label, like "Strong on its own" or "Smaller paper". Used
+   * where one paper alone may not be enough, so a person can see at a glance
+   * which papers carry the most weight.
+   */
+  tag?: string
 }
 
 export type CategoryId = 'citizenship' | 'identity' | 'residency'
@@ -278,6 +284,12 @@ export interface Category {
   rule: string
   /** True when the person likely already has enough for this area. */
   met: boolean
+  /**
+   * One plain sentence about where the person stands here and what would
+   * finish it. This carries the weight when "have" and "need" are not a simple
+   * count, like the identity rule.
+   */
+  summary: string
   /** Papers the person likely already holds. */
   have: ResultDoc[]
   /** Quick ways to fill the gap when they are short. */
@@ -351,7 +363,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your U.S. passport',
-      detail: 'A passport is a top-level ID. It proves who you are all by itself.',
+      detail: 'A passport proves who you are all by itself. You need nothing else here.',
+      tag: 'Strong on its own',
     })
     primary += 1
   }
@@ -359,7 +372,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'document',
       title: 'Your birth certificate',
-      detail: 'It counts toward proving who you are. Bring two smaller papers with it.',
+      detail: 'A key paper. Bring it with 2 smaller papers and you are set.',
+      tag: 'Key paper',
     })
     secondary += 1
   }
@@ -367,7 +381,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your TDCJ parole certificate',
-      detail: 'Your parole or mandatory release certificate counts toward proving who you are.',
+      detail: 'Your parole or mandatory release certificate counts as 1 smaller paper.',
+      tag: 'Smaller paper',
     })
     supporting += 1
   }
@@ -375,7 +390,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your TDCJ release papers',
-      detail: 'Your release or discharge papers count toward proving who you are.',
+      detail: 'Your release or discharge papers count as 1 smaller paper.',
+      tag: 'Smaller paper',
     })
     supporting += 1
   }
@@ -383,7 +399,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'id',
       title: 'Your Social Security card',
-      detail: 'The real card helps prove who you are.',
+      detail: 'The real card counts as 1 smaller paper.',
+      tag: 'Smaller paper',
     })
     supporting += 1
   }
@@ -391,7 +408,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'check',
       title: 'Your Texas voter registration card',
-      detail: 'A small paper that helps prove who you are.',
+      detail: 'Counts as 1 smaller paper.',
+      tag: 'Smaller paper',
     })
     supporting += 1
   }
@@ -399,7 +417,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'car',
       title: 'Your Texas vehicle or boat registration',
-      detail: 'A small paper that helps prove who you are.',
+      detail: 'Counts as 1 smaller paper.',
+      tag: 'Smaller paper',
     })
     supporting += 1
   }
@@ -407,28 +426,45 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'star',
       title: 'Your military or VA ID',
-      detail: 'A small paper that helps prove who you are.',
+      detail: 'Counts as 1 smaller paper.',
+      tag: 'Smaller paper',
     })
     supporting += 1
   }
 
   const identityMet = primary >= 1 || secondary >= 2 || (secondary >= 1 && supporting >= 2)
   const idGet: ResultDoc[] = []
-  if (!identityMet) {
-    if (ssn !== 'yes') {
-      idGet.push({
-        icon: 'id',
-        title: 'Order a new Social Security card',
-        detail:
-          'It is free from the Social Security Administration. It is a small paper that helps prove who you are.',
-      })
-    }
+
+  // The identity rule is not a simple count, so spell out where the person
+  // stands and the one move that finishes it.
+  let identitySummary: string
+  if (primary >= 1) {
+    identitySummary = 'Your passport covers this on its own. You are set here.'
+  } else if (secondary >= 1 && supporting >= 2) {
+    identitySummary = 'Your birth certificate plus your smaller papers cover this. You are set here.'
+  } else if (secondary >= 1) {
+    const need = 2 - supporting
+    identitySummary =
+      need === 1
+        ? 'You have your birth certificate and 1 smaller paper. Add 1 more smaller paper and you are set.'
+        : 'You have your birth certificate. Add 2 smaller papers, like your Social Security card and a voter card, and you are set.'
+  } else if (supporting >= 2) {
+    identitySummary =
+      'Your smaller papers count, but they are not enough by themselves. Add your birth certificate or a U.S. passport and you are set.'
+  } else if (supporting === 1) {
+    identitySummary =
+      'You have 1 smaller paper. Add your birth certificate or a U.S. passport to finish this.'
+  } else {
+    identitySummary =
+      'Bring a U.S. passport on its own, or your birth certificate plus 2 smaller papers.'
+  }
+
+  if (!identityMet && ssn !== 'yes') {
     idGet.push({
-      icon: 'document',
-      title: 'Plan to bring a few ID papers together',
-      detail: citizenshipMet
-        ? 'You can prove who you are with your birth certificate plus two smaller papers, like your Social Security card and a voter card or Texas vehicle registration.'
-        : 'A U.S. passport proves who you are all by itself. Or bring your birth certificate plus two smaller papers, like your Social Security card and a voter card.',
+      icon: 'id',
+      title: 'Order a new Social Security card',
+      detail:
+        'It is free from the Social Security Administration. It counts as 1 smaller paper toward proving who you are.',
     })
   }
 
@@ -512,6 +548,18 @@ export function assembleResult(answers: Answers): Result {
     })
   }
 
+  const citizenshipSummary = citizenshipMet
+    ? 'You are set here.'
+    : 'You need 1 of these. Most people use a birth certificate.'
+
+  const residencyCount = resHave.length
+  const residencySummary =
+    residencyCount >= 2
+      ? 'You have enough here. Bring any 2 of these.'
+      : residencyCount === 1
+        ? 'You have 1. You need 1 more paper that shows your Texas address.'
+        : 'You need 2 papers that show your Texas address.'
+
   const residencyMet = resHave.length >= 2
   const resGet: ResultDoc[] = []
   if (!residencyMet) {
@@ -543,14 +591,16 @@ export function assembleResult(answers: Answers): Result {
       title: 'Proof you are a U.S. citizen',
       rule: 'Bring 1 of these.',
       met: citizenshipMet,
+      summary: citizenshipSummary,
       have: citHave,
       get: citGet,
     },
     {
       id: 'identity',
       title: 'Proof of who you are',
-      rule: 'Bring 1 strong paper, or a few smaller ones together.',
+      rule: 'Bring a U.S. passport on its own, or your birth certificate plus 2 smaller papers.',
       met: identityMet,
+      summary: identitySummary,
       have: idHave,
       get: idGet,
     },
@@ -559,6 +609,7 @@ export function assembleResult(answers: Answers): Result {
       title: 'Proof of where you live',
       rule: 'Bring 2 of these.',
       met: residencyMet,
+      summary: residencySummary,
       have: resHave,
       get: resGet,
     },

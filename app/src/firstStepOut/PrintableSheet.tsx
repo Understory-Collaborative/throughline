@@ -18,6 +18,7 @@ function PrintCategory({ category, index }: { category: Category; index: number 
         {index}. {category.title}
       </h2>
       <p className="text-sm">{category.rule}</p>
+      <p className="text-sm font-semibold">{category.summary}</p>
       <ul className="mt-2 space-y-1.5">
         {docs.map((doc) => (
           <li key={doc.title} className="flex gap-2 text-sm">
@@ -25,7 +26,11 @@ function PrintCategory({ category, index }: { category: Category; index: number 
               &#9744;
             </span>
             <span>
-              <span className="font-semibold">{doc.title}.</span> {doc.detail}
+              <span className="font-semibold">
+                {doc.title}
+                {doc.tag ? ` (${doc.tag})` : ''}.
+              </span>{' '}
+              {doc.detail}
             </span>
           </li>
         ))}
