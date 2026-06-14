@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Category, Result, ResultDoc } from '../content/firstStepOut'
+import type { AcceptedDocs, Category, Result, ResultDoc } from '../content/firstStepOut'
 import { Icon } from './Icon'
 import { Progress } from './Progress'
 import { PrintableSheet } from './PrintableSheet'
@@ -44,6 +44,51 @@ function DocItem({ doc, tone }: { doc: ResultDoc; tone: 'have' | 'get' }) {
   )
 }
 
+function DocList({ items }: { items: string[] }) {
+  return (
+    <ul className="flex flex-col gap-1.5">
+      {items.map((item) => (
+        <li key={item} className="flex gap-2 text-sm leading-relaxed text-ink">
+          <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-leather" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+const summaryClass =
+  'inline-flex cursor-pointer list-none items-center gap-1 rounded-md text-sm font-semibold text-primary underline underline-offset-2 marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+
+/** The papers DPS accepts here, opened in tiers so the long list stays calm. */
+function WhatCounts({ accepted }: { accepted: AcceptedDocs }) {
+  return (
+    <div className="mt-4 rounded-2xl border border-line bg-paper/50 p-4">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-support">
+        Papers that count
+      </p>
+      <DocList items={accepted.common} />
+
+      {accepted.more.length > 0 && (
+        <details className="mt-3">
+          <summary className={summaryClass}>What else could I use?</summary>
+          <div className="mt-3">
+            <DocList items={accepted.more} />
+            {accepted.rest.length > 0 && (
+              <details className="mt-3">
+                <summary className={summaryClass}>Show me the full list</summary>
+                <div className="mt-3">
+                  <DocList items={accepted.rest} />
+                </div>
+              </details>
+            )}
+          </div>
+        </details>
+      )}
+    </div>
+  )
+}
+
 function CategoryBlock({ category, index }: { category: Category; index: number }) {
   const chip = category.met ? 'bg-primary/12 text-primary' : 'bg-honey/15 text-mahogany'
   const chipLabel = category.met ? 'You have this' : 'Not yet'
@@ -84,6 +129,8 @@ function CategoryBlock({ category, index }: { category: Category; index: number 
           </ul>
         </>
       )}
+
+      {!category.met && <WhatCounts accepted={category.accepted} />}
     </section>
   )
 }

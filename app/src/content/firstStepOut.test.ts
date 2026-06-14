@@ -71,6 +71,7 @@ describe('assembleResult: three DPS areas', () => {
       all.push(r.headline, r.subtext, r.nextStep.title, r.nextStep.detail)
       for (const c of r.categories) {
         all.push(c.title, c.rule, c.summary)
+        all.push(...c.accepted.common, ...c.accepted.more, ...c.accepted.rest)
         for (const d of [...c.have, ...c.get]) all.push(d.title, d.detail, d.tag ?? '')
       }
     }
@@ -94,6 +95,21 @@ describe('assembleResult: citizenship', () => {
     const cit = category(result, 'citizenship')
     expect(cit.met).toBe(false)
     expect(cit.get.map((d) => d.title)).toContainEqual(expect.stringMatching(/order your birth certificate/i))
+  })
+
+  it('lists the papers that count, so "1 of these" is never empty', () => {
+    const cit = category(assembleResult(answers({ birth: 'neither' })), 'citizenship')
+    expect(cit.accepted.common.length).toBeGreaterThan(0)
+    expect(cit.accepted.common.join(' ')).toMatch(/passport/i)
+    expect(cit.accepted.common.join(' ')).toMatch(/birth certificate/i)
+  })
+
+  it('gives every area a tiered list of what counts', () => {
+    for (const c of assembleResult(emptyAnswers).categories) {
+      expect(c.accepted.common.length).toBeGreaterThan(0)
+      expect(Array.isArray(c.accepted.more)).toBe(true)
+      expect(Array.isArray(c.accepted.rest)).toBe(true)
+    }
   })
 })
 

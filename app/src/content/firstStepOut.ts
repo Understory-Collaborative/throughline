@@ -277,6 +277,83 @@ export interface ResultDoc {
 
 export type CategoryId = 'citizenship' | 'identity' | 'residency'
 
+/**
+ * The papers DPS accepts for an area, in plain words, sorted by how common they
+ * are for this audience. We show the common set first, then let a person open
+ * "more" and the full list. This keeps a long government list from landing on a
+ * stressed reader all at once.
+ */
+export interface AcceptedDocs {
+  /** The most common papers, shown right away. */
+  common: string[]
+  /** A second set, behind "What else could I use?". */
+  more: string[]
+  /** Everything else, behind "Show me the full list". */
+  rest: string[]
+}
+
+export const acceptedByCategory: Record<CategoryId, AcceptedDocs> = {
+  citizenship: {
+    common: [
+      'A U.S. passport, book or card',
+      'Your birth certificate, the real one or a certified copy from the state',
+    ],
+    more: [
+      'A Certificate of Naturalization or Certificate of Citizenship',
+      'A Consular Report of Birth Abroad, for citizens born outside the country',
+    ],
+    rest: [
+      'A Permanent Resident Card, also called a green card',
+      'An Employment Authorization Card',
+      'Another current immigration document from Homeland Security',
+    ],
+  },
+  identity: {
+    common: [
+      'A U.S. passport, which counts on its own',
+      'Your birth certificate, with 2 smaller papers',
+      'A Texas driver license or ID, even if expired up to 2 years',
+    ],
+    more: [
+      'Your Social Security card',
+      'Your TDCJ release or parole papers',
+      'A Texas voter registration card',
+      'A Texas vehicle or boat registration',
+    ],
+    rest: [
+      'A Medicare or Medicaid card',
+      'A military ID or DD-214',
+      'A marriage license or divorce decree',
+      'School or immunization records',
+      'A Selective Service card',
+      'An out-of-state driver license, current or expired up to 2 years',
+      'A foreign passport',
+    ],
+  },
+  residency: {
+    common: [
+      'A lease, rental agreement, or mortgage statement',
+      'A utility or phone bill from the last 6 months',
+      'Your TDCJ release or parole papers',
+    ],
+    more: [
+      'A bank or credit card statement from the last 6 months',
+      'A pay stub from the last 6 months',
+      'Mail from a government office from the last 6 months',
+      'A Texas vehicle registration or title',
+      'A Texas voter registration card',
+    ],
+    rest: [
+      'Car, home, or renters insurance',
+      'A Texas high school or college transcript',
+      'A W-2, 1099, or 1098 tax form',
+      'Medical bills or a benefits letter',
+      'A Texas hunting or fishing license',
+      'Current military or VA papers with your address',
+    ],
+  },
+}
+
 export interface Category {
   id: CategoryId
   title: string
@@ -294,6 +371,8 @@ export interface Category {
   have: ResultDoc[]
   /** Quick ways to fill the gap when they are short. */
   get: ResultDoc[]
+  /** The full menu of papers DPS accepts for this area, plain and tiered. */
+  accepted: AcceptedDocs
 }
 
 export interface NextStep {
@@ -594,6 +673,7 @@ export function assembleResult(answers: Answers): Result {
       summary: citizenshipSummary,
       have: citHave,
       get: citGet,
+      accepted: acceptedByCategory.citizenship,
     },
     {
       id: 'identity',
@@ -603,6 +683,7 @@ export function assembleResult(answers: Answers): Result {
       summary: identitySummary,
       have: idHave,
       get: idGet,
+      accepted: acceptedByCategory.identity,
     },
     {
       id: 'residency',
@@ -612,6 +693,7 @@ export function assembleResult(answers: Answers): Result {
       summary: residencySummary,
       have: resHave,
       get: resGet,
+      accepted: acceptedByCategory.residency,
     },
   ]
 
