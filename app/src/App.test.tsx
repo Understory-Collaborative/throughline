@@ -42,8 +42,8 @@ describe('Throughline landing page', () => {
 
     const nav = screen.getByRole('navigation', { name: /throughline features/i })
     expect(within(nav).getByRole('button', { name: /first step out/i })).toBeInTheDocument()
-    expect(within(nav).getByText(/courtdate/i)).toBeInTheDocument()
-    expect(within(nav).getByText(/trustlist/i)).toBeInTheDocument()
+    expect(within(nav).getByText(/on time/i)).toBeInTheDocument()
+    expect(within(nav).getByText(/fair shot/i)).toBeInTheDocument()
   })
 
   it('marks the upcoming features as coming soon and not yet startable', () => {

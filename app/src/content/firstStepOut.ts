@@ -412,6 +412,10 @@ function countSlots(
 export interface NextStep {
   title: string
   detail: string
+  /** An outside page that helps with this step. Opens in a new tab. */
+  href?: string
+  /** The plain words for the link. */
+  linkLabel?: string
 }
 
 export interface Result {
@@ -460,7 +464,9 @@ export function assembleResult(answers: Answers): Result {
       icon: 'document',
       title: 'Order your birth certificate',
       detail:
-        'Born in Texas? Order it from the Texas Department of State Health Services, online or by mail. Born in another state? Order it from that state. It usually costs about 20 dollars and is the most useful paper to have.',
+        'Born in Texas? Order it online or by mail. Born in another state? Order it from that state. It usually costs about 20 dollars and is the most useful paper to have.',
+      href: 'https://ovra.txapps.texas.gov/ovra/order-birth-certificate',
+      linkLabel: 'Order online at Texas.gov',
     })
   }
 
@@ -769,7 +775,9 @@ export function assembleResult(answers: Answers): Result {
     nextStep = {
       title: 'Order your birth certificate',
       detail:
-        'This is the one paper that helps the most. It proves you are a U.S. citizen and helps prove who you are. Born in Texas? Order it from the Texas Department of State Health Services. Born somewhere else? Order it from that state.',
+        'This is the one paper that helps the most. It proves you are a U.S. citizen and helps prove who you are. Born in Texas? Order it online. Born somewhere else? Order it from that state.',
+      href: 'https://ovra.txapps.texas.gov/ovra/order-birth-certificate',
+      linkLabel: 'Order online at Texas.gov',
     }
   } else if (!identityMet) {
     nextStep =

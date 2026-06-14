@@ -306,6 +306,30 @@ export function ResultScreen({ result, onBack, onRestart }: ResultScreenProps) {
           </p>
           <p className="mt-1 font-display text-xl font-medium text-ink">{result.nextStep.title}</p>
           <p className="mt-1 text-base leading-relaxed text-ink">{result.nextStep.detail}</p>
+          {result.nextStep.href && (
+            <a
+              href={result.nextStep.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-base font-bold text-paper shadow-sm transition-colors hover:bg-primary-press focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              {result.nextStep.linkLabel ?? 'Open the page'}
+              <span className="sr-only">(opens in a new tab)</span>
+              <svg
+                viewBox="0 0 20 20"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M7 4H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2" />
+                <path d="M12 4h4v4M16 4l-7 7" />
+              </svg>
+            </a>
+          )}
         </section>
 
         {result.categories.map((category, i) => (

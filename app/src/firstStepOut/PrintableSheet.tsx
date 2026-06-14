@@ -54,6 +54,7 @@ export function PrintableSheet({ result, returnUrl }: { result: Result; returnUr
         <p className="text-sm font-bold uppercase tracking-widest">Your next step</p>
         <p className="mt-1 text-base font-bold">{result.nextStep.title}</p>
         <p className="mt-1 text-sm">{result.nextStep.detail}</p>
+        {result.nextStep.href && <p className="mt-1 text-sm font-semibold">{result.nextStep.href}</p>}
       </section>
 
       <div className="mt-4 space-y-4">

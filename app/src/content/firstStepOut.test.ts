@@ -259,6 +259,14 @@ describe('assembleResult: the single next step', () => {
   it('leads with the birth certificate when citizenship is missing', () => {
     const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
     expect(result.nextStep.title).toMatch(/order your birth certificate/i)
+    expect(result.nextStep.href).toBe('https://ovra.txapps.texas.gov/ovra/order-birth-certificate')
+  })
+
+  it('links the birth certificate card straight to the Texas order page', () => {
+    const order = category(assembleResult(answers({ birth: 'neither' })), 'citizenship').get.find(
+      (d) => /order your birth certificate/i.test(d.title),
+    )
+    expect(order?.href).toBe('https://ovra.txapps.texas.gov/ovra/order-birth-certificate')
   })
 
   it('sends a fully covered person to DPS', () => {

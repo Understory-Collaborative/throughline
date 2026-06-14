@@ -34,15 +34,15 @@ const features: Feature[] = [
     status: 'live',
   },
   {
-    id: 'courtdate',
-    name: 'CourtDate',
+    id: 'ontime',
+    name: 'On Time',
     tagline: 'Never miss a court date',
     body: 'Keep your court dates and what to bring in one place, with reminders so a date never slips by.',
     status: 'soon',
   },
   {
-    id: 'trustlist',
-    name: 'TrustList',
+    id: 'fairshot',
+    name: 'Fair Shot',
     tagline: 'Find work that is open to you',
     body: 'A list of employers who actually hire people with records, so you do not waste a day on a closed door.',
     status: 'soon',
@@ -103,10 +103,10 @@ function NavBar({ onHome, onStart }: { onHome: () => void; onStart: () => void }
             </button>
           </li>
           <li className="inline-flex items-center gap-1.5 text-support">
-            CourtDate <SoonBadge />
+            On Time <SoonBadge />
           </li>
           <li className="inline-flex items-center gap-1.5 text-support">
-            TrustList <SoonBadge />
+            Fair Shot <SoonBadge />
           </li>
         </ul>
       </nav>
