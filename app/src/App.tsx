@@ -57,6 +57,29 @@ function SoonBadge() {
   )
 }
 
+const promises = [
+  { title: 'Your privacy comes first', body: 'No sign up needed. We ask for the least we can.' },
+  { title: 'We never save your name', body: 'Your answers stay on your phone.' },
+  { title: 'Go at your own pace', body: 'There is no timer. Just a few quick questions.' },
+]
+
+function CheckIcon() {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="4,10 8,14 16,5" />
+    </svg>
+  )
+}
+
 /** The brand mark, clickable to return to the home page. */
 function BrandMark({ onHome }: { onHome: () => void }) {
   return (
@@ -207,23 +230,22 @@ function App() {
           </ul>
         </section>
 
-        <section aria-labelledby="promise" className="pb-16">
+        <section aria-labelledby="promise" className="border-t border-line py-10">
           <h2 id="promise" className="sr-only">
             Our promise
           </h2>
-          <ul className="grid gap-3 sm:grid-cols-3">
-            <li className="rounded-2xl border border-line bg-surface p-5">
-              <p className="font-display text-lg font-medium text-ink">Your privacy comes first</p>
-              <p className="mt-1 text-base text-support">No sign up needed. We ask for the least we can.</p>
-            </li>
-            <li className="rounded-2xl border border-line bg-surface p-5">
-              <p className="font-display text-lg font-medium text-ink">We never save your name</p>
-              <p className="mt-1 text-base text-support">Your answers stay on your phone.</p>
-            </li>
-            <li className="rounded-2xl border border-line bg-surface p-5">
-              <p className="font-display text-lg font-medium text-ink">Go at your own pace</p>
-              <p className="mt-1 text-base text-support">There is no timer. Just a few quick questions.</p>
-            </li>
+          <ul className="grid gap-x-6 gap-y-5 sm:grid-cols-3">
+            {promises.map((promise) => (
+              <li key={promise.title} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <CheckIcon />
+                </span>
+                <div>
+                  <p className="text-base font-semibold text-ink">{promise.title}</p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-support">{promise.body}</p>
+                </div>
+              </li>
+            ))}
           </ul>
         </section>
       </main>
