@@ -193,7 +193,7 @@ export const questions: Question[] = [
     stepLabel: 'Step 4 of 5',
     progress: 66,
     prompt: 'Do you have any of these coming to your address?',
-    help: 'Pick everything you have. These only count if they show your Texas address and are from the last 6 months.',
+    help: 'Pick everything you have. These only count if they have your name on them, show your Texas address, and are from the last 6 months.',
     multi: true,
     options: [
       {
@@ -316,7 +316,7 @@ export const acceptedByCategory: Record<CategoryId, AcceptedDocs> = {
   citizenship: {
     common: [
       'A U.S. passport, book or card',
-      'Your birth certificate, the real one or a certified copy from the state',
+      'Your birth certificate, the real one or a certified copy from the state. A Puerto Rico copy has to be issued on or after July 1, 2010',
     ],
     more: [
       'A Certificate of Naturalization or Certificate of Citizenship',
@@ -454,7 +454,8 @@ export function assembleResult(answers: Answers): Result {
     citHave.push({
       icon: 'document',
       title: 'Your birth certificate',
-      detail: 'The real one or a certified copy from the state. A photocopy will not work.',
+      detail:
+        'The real one or a certified copy from the state. A photocopy will not work. If yours is from Puerto Rico, it has to be a copy issued on or after July 1, 2010. Older Puerto Rico ones no longer count.',
     })
   }
   const citizenshipMet = citHave.length >= 1
@@ -464,7 +465,7 @@ export function assembleResult(answers: Answers): Result {
       icon: 'document',
       title: 'Order your birth certificate',
       detail:
-        'Born in Texas? Order it online or by mail. Born in another state? Order it from that state. It usually costs about 20 dollars and is the most useful paper to have.',
+        'Born in Texas? Order it online or by mail. Born in another state? Order it from that state. Born in Puerto Rico? Order a new copy, since ones issued before July 1, 2010 no longer count. It usually costs about 20 dollars and is the most useful paper to have.',
       href: 'https://ovra.txapps.texas.gov/ovra/order-birth-certificate',
       linkLabel: 'Order online at Texas.gov',
     })
@@ -672,12 +673,13 @@ export function assembleResult(answers: Answers): Result {
     : 'You need 1 of these. Most people use a birth certificate.'
 
   const residencyCount = resHave.length
-  const residencySummary =
+  const residencyBase =
     residencyCount >= 2
       ? 'You have enough here. Bring any 2 of these.'
       : residencyCount === 1
         ? 'You have 1. You need 1 more paper that shows your Texas address.'
         : 'You need 2 papers that show your Texas address.'
+  const residencySummary = `${residencyBase} Each one has to be in your name.`
 
   const residencyMet = resHave.length >= 2
   const resGet: ResultDoc[] = []
@@ -688,6 +690,14 @@ export function assembleResult(answers: Answers): Result {
         title: 'Ask your halfway house for a letter',
         detail:
           'Ask your case manager for a letter on the facility letterhead that says you live there now. Most can hand it to you the same day.',
+      })
+    }
+    if (housing === 'family') {
+      resGet.push({
+        icon: 'mail',
+        title: 'Get a paper that shows your own name',
+        detail:
+          "Staying with family or a friend? The papers you bring have to be in your name. A bill in someone else's name will not count for you, even if you live there. The steps below get mail sent in your name.",
       })
     }
     resGet.push({
