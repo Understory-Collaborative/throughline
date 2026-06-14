@@ -379,21 +379,23 @@ export function ResultScreen({ result, onBack, onRestart }: ResultScreenProps) {
               Print or save as PDF
             </button>
             <p className="self-center text-sm text-support">
-              On a phone? Your plan stays on this page. Keep it open or save the link below.
+              On a phone? Tap print to save a PDF, or keep this page open while you gather your
+              papers.
             </p>
           </div>
         </section>
 
-        {/* Come back any time. A link to return or pass to a friend. */}
+        {/* A link back to the tool, to use again or pass to a friend. */}
         <section
           aria-labelledby="come-back"
           className="mt-4 rounded-2xl border border-line bg-surface p-5"
         >
           <h2 id="come-back" className="font-display text-lg font-medium text-ink">
-            Come back any time
+            Come back or share
           </h2>
           <p className="mt-1 text-sm leading-relaxed text-support">
-            Save this link, or share it with a friend who could use it.
+            Print or save your plan above to keep it. This link opens First Step Out, so you can come
+            back or send it to a friend.
           </p>
           <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
             <code className="break-all rounded-lg border border-line bg-paper px-3 py-2 text-sm text-ink">
