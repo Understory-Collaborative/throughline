@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('Throughline landing page', () => {
@@ -35,6 +36,24 @@ describe('Throughline landing page', () => {
 
     expect(screen.getByText(/covers texas for now/i)).toBeInTheDocument()
     expect(screen.getByText(/more states are coming/i)).toBeInTheDocument()
+  })
+
+  it('returns to the home page when the brand mark is clicked from the flow', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /start first step out/i }))
+    expect(screen.queryByRole('button', { name: /start first step out/i })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /throughline, go to the home page/i }))
+
+    expect(screen.getByRole('button', { name: /start first step out/i })).toBeInTheDocument()
+  })
+
+  it('leads its privacy promise with protecting privacy', () => {
+    render(<App />)
+
+    expect(screen.getByText(/your privacy comes first/i)).toBeInTheDocument()
   })
 
   it('does not collect a name or account (privacy stance)', () => {

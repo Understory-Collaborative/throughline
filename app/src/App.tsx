@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Flow } from './firstStepOut/Flow'
+import { scrollToTop } from './firstStepOut/scrollToTop'
 
 /**
  * Throughline landing page.
@@ -13,6 +14,25 @@ import { Flow } from './firstStepOut/Flow'
  * See the root CLAUDE.md.
  */
 
+/** The brand mark, clickable to return to the home page. */
+function BrandHeader({ onHome }: { onHome: () => void }) {
+  return (
+    <header className="mx-auto flex w-full max-w-3xl items-center px-5 py-5 print:hidden">
+      <button
+        type="button"
+        onClick={onHome}
+        aria-label="Throughline, go to the home page"
+        className="-m-1 flex items-center gap-3 rounded-lg p-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        <span aria-hidden="true" className="relative inline-block h-6 w-6 rounded-lg bg-primary">
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-honey" />
+        </span>
+        <span className="font-display text-xl font-semibold text-ink">Throughline</span>
+      </button>
+    </header>
+  )
+}
+
 function App() {
   const [started, setStarted] = useState(false)
 
@@ -20,18 +40,15 @@ function App() {
     setStarted(true)
   }
 
+  function goHome() {
+    setStarted(false)
+    scrollToTop()
+  }
+
   if (started) {
     return (
       <div className="flex min-h-svh flex-col">
-        <header className="mx-auto flex w-full max-w-3xl items-center gap-3 px-5 py-5 print:hidden">
-          <span
-            aria-hidden="true"
-            className="relative inline-block h-6 w-6 rounded-lg bg-primary"
-          >
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-honey" />
-          </span>
-          <span className="font-display text-xl font-semibold text-ink">Throughline</span>
-        </header>
+        <BrandHeader onHome={goHome} />
         <main className="mx-auto w-full max-w-3xl flex-1 px-5 pb-16 print:px-0 print:pb-0">
           <Flow onExit={() => setStarted(false)} />
         </main>
@@ -46,15 +63,7 @@ function App() {
 
   return (
     <div className="flex min-h-svh flex-col">
-      <header className="mx-auto flex w-full max-w-3xl items-center gap-3 px-5 py-5">
-        <span
-          aria-hidden="true"
-          className="relative inline-block h-6 w-6 rounded-lg bg-primary"
-        >
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-honey" />
-        </span>
-        <span className="font-display text-xl font-semibold text-ink">Throughline</span>
-      </header>
+      <BrandHeader onHome={() => scrollToTop()} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-5">
         <section className="pt-6 pb-12">
@@ -90,8 +99,8 @@ function App() {
           </h2>
           <ul className="grid gap-3 sm:grid-cols-3">
             <li className="rounded-2xl border border-line bg-surface p-5">
-              <p className="font-display text-lg font-medium text-ink">No account, ever</p>
-              <p className="mt-1 text-base text-support">Nothing to sign up for. Just start.</p>
+              <p className="font-display text-lg font-medium text-ink">Your privacy comes first</p>
+              <p className="mt-1 text-base text-support">No sign up needed. We ask for the least we can.</p>
             </li>
             <li className="rounded-2xl border border-line bg-surface p-5">
               <p className="font-display text-lg font-medium text-ink">We never save your name</p>
