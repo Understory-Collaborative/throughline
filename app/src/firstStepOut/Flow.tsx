@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   assembleResult,
   emptyAnswers,
@@ -10,26 +10,12 @@ import { QuestionScreen } from './QuestionScreen'
 import { ResultScreen } from './ResultScreen'
 import { track } from '../analytics'
 
-/** Where the in-progress flow lives on the device. Selections only, no PII. */
-const STATE_KEY = 'throughline.firstStepOut.state'
-
-interface SavedState {
+interface SessionState {
   step: number
   answers: Answers
 }
 
-function loadState(): SavedState {
-  try {
-    const raw = localStorage.getItem(STATE_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<SavedState>
-      const answers = { ...emptyAnswers, ...parsed.answers }
-      const step = typeof parsed.step === 'number' ? parsed.step : 0
-      return { step: Math.min(Math.max(step, 0), questions.length), answers }
-    }
-  } catch {
-    // A corrupt or unreadable value just means we start fresh.
-  }
+function freshState(): SessionState {
   return { step: 0, answers: { ...emptyAnswers } }
 }
 
@@ -38,21 +24,15 @@ interface FlowProps {
   onExit: () => void
 }
 
+/**
+ * The First Step Out question flow.
+ *
+ * Every visit starts fresh. We treat each person as a first-time visitor, so we
+ * keep no progress between visits. Answers live in React state for this session
+ * only. Nothing is written to the device, which keeps the least we can.
+ */
 export function Flow({ onExit }: FlowProps) {
-  const [{ step, answers }, setState] = useState<SavedState>(loadState)
-
-  // Note once whether this mount restored earlier progress, before any
-  // navigation changes the step.
-  const resumed = useRef(step > 0)
-
-  // Remember progress on the device so a person can pick up where they left off.
-  useEffect(() => {
-    localStorage.setItem(STATE_KEY, JSON.stringify({ step, answers }))
-  }, [step, answers])
-
-  useEffect(() => {
-    if (resumed.current) track({ name: 'fso_resume' })
-  }, [])
+  const [{ step, answers }, setState] = useState<SessionState>(freshState)
 
   function setAnswer(id: QuestionId, value: string | string[]) {
     setState((prev) => ({ ...prev, answers: { ...prev.answers, [id]: value } }))
@@ -73,14 +53,13 @@ export function Flow({ onExit }: FlowProps) {
 
   function restart() {
     track({ name: 'fso_restart' })
-    localStorage.removeItem(STATE_KEY)
-    setState({ step: 0, answers: { ...emptyAnswers } })
+    setState(freshState())
   }
 
   const onResult = step >= questions.length
 
   return (
-    <div className="mx-auto w-full max-w-xl rounded-3xl border border-line bg-surface/70 p-6 shadow-sm sm:p-8">
+    <div className="mx-auto w-full max-w-xl rounded-3xl border border-line bg-surface/70 p-6 shadow-sm sm:p-8 print:max-w-none print:rounded-none print:border-0 print:bg-transparent print:p-0 print:shadow-none">
       {onResult ? (
         <ResultScreen
           result={assembleResult(answers)}

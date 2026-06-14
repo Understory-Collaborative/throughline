@@ -17,7 +17,8 @@ export type AnalyticsEvent =
   | { name: 'fso_result_view' }
   | { name: 'fso_back'; from: QuestionId }
   | { name: 'fso_restart' }
-  | { name: 'fso_resume' }
+  | { name: 'fso_print' }
+  | { name: 'fso_share' }
 
 interface PendoAgent {
   track?: (name: string, properties?: Record<string, unknown>) => void

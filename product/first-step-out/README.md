@@ -22,12 +22,15 @@ See the demo persona in `../personas/marcus.md`.
 
 ## How it works
 
-1. **Short question flow.** Ask only what changes the answer. Identity,
-   citizenship, and residency, in plain words. One question per screen.
-2. **Personalized result.** Map the person's answers to what counts, what they
-   already have, and the gaps.
-3. **Printable plan.** A clear list to bring to DPS, plus where to fill gaps.
-   Printable and saveable, since not everyone has reliable data.
+1. **Short question flow.** Ask only what changes the answer. Citizenship,
+   identity, and residency, in plain words. One question per screen. Every visit
+   starts fresh, so there is no "pick up where you left off" to puzzle over.
+2. **Personalized result.** Map the person's answers to the three areas DPS asks
+   about. For each area, show what counts, what they already have, and the
+   quickest way to fill a gap. End with one clear next step.
+3. **Two ways to keep it.** The result reads well on a phone. A person can also
+   print or save a clean one-page PDF to carry to DPS. The page shows a link to
+   come back or share with a friend, and the printout carries that link too.
 
 ## Content model (to build)
 
@@ -49,5 +52,7 @@ give have to be right.
 ## Open questions
 
 - The exact trimmed question set, validated with the community.
-- Print and save format that works on a cheap phone and a library computer.
+- A named owner to confirm the document rules against current Texas DPS
+  requirements. The identity rule in particular is simplified for reading ease,
+  so it needs a check.
 - How and where we hand off to real people and organizations.

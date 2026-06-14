@@ -1,14 +1,16 @@
 /**
  * First Step Out content, as data.
  *
- * The question tree and the residency outcome logic live here so collaborators,
+ * The question tree and the document logic live here so collaborators,
  * including formerly incarcerated reviewers, can read and correct the actual
  * words without touching the UI. See product/first-step-out/README.md.
  *
- * Texas DPS accepts one proof of residency. The job of this flow is to find the
- * proof a person most likely already has, or the quickest one to get. The rules
- * encoded below mirror the validated prototype. They still need a named owner to
- * confirm them against current Texas DPS requirements before launch.
+ * Texas DPS asks for proof in three areas to get a REAL ID. You need proof you
+ * are a U.S. citizen, proof of who you are, and proof of where you live. This
+ * flow finds the papers a person most likely already holds, then names the
+ * quickest way to fill any gap. The rules below follow the Texas DPS REAL ID
+ * checklist. They still need a named owner to confirm them against current
+ * Texas DPS requirements before launch.
  */
 
 export type IconName =
@@ -31,7 +33,7 @@ export type IconName =
   | 'doc'
   | 'check'
 
-export type QuestionId = 'tdcj' | 'housing' | 'mail' | 'extras'
+export type QuestionId = 'tdcj' | 'birth' | 'ssn' | 'housing' | 'mail' | 'extras'
 
 export interface Option {
   value: string
@@ -65,6 +67,8 @@ export interface Question {
 /** multi answers hold a list. No names, no PII. */
 export interface Answers {
   tdcj: string | null
+  birth: string | null
+  ssn: string | null
   housing: string | null
   mail: string[]
   extras: string[]
@@ -72,6 +76,8 @@ export interface Answers {
 
 export const emptyAnswers: Answers = {
   tdcj: null,
+  birth: null,
+  ssn: null,
   housing: null,
   mail: [],
   extras: [],
@@ -82,33 +88,78 @@ export const questions: Question[] = [
     id: 'tdcj',
     stepLabel: 'Getting started',
     progress: 0,
-    prompt: 'Were you recently released from a Texas facility or are you currently on parole?',
-    help: 'Your answer changes which documents will work for you. There is no wrong answer here.',
+    prompt: 'Were you recently let out of a Texas prison, or are you on parole?',
+    help: 'Your answer changes which papers will work for you. There is no wrong answer here.',
     notice:
-      'If you were released from a TDCJ facility, your release paperwork may already cover this entire requirement.',
+      'If you came out of a TDCJ unit, your release papers count for more than one thing on your list. Hold on to them.',
     multi: false,
     options: [
-      { value: 'yes', title: 'Yes, released from a Texas state facility or on parole', icon: 'id' },
+      { value: 'yes', title: 'Yes, from a Texas state prison or on parole', icon: 'id' },
       {
         value: 'federal',
-        title: 'Yes, but from a federal facility',
+        title: 'Yes, but from a federal prison',
         sub: 'Federal Bureau of Prisons',
         icon: 'building',
       },
-      { value: 'no', title: 'No, that does not apply to me', icon: 'home' },
+      { value: 'no', title: 'No, that is not me', icon: 'home' },
+    ],
+  },
+  {
+    id: 'birth',
+    stepLabel: 'Step 1 of 5',
+    progress: 16,
+    prompt: 'Do you have your birth certificate or a U.S. passport?',
+    help: 'Pick what you have. One of these is the strongest paper you can bring. It helps prove who you are and that you are a U.S. citizen.',
+    multi: false,
+    options: [
+      {
+        value: 'passport',
+        title: 'Yes, a U.S. passport',
+        sub: 'Book or card, not expired',
+        icon: 'doc',
+      },
+      {
+        value: 'birth',
+        title: 'Yes, my birth certificate',
+        sub: 'The real one or a certified copy, not a photocopy',
+        icon: 'document',
+      },
+      {
+        value: 'neither',
+        title: 'I do not have either one',
+        sub: 'That is okay. We will show you how to get one',
+        icon: 'minusCircle',
+      },
+    ],
+  },
+  {
+    id: 'ssn',
+    stepLabel: 'Step 2 of 5',
+    progress: 33,
+    prompt: 'Do you have your Social Security card?',
+    help: 'DPS will ask for your Social Security number. The real card also helps prove who you are.',
+    multi: false,
+    options: [
+      { value: 'yes', title: 'Yes, I have the card', icon: 'id' },
+      {
+        value: 'no',
+        title: 'No, I do not have it',
+        sub: 'You can still go. A new one is free to order',
+        icon: 'minusCircle',
+      },
     ],
   },
   {
     id: 'housing',
-    stepLabel: 'Step 1 of 4',
-    progress: 25,
+    stepLabel: 'Step 3 of 5',
+    progress: 50,
     prompt: 'Where are you staying right now?',
-    help: 'We will use this to figure out which documents are realistic for you to get quickly.',
+    help: 'We will use this to figure out which papers are realistic for you to get quickly.',
     multi: false,
     options: [
       {
         value: 'halfway',
-        title: 'A halfway house or reentry facility',
+        title: 'A halfway house or reentry center',
         sub: 'Including residential reentry centers',
         icon: 'houseDoor',
       },
@@ -129,10 +180,10 @@ export const questions: Question[] = [
   },
   {
     id: 'mail',
-    stepLabel: 'Step 2 of 4',
-    progress: 50,
+    stepLabel: 'Step 4 of 5',
+    progress: 66,
     prompt: 'Do you have any of these coming to your address?',
-    help: 'Select everything that applies. These only count if they show your current Texas address and are dated within the last 6 months.',
+    help: 'Pick everything you have. These only count if they show your Texas address and are from the last 6 months.',
     multi: true,
     options: [
       {
@@ -156,13 +207,13 @@ export const questions: Question[] = [
       {
         value: 'paystub',
         title: 'A pay stub or paycheck',
-        sub: 'From your current employer',
+        sub: 'From your current job',
         icon: 'document',
       },
       {
         value: 'none',
         title: 'None of these right now',
-        sub: 'That is okay. There are other options',
+        sub: 'That is okay. There are other ways',
         icon: 'minusCircle',
         exclusive: true,
       },
@@ -170,10 +221,10 @@ export const questions: Question[] = [
   },
   {
     id: 'extras',
-    stepLabel: 'Step 3 of 4',
-    progress: 75,
+    stepLabel: 'Step 5 of 5',
+    progress: 83,
     prompt: 'A couple more quick questions.',
-    help: 'These help us check a few more options that might apply to you. Select all that apply.',
+    help: 'These help us check a few more papers that might count for you. Pick all that apply.',
     multi: true,
     options: [
       {
@@ -189,12 +240,12 @@ export const questions: Question[] = [
       },
       {
         value: 'military',
-        title: 'I served in the US military or receive VA benefits',
+        title: 'I served in the U.S. military or get VA benefits',
         icon: 'star',
       },
       {
         value: 'insurance',
-        title: 'I have a current car, home, or renters insurance policy',
+        title: 'I have current car, home, or renters insurance',
         icon: 'shield',
       },
       { value: 'none2', title: 'None of these apply to me', icon: 'minusCircle', exclusive: true },
@@ -202,9 +253,28 @@ export const questions: Question[] = [
   },
 ]
 
-export interface ResultItem {
-  kind: 'have' | 'get'
+export interface ResultDoc {
   icon: IconName
+  title: string
+  detail: string
+}
+
+export type CategoryId = 'citizenship' | 'identity' | 'residency'
+
+export interface Category {
+  id: CategoryId
+  title: string
+  /** Plain-language version of how many papers this area needs. */
+  rule: string
+  /** True when the person likely already has enough for this area. */
+  met: boolean
+  /** Papers the person likely already holds. */
+  have: ResultDoc[]
+  /** Quick ways to fill the gap when they are short. */
+  get: ResultDoc[]
+}
+
+export interface NextStep {
   title: string
   detail: string
 }
@@ -212,150 +282,317 @@ export interface ResultItem {
 export interface Result {
   headline: string
   subtext: string
-  have: ResultItem[]
-  get: ResultItem[]
+  categories: Category[]
+  /** The single clearest thing to do next. */
+  nextStep: NextStep
 }
 
 /**
- * Turn a person's answers into a residency plan. Each "have" item is a document
- * they likely already hold. Each "get" item is a quick way to create one. They
- * only need one accepted document, so the result frames it that way.
+ * Turn a person's answers into a three-part plan that mirrors what Texas DPS
+ * asks for: proof of citizenship, proof of identity, and proof of residency.
+ * Each area lists the papers a person likely already holds and the quickest way
+ * to fill a gap. The next step names the single most useful move.
  *
- * The order and the gates here match the validated prototype exactly.
+ * DPS identity rule, in plain terms: one strong paper (a passport), or two
+ * mid-level papers, or one mid-level paper plus two smaller ones. We classify
+ * each document by tier and check the combination.
  */
 export function assembleResult(answers: Answers): Result {
-  const { tdcj, housing } = answers
+  const { tdcj, birth, ssn, housing } = answers
   const mail = answers.mail ?? []
   const extras = answers.extras ?? []
 
-  const have: ResultItem[] = []
-  const get: ResultItem[] = []
-
-  if (tdcj === 'yes') {
-    have.push({
-      kind: 'have',
+  // ---- Proof of citizenship (need one) ----
+  const citHave: ResultDoc[] = []
+  if (birth === 'passport') {
+    citHave.push({
       icon: 'doc',
-      title: 'Your TDCJ release or parole paperwork',
-      detail:
-        'This alone covers the residency requirement. Bring the original document to DPS. You will not need other proof.',
+      title: 'Your U.S. passport',
+      detail: 'A passport book or card that has not expired. This one paper also proves who you are.',
     })
   }
+  if (birth === 'birth') {
+    citHave.push({
+      icon: 'document',
+      title: 'Your birth certificate',
+      detail: 'The real one or a certified copy from the state. A photocopy will not work.',
+    })
+  }
+  const citizenshipMet = citHave.length >= 1
+  const citGet: ResultDoc[] = []
+  if (!citizenshipMet) {
+    citGet.push({
+      icon: 'document',
+      title: 'Order your birth certificate',
+      detail:
+        'Born in Texas? Order it from the Texas Department of State Health Services, online or by mail. Born in another state? Order it from that state. It usually costs about 20 dollars and is the most useful paper to have.',
+    })
+  }
+
+  // ---- Proof of identity ----
+  // Tiers from the DPS list. One primary, or two secondary, or one secondary
+  // plus two supporting, is enough.
+  const idHave: ResultDoc[] = []
+  let primary = 0
+  let secondary = 0
+  let supporting = 0
+
+  if (birth === 'passport') {
+    idHave.push({
+      icon: 'doc',
+      title: 'Your U.S. passport',
+      detail: 'A passport is a top-level ID. It proves who you are all by itself.',
+    })
+    primary += 1
+  }
+  if (birth === 'birth') {
+    idHave.push({
+      icon: 'document',
+      title: 'Your birth certificate',
+      detail: 'It counts toward proving who you are. Bring two smaller papers with it.',
+    })
+    secondary += 1
+  }
+  if (tdcj === 'yes') {
+    idHave.push({
+      icon: 'doc',
+      title: 'Your TDCJ release or parole certificate',
+      detail: 'Your Texas release or parole paper counts toward proving who you are.',
+    })
+    supporting += 1
+  }
   if (tdcj === 'federal') {
-    have.push({
-      kind: 'have',
+    idHave.push({
       icon: 'building',
       title: 'Your federal release certificate',
-      detail: 'Federal release paperwork is accepted. Bring the original.',
+      detail: 'Your federal release paper counts toward proving who you are.',
+    })
+    supporting += 1
+  }
+  if (ssn === 'yes') {
+    idHave.push({
+      icon: 'id',
+      title: 'Your Social Security card',
+      detail: 'The real card helps prove who you are.',
+    })
+    supporting += 1
+  }
+  if (extras.includes('voter')) {
+    idHave.push({
+      icon: 'check',
+      title: 'Your Texas voter registration card',
+      detail: 'A small paper that helps prove who you are.',
+    })
+    supporting += 1
+  }
+  if (extras.includes('vehicle')) {
+    idHave.push({
+      icon: 'car',
+      title: 'Your Texas vehicle or boat registration',
+      detail: 'A small paper that helps prove who you are.',
+    })
+    supporting += 1
+  }
+  if (extras.includes('military')) {
+    idHave.push({
+      icon: 'star',
+      title: 'Your military or VA ID',
+      detail: 'A small paper that helps prove who you are.',
+    })
+    supporting += 1
+  }
+
+  const identityMet = primary >= 1 || secondary >= 2 || (secondary >= 1 && supporting >= 2)
+  const idGet: ResultDoc[] = []
+  if (!identityMet) {
+    if (ssn !== 'yes') {
+      idGet.push({
+        icon: 'id',
+        title: 'Order a new Social Security card',
+        detail:
+          'It is free from the Social Security Administration. It is a small paper that helps prove who you are.',
+      })
+    }
+    idGet.push({
+      icon: 'document',
+      title: 'Plan to bring a few ID papers together',
+      detail: citizenshipMet
+        ? 'You can prove who you are with your birth certificate plus two smaller papers, like your Social Security card and a voter card or Texas vehicle registration.'
+        : 'A U.S. passport proves who you are all by itself. Or bring your birth certificate plus two smaller papers, like your Social Security card and a voter card.',
+    })
+  }
+
+  // ---- Proof of residency (need two) ----
+  const resHave: ResultDoc[] = []
+  if (tdcj === 'yes') {
+    resHave.push({
+      icon: 'doc',
+      title: 'Your TDCJ release or parole paper',
+      detail: 'Your Texas release or parole paper also shows where you live. It counts here too.',
     })
   }
   if (housing === 'own') {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'home',
-      title: 'Your lease, rental agreement, or mortgage statement',
-      detail: 'Any current document showing you live at a Texas address.',
+      title: 'Your lease or mortgage paper',
+      detail: 'Any current paper that shows you live at a Texas address.',
     })
   }
   if (mail.includes('utility')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'bolt',
       title: 'Your utility or phone bill',
-      detail: 'Dated within the last 6 months, showing your current Texas address.',
+      detail: 'From the last 6 months, showing your Texas address.',
     })
   }
   if (mail.includes('bank')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'bank',
       title: 'Your bank or credit card statement',
-      detail: 'Dated within the last 6 months, showing your current Texas address.',
+      detail: 'From the last 6 months, showing your Texas address.',
     })
   }
   if (mail.includes('govt')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'mail',
-      title: 'Your government agency letter',
-      detail:
-        'Any letter from a federal, state, county, or city office dated within the last 6 months.',
+      title: 'Your letter from a government office',
+      detail: 'Any letter from a federal, state, county, or city office from the last 6 months.',
     })
   }
   if (mail.includes('paystub')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'document',
       title: 'Your pay stub',
-      detail: 'A pre-printed paycheck or stub from your employer dated within the last 6 months.',
-    })
-  }
-  if (extras.includes('voter')) {
-    have.push({
-      kind: 'have',
-      icon: 'check',
-      title: 'Your Texas voter registration card',
-      detail: 'The physical card must be valid and unexpired.',
+      detail: 'A printed paycheck or stub from your job from the last 6 months.',
     })
   }
   if (extras.includes('vehicle')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'car',
       title: 'Your Texas vehicle or boat registration',
-      detail: 'Current, unexpired registration or title in your name.',
+      detail: 'Current registration in your name. It works for where you live too.',
+    })
+  }
+  if (extras.includes('voter')) {
+    resHave.push({
+      icon: 'check',
+      title: 'Your Texas voter registration card',
+      detail: 'It works for where you live too.',
     })
   }
   if (extras.includes('military')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'star',
-      title: 'Your military or VA document',
-      detail: 'Any current document from the US military or VA showing your Texas address.',
+      title: 'Your military or VA paper',
+      detail: 'A current paper from the U.S. military or VA that shows your Texas address.',
     })
   }
   if (extras.includes('insurance')) {
-    have.push({
-      kind: 'have',
+    resHave.push({
       icon: 'shield',
-      title: 'Your insurance card or statement',
-      detail: 'Current car, home, or renters insurance showing your Texas address.',
+      title: 'Your insurance paper',
+      detail: 'Current car, home, or renters insurance that shows your Texas address.',
     })
   }
 
-  if (housing === 'halfway') {
-    get.push({
-      kind: 'get',
-      icon: 'home',
-      title: 'A letter from your reentry facility',
+  const residencyMet = resHave.length >= 2
+  const resGet: ResultDoc[] = []
+  if (!residencyMet) {
+    if (housing === 'halfway') {
+      resGet.push({
+        icon: 'home',
+        title: 'Ask your halfway house for a letter',
+        detail:
+          'Ask your case manager for a letter on the facility letterhead that says you live there now. Most can hand it to you the same day.',
+      })
+    }
+    resGet.push({
+      icon: 'bank',
+      title: 'Open a free checking account',
       detail:
-        'Ask your case manager for a letter on facility letterhead that confirms you are a current resident. Most can provide this the same day.',
+        'Many banks offer second chance accounts with no credit check. Ask for a paper statement mailed to your address. It counts after it arrives.',
+    })
+    resGet.push({
+      icon: 'mail',
+      title: 'Apply for Medicaid or SNAP',
+      detail:
+        'When you sign up, letters from these offices come to your address and count. Apply with Texas HHS online or at your county office.',
     })
   }
-  if (housing === 'family' || housing === 'unsure' || mail.includes('none')) {
-    if (have.length === 0) {
-      get.push({
-        kind: 'get',
-        icon: 'bank',
-        title: 'Open a bank account and get a statement sent to your address',
-        detail:
-          'Many banks offer free second-chance checking accounts with no credit check. Once it is open, ask for a paper statement at your address. It counts within 6 months.',
-      })
-      get.push({
-        kind: 'get',
-        icon: 'mail',
-        title: 'Apply for Medicaid or SNAP benefits',
-        detail:
-          'Once you enroll, letters from these agencies come to your address and count as government mail. Apply at Texas HHS online or in person at your county office.',
-      })
+
+  const categories: Category[] = [
+    {
+      id: 'citizenship',
+      title: 'Proof you are a U.S. citizen',
+      rule: 'Bring 1 of these.',
+      met: citizenshipMet,
+      have: citHave,
+      get: citGet,
+    },
+    {
+      id: 'identity',
+      title: 'Proof of who you are',
+      rule: 'Bring 1 strong paper, or a few smaller ones together.',
+      met: identityMet,
+      have: idHave,
+      get: idGet,
+    },
+    {
+      id: 'residency',
+      title: 'Proof of where you live',
+      rule: 'Bring 2 of these.',
+      met: residencyMet,
+      have: resHave,
+      get: resGet,
+    },
+  ]
+
+  let nextStep: NextStep
+  if (!citizenshipMet) {
+    nextStep = {
+      title: 'Order your birth certificate',
+      detail:
+        'This is the one paper that helps the most. It proves you are a U.S. citizen and helps prove who you are. Born in Texas? Order it from the Texas Department of State Health Services. Born somewhere else? Order it from that state.',
+    }
+  } else if (!identityMet) {
+    nextStep =
+      ssn !== 'yes'
+        ? {
+            title: 'Order a new Social Security card',
+            detail:
+              'It is free. With your birth certificate and one more small paper, you have enough to prove who you are. Then take your papers to DPS.',
+          }
+        : {
+            title: 'Bring one more ID paper',
+            detail:
+              'With your birth certificate, your Social Security card, and one more small paper like a voter card or Texas vehicle registration, you have enough. Then take your papers to DPS.',
+          }
+  } else if (!residencyMet) {
+    nextStep =
+      housing === 'halfway'
+        ? {
+            title: 'Ask your halfway house for a proof of address letter',
+            detail:
+              'You have most of what you need. One letter on facility letterhead fills the last gap. Then take your papers to DPS.',
+          }
+        : {
+            title: 'Get one more proof of where you live',
+            detail:
+              'You need 2 papers that show your Texas address. The fastest way is to open a free checking account or apply for Medicaid or SNAP, then use the mail they send. Then take your papers to DPS.',
+          }
+  } else {
+    nextStep = {
+      title: 'Take your papers to DPS',
+      detail:
+        'You have what you need. Bring the papers above to your nearest Texas DPS office. Call first or check the website, since some offices ask you to book a time.',
     }
   }
 
-  const headline =
-    have.length > 0 ? 'You are closer than you think.' : 'Here is your next step.'
-  const subtext =
-    have.length > 0
-      ? 'You already have what you need. You only need one item from the list below.'
-      : 'You do not have a residency document yet, and these are straightforward to get. You only need one.'
+  const allMet = citizenshipMet && identityMet && residencyMet
+  const headline = allMet ? 'You have what you need.' : 'Here is your plan.'
+  const subtext = allMet
+    ? 'Bring the papers below to your nearest DPS office. You are ready.'
+    : 'Here is what counts, what you already have, and the one thing to do next.'
 
-  return { headline, subtext, have, get }
+  return { headline, subtext, categories, nextStep }
 }

@@ -1,9 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import App from './App'
-
-const PROGRESS_KEY = 'throughline.firstStepOut.startedAt'
 
 describe('Throughline landing page', () => {
   it('has a single top-level heading', () => {
@@ -19,28 +16,18 @@ describe('Throughline landing page', () => {
     expect(screen.getAllByText(/first step out/i).length).toBeGreaterThan(0)
   })
 
-  it('offers a clear way to start for a first-time visitor', () => {
+  it('always offers the same clear way to start', () => {
     render(<App />)
 
     expect(screen.getByRole('button', { name: /start first step out/i })).toBeInTheDocument()
   })
 
-  it('records progress on the device when the visitor starts', async () => {
-    render(<App />)
-
-    await userEvent.click(screen.getByRole('button', { name: /start first step out/i }))
-
-    expect(localStorage.getItem(PROGRESS_KEY)).not.toBeNull()
-  })
-
-  it('invites a returning visitor to pick up where they left off', () => {
-    localStorage.setItem(PROGRESS_KEY, new Date().toISOString())
-
+  it('does not invite a person to pick up where they left off', () => {
     render(<App />)
 
     expect(
-      screen.getByRole('button', { name: /pick up where you left off/i }),
-    ).toBeInTheDocument()
+      screen.queryByRole('button', { name: /pick up where you left off/i }),
+    ).not.toBeInTheDocument()
   })
 
   it('does not collect a name or account (privacy stance)', () => {
