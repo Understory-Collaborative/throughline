@@ -193,4 +193,27 @@ describe('First Step Out analytics', () => {
 
     expect(pendoTrack).toHaveBeenCalledWith('fso_result_view', undefined)
   })
+
+  it('records which resource link a person opens, without the answers', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    // A path that leaves citizenship missing, so the birth certificate link shows.
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /do not have either one/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /i have the card/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /with family or a friend/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these right now/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these apply/i }))
+    await user.click(screen.getByRole('button', { name: /see my documents/i }))
+
+    await user.click(screen.getAllByRole('link', { name: /order online at Texas\.gov/i })[0])
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_link', { target: 'birth_cert' })
+  })
 })

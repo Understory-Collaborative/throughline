@@ -20,6 +20,14 @@ function getReturnUrl(): string {
   return 'throughline.app'
 }
 
+/** Map a resource link to a coarse, non-identifying analytics target. */
+function linkTarget(href?: string): 'birth_cert' | 'snap' | 'other' {
+  if (!href) return 'other'
+  if (href.includes('order-birth-certificate')) return 'birth_cert'
+  if (href.includes('yourtexasbenefits')) return 'snap'
+  return 'other'
+}
+
 function DocItem({ doc, tone }: { doc: ResultDoc; tone: 'have' | 'get' }) {
   const accent = tone === 'have' ? 'border-l-4 border-primary' : 'border-l-4 border-honey'
   const iconWrap = tone === 'have' ? 'bg-primary/10 text-primary' : 'bg-honey/15 text-mahogany'
@@ -44,6 +52,7 @@ function DocItem({ doc, tone }: { doc: ResultDoc; tone: 'have' | 'get' }) {
             href={doc.href}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track({ name: 'fso_link', target: linkTarget(doc.href) })}
             className="mt-2 inline-flex items-center gap-1 rounded-md text-sm font-semibold text-primary underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {doc.linkLabel ?? 'Open the page'}
@@ -311,6 +320,7 @@ export function ResultScreen({ result, onBack, onRestart }: ResultScreenProps) {
               href={result.nextStep.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track({ name: 'fso_link', target: linkTarget(result.nextStep.href) })}
               className="mt-3 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-base font-bold text-paper shadow-sm transition-colors hover:bg-primary-press focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {result.nextStep.linkLabel ?? 'Open the page'}

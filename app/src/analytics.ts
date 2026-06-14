@@ -19,6 +19,9 @@ export type AnalyticsEvent =
   | { name: 'fso_restart' }
   | { name: 'fso_print' }
   | { name: 'fso_share' }
+  // Which public resource a person opened from the result. This is the help
+  // signal, not personal data. We send the resource, never what they answered.
+  | { name: 'fso_link'; target: 'birth_cert' | 'snap' | 'other' }
 
 interface PendoAgent {
   track?: (name: string, properties?: Record<string, unknown>) => void
