@@ -30,6 +30,13 @@ describe('Throughline landing page', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('is honest that it covers Texas for now with more states planned', () => {
+    render(<App />)
+
+    expect(screen.getByText(/covers texas for now/i)).toBeInTheDocument()
+    expect(screen.getByText(/more states are coming/i)).toBeInTheDocument()
+  })
+
   it('does not collect a name or account (privacy stance)', () => {
     render(<App />)
 

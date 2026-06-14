@@ -69,6 +69,9 @@ function App() {
             Throughline walks with you through the first steps after leaving prison. We start with
             getting your Texas ID back, in plain words, one step at a time.
           </p>
+          <p className="mt-3 max-w-xl text-base text-support">
+            First Step Out covers Texas for now. More states are coming.
+          </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <button

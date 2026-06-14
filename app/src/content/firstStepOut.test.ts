@@ -63,8 +63,9 @@ describe('assembleResult: three DPS areas', () => {
     const all: string[] = []
     for (const ans of [
       emptyAnswers,
-      answers({ tdcj: 'yes', birth: 'birth', ssn: 'yes', housing: 'own', mail: ['utility'] }),
+      answers({ tdcj: 'parole', birth: 'birth', ssn: 'yes', housing: 'own', mail: ['utility'] }),
       answers({ tdcj: 'no', birth: 'neither', ssn: 'no', housing: 'halfway' }),
+      answers({ tdcj: 'discharged', birth: 'passport', ssn: 'yes' }),
     ]) {
       const r = assembleResult(ans)
       all.push(r.headline, r.subtext, r.nextStep.title, r.nextStep.detail)
@@ -108,14 +109,21 @@ describe('assembleResult: identity', () => {
   })
 
   it('is met by a birth certificate plus two smaller papers', () => {
-    const result = assembleResult(answers({ birth: 'birth', tdcj: 'yes', ssn: 'yes' }))
+    const result = assembleResult(answers({ birth: 'birth', tdcj: 'parole', ssn: 'yes' }))
     expect(category(result, 'identity').met).toBe(true)
   })
 
-  it('lists the release certificate as proof of identity for a Texas release', () => {
-    const result = assembleResult(answers({ tdcj: 'yes' }))
+  it('lists the parole certificate as proof of identity for someone on parole', () => {
+    const result = assembleResult(answers({ tdcj: 'parole' }))
     expect(category(result, 'identity').have.map((d) => d.title)).toContainEqual(
-      expect.stringMatching(/TDCJ release or parole certificate/i),
+      expect.stringMatching(/TDCJ parole certificate/i),
+    )
+  })
+
+  it('lists release papers as proof of identity for someone fully discharged', () => {
+    const result = assembleResult(answers({ tdcj: 'discharged' }))
+    expect(category(result, 'identity').have.map((d) => d.title)).toContainEqual(
+      expect.stringMatching(/TDCJ release papers/i),
     )
   })
 })
@@ -133,10 +141,10 @@ describe('assembleResult: residency', () => {
     expect(category(result, 'residency').met).toBe(true)
   })
 
-  it('counts TDCJ release paperwork toward residency', () => {
-    const result = assembleResult(answers({ tdcj: 'yes' }))
+  it('counts TDCJ paperwork toward residency', () => {
+    const result = assembleResult(answers({ tdcj: 'parole' }))
     expect(category(result, 'residency').have.map((d) => d.title)).toContainEqual(
-      expect.stringMatching(/TDCJ release or parole paper/i),
+      expect.stringMatching(/TDCJ parole certificate/i),
     )
   })
 
@@ -157,13 +165,13 @@ describe('assembleResult: residency', () => {
 
 describe('assembleResult: the single next step', () => {
   it('leads with the birth certificate when citizenship is missing', () => {
-    const result = assembleResult(answers({ tdcj: 'yes', ssn: 'yes', birth: 'neither' }))
+    const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
     expect(result.nextStep.title).toMatch(/order your birth certificate/i)
   })
 
   it('sends a fully covered person to DPS', () => {
     const result = assembleResult(
-      answers({ birth: 'passport', tdcj: 'yes', housing: 'own', mail: ['utility'] }),
+      answers({ birth: 'passport', tdcj: 'parole', housing: 'own', mail: ['utility'] }),
     )
     expect(result.categories.every((c) => c.met)).toBe(true)
     expect(result.headline).toBe('You have what you need.')

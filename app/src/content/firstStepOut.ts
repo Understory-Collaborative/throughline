@@ -88,20 +88,30 @@ export const questions: Question[] = [
     id: 'tdcj',
     stepLabel: 'Getting started',
     progress: 0,
-    prompt: 'Were you recently let out of a Texas prison, or are you on parole?',
-    help: 'Your answer changes which papers will work for you. There is no wrong answer here.',
+    prompt: 'Are you on parole, or are you fully done with your sentence?',
+    help: 'Your answer tells us which release papers you have. They count for more than one thing on your list. First Step Out covers Texas for now.',
     notice:
-      'If you came out of a TDCJ unit, your release papers count for more than one thing on your list. Hold on to them.',
+      'Whether you are on parole or fully done, your TDCJ papers count toward proving who you are and where you live. Hold on to them.',
     multi: false,
     options: [
-      { value: 'yes', title: 'Yes, from a Texas state prison or on parole', icon: 'id' },
       {
-        value: 'federal',
-        title: 'Yes, but from a federal prison',
-        sub: 'Federal Bureau of Prisons',
-        icon: 'building',
+        value: 'parole',
+        title: 'I am on parole or supervision',
+        sub: 'Still checking in with a parole officer',
+        icon: 'id',
       },
-      { value: 'no', title: 'No, that is not me', icon: 'home' },
+      {
+        value: 'discharged',
+        title: 'I am fully done, free and clear',
+        sub: 'My sentence is finished',
+        icon: 'check',
+      },
+      {
+        value: 'no',
+        title: 'Neither one fits me',
+        sub: 'I was not recently in a Texas prison or jail',
+        icon: 'home',
+      },
     ],
   },
   {
@@ -353,19 +363,19 @@ export function assembleResult(answers: Answers): Result {
     })
     secondary += 1
   }
-  if (tdcj === 'yes') {
+  if (tdcj === 'parole') {
     idHave.push({
       icon: 'doc',
-      title: 'Your TDCJ release or parole certificate',
-      detail: 'Your Texas release or parole paper counts toward proving who you are.',
+      title: 'Your TDCJ parole certificate',
+      detail: 'Your parole or mandatory release certificate counts toward proving who you are.',
     })
     supporting += 1
   }
-  if (tdcj === 'federal') {
+  if (tdcj === 'discharged') {
     idHave.push({
-      icon: 'building',
-      title: 'Your federal release certificate',
-      detail: 'Your federal release paper counts toward proving who you are.',
+      icon: 'doc',
+      title: 'Your TDCJ release papers',
+      detail: 'Your release or discharge papers count toward proving who you are.',
     })
     supporting += 1
   }
@@ -424,11 +434,18 @@ export function assembleResult(answers: Answers): Result {
 
   // ---- Proof of residency (need two) ----
   const resHave: ResultDoc[] = []
-  if (tdcj === 'yes') {
+  if (tdcj === 'parole') {
     resHave.push({
       icon: 'doc',
-      title: 'Your TDCJ release or parole paper',
-      detail: 'Your Texas release or parole paper also shows where you live. It counts here too.',
+      title: 'Your TDCJ parole certificate',
+      detail: 'Your parole or mandatory release certificate also shows where you live. It counts here too.',
+    })
+  }
+  if (tdcj === 'discharged') {
+    resHave.push({
+      icon: 'doc',
+      title: 'Your TDCJ release papers',
+      detail: 'Your release or discharge papers also show where you live. They count here too.',
     })
   }
   if (housing === 'own') {

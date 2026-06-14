@@ -9,7 +9,7 @@ type PendoWindow = typeof window & { pendo?: { track?: (...args: unknown[]) => v
 
 /** Walk through every question with a set of answers that fully covers DPS. */
 async function completeFlow(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('radio', { name: /Texas state prison or on parole/i }))
+  await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
   await user.click(screen.getByRole('button', { name: /continue/i }))
 
   await user.click(screen.getByRole('radio', { name: /my birth certificate/i }))
@@ -33,7 +33,7 @@ describe('First Step Out flow', () => {
     render(<Flow onExit={noop} />)
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /let out of a Texas prison/i }),
+      screen.getByRole('heading', { level: 1, name: /on parole, or are you fully done/i }),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /continue/i })).toBeDisabled()
   })
@@ -41,7 +41,7 @@ describe('First Step Out flow', () => {
   it('enables Continue once an answer is picked', async () => {
     render(<Flow onExit={noop} />)
 
-    await userEvent.click(screen.getByRole('radio', { name: /Texas state prison or on parole/i }))
+    await userEvent.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
 
     expect(screen.getByRole('button', { name: /continue/i })).toBeEnabled()
   })
@@ -82,7 +82,7 @@ describe('First Step Out flow', () => {
     render(<Flow onExit={noop} />)
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /let out of a Texas prison/i }),
+      screen.getByRole('heading', { level: 1, name: /on parole, or are you fully done/i }),
     ).toBeInTheDocument()
   })
 
@@ -99,7 +99,7 @@ describe('First Step Out flow', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
-    await user.click(screen.getByRole('radio', { name: /Texas state prison or on parole/i }))
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
     await user.click(screen.getByRole('radio', { name: /my birth certificate/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
@@ -175,7 +175,7 @@ describe('First Step Out analytics', () => {
 
     expect(pendoTrack).toHaveBeenCalledWith('fso_step_view', { step: 'tdcj' })
 
-    await user.click(screen.getByRole('radio', { name: /Texas state prison or on parole/i }))
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
 
     expect(pendoTrack).toHaveBeenCalledWith('fso_step_view', { step: 'birth' })
