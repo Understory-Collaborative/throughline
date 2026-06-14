@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { Flow } from './firstStepOut/Flow'
 import { scrollToTop } from './firstStepOut/scrollToTop'
+import { track } from './analytics'
+
+type StartSource = 'hero' | 'card' | 'nav'
 
 /**
  * Throughline landing page.
@@ -164,7 +167,8 @@ function FeatureCard({ feature, onStart }: { feature: Feature; onStart: () => vo
 function App() {
   const [view, setView] = useState<View>('home')
 
-  function startFso() {
+  function startFso(source: StartSource) {
+    track({ name: 'fso_start', source })
     setView('fso')
     scrollToTop()
   }
@@ -192,7 +196,7 @@ function App() {
 
   return (
     <div className="flex min-h-svh flex-col">
-      <NavBar onHome={goHome} onStart={startFso} />
+      <NavBar onHome={goHome} onStart={() => startFso('nav')} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-5">
         <section className="pt-8 pb-12">
@@ -207,7 +211,7 @@ function App() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <button
               type="button"
-              onClick={startFso}
+              onClick={() => startFso('hero')}
               className="rounded-2xl bg-primary px-7 py-4 text-center text-lg font-bold text-paper shadow-sm transition-colors hover:bg-primary-press focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               Start First Step Out
@@ -225,7 +229,7 @@ function App() {
           </p>
           <ul className="mt-5 grid gap-3 sm:grid-cols-3">
             {features.map((feature) => (
-              <FeatureCard key={feature.id} feature={feature} onStart={startFso} />
+              <FeatureCard key={feature.id} feature={feature} onStart={() => startFso('card')} />
             ))}
           </ul>
         </section>

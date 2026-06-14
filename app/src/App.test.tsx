@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
+
+type PendoWindow = typeof window & { pendo?: { track?: (...args: unknown[]) => void } }
 
 describe('Throughline landing page', () => {
   it('has a single top-level heading', () => {
@@ -84,5 +86,38 @@ describe('Throughline landing page', () => {
 
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/name/i)).not.toBeInTheDocument()
+  })
+})
+
+describe('Throughline landing analytics', () => {
+  const w = window as PendoWindow
+  let pendoTrack: ReturnType<typeof vi.fn>
+
+  beforeEach(() => {
+    pendoTrack = vi.fn()
+    w.pendo = { track: pendoTrack as (...args: unknown[]) => void }
+  })
+
+  afterEach(() => {
+    delete w.pendo
+  })
+
+  it('records where a person started First Step Out from', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /start first step out/i }))
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_start', { source: 'hero' })
+  })
+
+  it('records starting from a feature card', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const card = screen.getByRole('heading', { name: /^first step out$/i }).closest('li')
+    await user.click(within(card as HTMLElement).getByRole('button', { name: /^start$/i }))
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_start', { source: 'card' })
   })
 })

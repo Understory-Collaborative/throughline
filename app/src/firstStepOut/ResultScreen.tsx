@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import type { AcceptedDocs, Category, Result, ResultDoc, Slot } from '../content/firstStepOut'
+import type {
+  AcceptedDocs,
+  Category,
+  CategoryId,
+  Result,
+  ResultDoc,
+  Slot,
+} from '../content/firstStepOut'
 import { Icon } from './Icon'
 import { Progress } from './Progress'
 import { PrintableSheet } from './PrintableSheet'
@@ -145,7 +152,7 @@ function Pips({ slots }: { slots: Slot[] }) {
 }
 
 /** One card in the hand. Filled holds a paper. Empty is a dotted placeholder. */
-function SlotCard({ slot }: { slot: Slot }) {
+function SlotCard({ slot, area }: { slot: Slot; area: CategoryId }) {
   if (slot.filled && slot.doc) {
     const { doc } = slot
     return (
@@ -177,7 +184,12 @@ function SlotCard({ slot }: { slot: Slot }) {
 
   return (
     <li>
-      <details className="group">
+      <details
+        className="group"
+        onToggle={(e) => {
+          if (e.currentTarget.open) track({ name: 'fso_options_open', area })
+        }}
+      >
         <summary className="flex cursor-pointer list-none items-center gap-3 rounded-2xl border-2 border-dashed border-leather/60 bg-paper/30 p-3 text-support marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
           <span
             aria-hidden="true"
@@ -221,7 +233,7 @@ function CategoryBlock({ category, index }: { category: Category; index: number 
 
       <ul className="mt-3 flex flex-col gap-2">
         {category.slots.map((slot, i) => (
-          <SlotCard key={slot.doc?.title ?? `empty-${i}`} slot={slot} />
+          <SlotCard key={slot.doc?.title ?? `empty-${i}`} slot={slot} area={category.id} />
         ))}
       </ul>
 

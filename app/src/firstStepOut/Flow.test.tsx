@@ -216,4 +216,26 @@ describe('First Step Out analytics', () => {
 
     expect(pendoTrack).toHaveBeenCalledWith('fso_link', { target: 'birth_cert' })
   })
+
+  it('records opening the list of papers that count for an area', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /do not have either one/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /i have the card/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /with family or a friend/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these right now/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these apply/i }))
+    await user.click(screen.getByRole('button', { name: /see my documents/i }))
+
+    await user.click(screen.getByText('Add 1 paper'))
+
+    expect(pendoTrack).toHaveBeenCalledWith('fso_options_open', { area: 'citizenship' })
+  })
 })
