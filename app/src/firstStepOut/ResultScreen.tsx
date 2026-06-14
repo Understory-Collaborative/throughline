@@ -230,6 +230,7 @@ function CategoryBlock({ category, index }: { category: Category; index: number 
         </h2>
         <Pips slots={category.slots} />
       </div>
+      <p className="mt-2 text-base font-medium leading-relaxed text-ink">{category.summary}</p>
 
       <ul className="mt-3 flex flex-col gap-2">
         {category.slots.map((slot, i) => (

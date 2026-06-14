@@ -63,6 +63,28 @@ describe('First Step Out flow', () => {
     expect(within(residency).getByText(/lease or mortgage/i)).toBeInTheDocument()
   })
 
+  it('shows the plain-language status line for an area on screen', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    // A path that leaves identity short: smaller papers but no key paper.
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /do not have either one/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /i have the card/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /with family or a friend/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these right now/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these apply/i }))
+    await user.click(screen.getByRole('button', { name: /see my documents/i }))
+
+    const identity = screen.getByRole('region', { name: /proof of who you are/i })
+    expect(within(identity).getByText(/not enough by themselves/i)).toBeInTheDocument()
+  })
+
   it('always shows a single clear next step', async () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
