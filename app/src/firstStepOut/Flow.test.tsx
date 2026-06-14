@@ -60,7 +60,7 @@ describe('First Step Out flow', () => {
     expect(within(citizenship).getByText(/birth certificate/i)).toBeInTheDocument()
 
     const residency = screen.getByRole('region', { name: /proof of where you live/i })
-    expect(within(residency).getByText(/utility or phone bill/i)).toBeInTheDocument()
+    expect(within(residency).getByText(/lease or mortgage/i)).toBeInTheDocument()
   })
 
   it('always shows a single clear next step', async () => {

@@ -72,6 +72,7 @@ describe('assembleResult: three DPS areas', () => {
       for (const c of r.categories) {
         all.push(c.title, c.rule, c.summary)
         all.push(...c.accepted.common, ...c.accepted.more, ...c.accepted.rest)
+        for (const s of c.slots) all.push(s.needLabel ?? '')
         for (const d of [...c.have, ...c.get]) all.push(d.title, d.detail, d.tag ?? '')
       }
     }
@@ -199,6 +200,51 @@ describe('assembleResult: residency', () => {
     const titles = category(result, 'residency').get.map((d) => d.title)
     expect(titles).toContainEqual(expect.stringMatching(/open a free checking account/i))
     expect(titles).toContainEqual(expect.stringMatching(/medicaid or snap/i))
+  })
+})
+
+describe('assembleResult: slots (the card hand)', () => {
+  it('gives citizenship one slot, empty when nothing is held', () => {
+    const cit = category(assembleResult(answers({ birth: 'neither' })), 'citizenship')
+    expect(cit.slots).toHaveLength(1)
+    expect(cit.slots[0].filled).toBe(false)
+    expect(cit.slots[0].needLabel).toBeTruthy()
+  })
+
+  it('fills the citizenship slot when a passport is held', () => {
+    const cit = category(assembleResult(answers({ birth: 'passport' })), 'citizenship')
+    expect(cit.slots[0].filled).toBe(true)
+    expect(cit.slots[0].doc?.title).toMatch(/passport/i)
+  })
+
+  it('gives residency two slots and fills what is held', () => {
+    const res = category(assembleResult(answers({ housing: 'own' })), 'residency')
+    expect(res.slots).toHaveLength(2)
+    expect(res.slots.filter((s) => s.filled)).toHaveLength(1)
+    expect(res.slots.filter((s) => !s.filled)).toHaveLength(1)
+  })
+
+  it('shows identity as a single slot when a passport stands alone', () => {
+    const id = category(assembleResult(answers({ birth: 'passport' })), 'identity')
+    expect(id.slots).toHaveLength(1)
+    expect(id.slots[0].filled).toBe(true)
+  })
+
+  it('shows identity as a key paper plus two smaller papers otherwise', () => {
+    const id = category(assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' })), 'identity')
+    expect(id.slots).toHaveLength(3)
+    // Key paper slot empty (no birth certificate), two smaller slots filled.
+    expect(id.slots[0].filled).toBe(false)
+    expect(id.slots.filter((s) => s.filled)).toHaveLength(2)
+  })
+
+  it('marks an area met only when every slot is filled', () => {
+    const result = assembleResult(
+      answers({ birth: 'passport', tdcj: 'parole', housing: 'own', mail: ['utility'] }),
+    )
+    for (const c of result.categories) {
+      expect(c.met).toBe(c.slots.every((s) => s.filled))
+    }
   })
 })
 

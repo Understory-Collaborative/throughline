@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { AcceptedDocs, Category, Result, ResultDoc } from '../content/firstStepOut'
+import type { AcceptedDocs, Category, Result, ResultDoc, Slot } from '../content/firstStepOut'
 import { Icon } from './Icon'
 import { Progress } from './Progress'
 import { PrintableSheet } from './PrintableSheet'
@@ -89,38 +89,92 @@ function WhatCounts({ accepted }: { accepted: AcceptedDocs }) {
   )
 }
 
-function CategoryBlock({ category, index }: { category: Category; index: number }) {
-  const chip = category.met ? 'bg-primary/12 text-primary' : 'bg-honey/15 text-mahogany'
-  const chipLabel = category.met ? 'You have this' : 'Not yet'
+/** A row of dots that reads like a scorecard: filled versus still open. */
+function Pips({ slots }: { slots: Slot[] }) {
+  const filled = slots.filter((s) => s.filled).length
+  return (
+    <span
+      className="flex items-center gap-1.5"
+      role="img"
+      aria-label={`${filled} of ${slots.length} collected`}
+    >
+      {slots.map((slot, i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className={`h-3 w-3 rounded-full ${
+            slot.filled ? 'bg-primary' : 'border-2 border-dashed border-leather'
+          }`}
+        />
+      ))}
+    </span>
+  )
+}
+
+/** One card in the hand. Filled holds a paper. Empty is a dotted placeholder. */
+function SlotCard({ slot }: { slot: Slot }) {
+  if (slot.filled && slot.doc) {
+    const { doc } = slot
+    return (
+      <li className="flex items-center gap-3 rounded-2xl border border-line border-l-4 border-l-primary bg-surface p-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <Icon name={doc.icon} className="h-[18px] w-[18px]" />
+        </span>
+        <span className="min-w-0 flex-1 text-base font-medium text-ink">{doc.title}</span>
+        {doc.tag && (
+          <span className="hidden shrink-0 rounded-full bg-paper px-2 py-0.5 text-xs font-semibold text-support sm:inline">
+            {doc.tag}
+          </span>
+        )}
+        <svg
+          viewBox="0 0 20 20"
+          className="h-5 w-5 shrink-0 text-primary"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="4,10 8,14 16,5" />
+        </svg>
+      </li>
+    )
+  }
 
   return (
+    <li className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-leather/60 bg-paper/30 p-3 text-support">
+      <span
+        aria-hidden="true"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-leather/60 text-xl font-bold leading-none text-leather"
+      >
+        +
+      </span>
+      <span className="flex-1 text-base font-medium">{slot.needLabel}</span>
+    </li>
+  )
+}
+
+function CategoryBlock({ category, index }: { category: Category; index: number }) {
+  return (
     <section className="mt-6" aria-labelledby={`cat-${category.id}`}>
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id={`cat-${category.id}`} className="font-display text-xl font-medium text-ink">
           {index}. {category.title}
         </h2>
-        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${chip}`}>{chipLabel}</span>
+        <Pips slots={category.slots} />
       </div>
-      <p className="mt-1 text-sm text-support">{category.rule}</p>
-      <p className="mt-2 text-base font-medium leading-relaxed text-ink">{category.summary}</p>
 
-      {category.have.length > 0 && (
-        <>
-          <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-support">
-            What you already have
-          </p>
-          <ul className="flex flex-col gap-2">
-            {category.have.map((doc) => (
-              <DocItem key={doc.title} doc={doc} tone="have" />
-            ))}
-          </ul>
-        </>
-      )}
+      <ul className="mt-3 flex flex-col gap-2">
+        {category.slots.map((slot, i) => (
+          <SlotCard key={slot.doc?.title ?? `empty-${i}`} slot={slot} />
+        ))}
+      </ul>
 
       {category.get.length > 0 && (
         <>
           <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-widest text-support">
-            {category.have.length > 0 ? 'Quick ways to get more' : 'Quick ways to get one'}
+            {category.have.length > 0 ? 'How to get more' : 'How to get one'}
           </p>
           <ul className="flex flex-col gap-2">
             {category.get.map((doc) => (

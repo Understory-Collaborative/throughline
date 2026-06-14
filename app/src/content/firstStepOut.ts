@@ -278,6 +278,20 @@ export interface ResultDoc {
 export type CategoryId = 'citizenship' | 'identity' | 'residency'
 
 /**
+ * One spot in an area's "hand". A filled slot holds a paper the person has. An
+ * empty slot is a placeholder that shows, at a glance, that a paper is still
+ * needed there. This lets the result read like a card hand instead of a wall of
+ * text.
+ */
+export interface Slot {
+  filled: boolean
+  /** The paper held here, when the slot is filled. */
+  doc?: ResultDoc
+  /** A short label for what goes here, when the slot is empty. */
+  needLabel?: string
+}
+
+/**
  * The papers DPS accepts for an area, in plain words, sorted by how common they
  * are for this audience. We show the common set first, then let a person open
  * "more" and the full list. This keeps a long government list from landing on a
@@ -371,8 +385,17 @@ export interface Category {
   have: ResultDoc[]
   /** Quick ways to fill the gap when they are short. */
   get: ResultDoc[]
+  /** The hand for this area: filled slots and empty placeholders. */
+  slots: Slot[]
   /** The full menu of papers DPS accepts for this area, plain and tiered. */
   accepted: AcceptedDocs
+}
+
+/** Build a row of slots that just needs a count, filling from what is held. */
+function countSlots(have: ResultDoc[], need: number, needLabel: string): Slot[] {
+  return Array.from({ length: need }, (_, i) =>
+    i < have.length ? { filled: true, doc: have[i] } : { filled: false, needLabel },
+  )
 }
 
 export interface NextStep {
@@ -664,6 +687,29 @@ export function assembleResult(answers: Answers): Result {
     })
   }
 
+  // ---- Slots: a card hand per area, filled from what the person has ----
+  const citSlots = countSlots(citHave, 1, 'Add 1 paper')
+  const resSlots = countSlots(resHave, 2, 'Add a paper')
+
+  // Identity is not a simple count. A passport stands alone. Otherwise the hand
+  // is a key paper plus 2 smaller papers.
+  const passportDoc = idHave.find((d) => d.tag === 'Strong on its own')
+  const birthDoc = idHave.find((d) => d.tag === 'Key paper')
+  const smallerDocs = idHave.filter((d) => d.tag === 'Smaller paper')
+  const idSlots: Slot[] = passportDoc
+    ? [{ filled: true, doc: passportDoc }]
+    : [
+        birthDoc
+          ? { filled: true, doc: birthDoc }
+          : { filled: false, needLabel: 'Add a key paper' },
+        smallerDocs[0]
+          ? { filled: true, doc: smallerDocs[0] }
+          : { filled: false, needLabel: 'Add a smaller paper' },
+        smallerDocs[1]
+          ? { filled: true, doc: smallerDocs[1] }
+          : { filled: false, needLabel: 'Add a smaller paper' },
+      ]
+
   const categories: Category[] = [
     {
       id: 'citizenship',
@@ -673,6 +719,7 @@ export function assembleResult(answers: Answers): Result {
       summary: citizenshipSummary,
       have: citHave,
       get: citGet,
+      slots: citSlots,
       accepted: acceptedByCategory.citizenship,
     },
     {
@@ -683,6 +730,7 @@ export function assembleResult(answers: Answers): Result {
       summary: identitySummary,
       have: idHave,
       get: idGet,
+      slots: idSlots,
       accepted: acceptedByCategory.identity,
     },
     {
@@ -693,6 +741,7 @@ export function assembleResult(answers: Answers): Result {
       summary: residencySummary,
       have: resHave,
       get: resGet,
+      slots: resSlots,
       accepted: acceptedByCategory.residency,
     },
   ]
