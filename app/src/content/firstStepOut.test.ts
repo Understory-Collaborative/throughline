@@ -1,100 +1,280 @@
 import { describe, it, expect } from 'vitest'
-import { assembleResult, emptyAnswers, questions, type Answers } from './firstStepOut'
+import {
+  assembleResult,
+  emptyAnswers,
+  questions,
+  type Answers,
+  type CategoryId,
+  type Result,
+} from './firstStepOut'
 
 function answers(overrides: Partial<Answers>): Answers {
   return { ...emptyAnswers, ...overrides }
 }
 
+function category(result: Result, id: CategoryId) {
+  const found = result.categories.find((c) => c.id === id)
+  if (!found) throw new Error(`missing category ${id}`)
+  return found
+}
+
 describe('First Step Out question tree', () => {
-  it('asks the four planned questions in order', () => {
-    expect(questions.map((q) => q.id)).toEqual(['tdcj', 'housing', 'mail', 'extras'])
+  it('asks the planned questions in order', () => {
+    expect(questions.map((q) => q.id)).toEqual([
+      'tdcj',
+      'birth',
+      'ssn',
+      'housing',
+      'mail',
+      'extras',
+    ])
   })
 
   it('marks the mail and extras questions as multi-select', () => {
     const byId = Object.fromEntries(questions.map((q) => [q.id, q]))
     expect(byId.tdcj.multi).toBe(false)
+    expect(byId.birth.multi).toBe(false)
+    expect(byId.ssn.multi).toBe(false)
     expect(byId.housing.multi).toBe(false)
     expect(byId.mail.multi).toBe(true)
     expect(byId.extras.multi).toBe(true)
   })
 
-  it('follows house style, with no em dashes in any copy', () => {
+  it('follows house style, with no em dashes in any question copy', () => {
     const allCopy = questions
-      .flatMap((q) => [q.prompt, q.help, q.notice ?? '', ...q.options.flatMap((o) => [o.title, o.sub ?? ''])])
+      .flatMap((q) => [
+        q.prompt,
+        q.help,
+        q.notice ?? '',
+        ...q.options.flatMap((o) => [o.title, o.sub ?? '']),
+      ])
       .join(' ')
     expect(allCopy).not.toContain('—')
   })
 })
 
-describe('assembleResult', () => {
-  it('treats TDCJ release paperwork as covering residency on its own', () => {
-    const result = assembleResult(answers({ tdcj: 'yes' }))
-
-    expect(result.have).toHaveLength(1)
-    expect(result.have[0].title).toMatch(/TDCJ release or parole paperwork/i)
-    expect(result.headline).toBe('You are closer than you think.')
+describe('assembleResult: three DPS areas', () => {
+  it('returns citizenship, identity, and residency, in that order', () => {
+    const result = assembleResult(emptyAnswers)
+    expect(result.categories.map((c) => c.id)).toEqual(['citizenship', 'identity', 'residency'])
   })
 
-  it('accepts federal release paperwork', () => {
-    const result = assembleResult(answers({ tdcj: 'federal' }))
+  it('follows house style, with no em dashes in any result copy', () => {
+    const all: string[] = []
+    for (const ans of [
+      emptyAnswers,
+      answers({ tdcj: 'parole', birth: 'birth', ssn: 'yes', housing: 'own', mail: ['utility'] }),
+      answers({ tdcj: 'no', birth: 'neither', ssn: 'no', housing: 'halfway' }),
+      answers({ tdcj: 'discharged', birth: 'passport', ssn: 'yes' }),
+    ]) {
+      const r = assembleResult(ans)
+      all.push(r.headline, r.subtext, r.nextStep.title, r.nextStep.detail)
+      for (const c of r.categories) {
+        all.push(c.title, c.rule, c.summary)
+        all.push(...c.accepted.common, ...c.accepted.more, ...c.accepted.rest)
+        for (const s of c.slots) all.push(s.needLabel ?? '')
+        for (const d of [...c.have, ...c.get]) all.push(d.title, d.detail, d.tag ?? '')
+      }
+    }
+    expect(all.join(' ')).not.toContain('—')
+  })
+})
 
-    expect(result.have[0].title).toMatch(/federal release certificate/i)
+describe('assembleResult: citizenship', () => {
+  it('is met by a passport', () => {
+    const result = assembleResult(answers({ birth: 'passport' }))
+    expect(category(result, 'citizenship').met).toBe(true)
   })
 
-  it('counts a person\'s own place as a residency document they already have', () => {
-    const result = assembleResult(answers({ tdcj: 'no', housing: 'own' }))
+  it('is met by a birth certificate', () => {
+    const result = assembleResult(answers({ birth: 'birth' }))
+    expect(category(result, 'citizenship').met).toBe(true)
+  })
 
-    expect(result.have.map((i) => i.title)).toContainEqual(
-      expect.stringMatching(/lease, rental agreement, or mortgage/i),
+  it('points to ordering a birth certificate when neither is held', () => {
+    const result = assembleResult(answers({ birth: 'neither' }))
+    const cit = category(result, 'citizenship')
+    expect(cit.met).toBe(false)
+    expect(cit.get.map((d) => d.title)).toContainEqual(expect.stringMatching(/order your birth certificate/i))
+  })
+
+  it('lists the papers that count, so "1 of these" is never empty', () => {
+    const cit = category(assembleResult(answers({ birth: 'neither' })), 'citizenship')
+    expect(cit.accepted.common.length).toBeGreaterThan(0)
+    expect(cit.accepted.common.join(' ')).toMatch(/passport/i)
+    expect(cit.accepted.common.join(' ')).toMatch(/birth certificate/i)
+  })
+
+  it('gives every area a tiered list of what counts', () => {
+    for (const c of assembleResult(emptyAnswers).categories) {
+      expect(c.accepted.common.length).toBeGreaterThan(0)
+      expect(Array.isArray(c.accepted.more)).toBe(true)
+      expect(Array.isArray(c.accepted.rest)).toBe(true)
+    }
+  })
+})
+
+describe('assembleResult: identity', () => {
+  it('is met by a passport on its own', () => {
+    const result = assembleResult(answers({ birth: 'passport' }))
+    expect(category(result, 'identity').met).toBe(true)
+  })
+
+  it('is not met by a birth certificate alone', () => {
+    const result = assembleResult(answers({ birth: 'birth' }))
+    expect(category(result, 'identity').met).toBe(false)
+  })
+
+  it('explains the gap when smaller papers are held but no key paper is', () => {
+    // Two smaller papers (TDCJ + Social Security) but no birth certificate.
+    const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
+    const identity = category(result, 'identity')
+
+    expect(identity.met).toBe(false)
+    expect(identity.summary).toMatch(/not enough by themselves/i)
+    expect(identity.summary).toMatch(/birth certificate or a u\.s\. passport/i)
+  })
+
+  it('labels each identity paper with its strength', () => {
+    const result = assembleResult(answers({ birth: 'passport', tdcj: 'parole', ssn: 'yes' }))
+    const tags = category(result, 'identity').have.map((d) => d.tag)
+
+    expect(tags).toContain('Strong on its own')
+    expect(tags).toContain('Smaller paper')
+  })
+
+  it('tells a passport holder they are set on identity', () => {
+    const result = assembleResult(answers({ birth: 'passport' }))
+    expect(category(result, 'identity').summary).toMatch(/on its own/i)
+  })
+
+  it('is met by a birth certificate plus two smaller papers', () => {
+    const result = assembleResult(answers({ birth: 'birth', tdcj: 'parole', ssn: 'yes' }))
+    expect(category(result, 'identity').met).toBe(true)
+  })
+
+  it('lists the parole certificate as proof of identity for someone on parole', () => {
+    const result = assembleResult(answers({ tdcj: 'parole' }))
+    expect(category(result, 'identity').have.map((d) => d.title)).toContainEqual(
+      expect.stringMatching(/TDCJ parole certificate/i),
     )
   })
 
-  it('lists each piece of qualifying mail the person selected', () => {
+  it('lists release papers as proof of identity for someone fully discharged', () => {
+    const result = assembleResult(answers({ tdcj: 'discharged' }))
+    expect(category(result, 'identity').have.map((d) => d.title)).toContainEqual(
+      expect.stringMatching(/TDCJ release papers/i),
+    )
+  })
+})
+
+describe('assembleResult: residency', () => {
+  it('needs two papers, so one is not enough', () => {
+    const result = assembleResult(answers({ housing: 'own' }))
+    const res = category(result, 'residency')
+    expect(res.have).toHaveLength(1)
+    expect(res.met).toBe(false)
+  })
+
+  it('is met with two qualifying papers', () => {
+    const result = assembleResult(answers({ housing: 'own', mail: ['utility'] }))
+    expect(category(result, 'residency').met).toBe(true)
+  })
+
+  it('counts TDCJ paperwork toward residency', () => {
+    const result = assembleResult(answers({ tdcj: 'parole' }))
+    expect(category(result, 'residency').have.map((d) => d.title)).toContainEqual(
+      expect.stringMatching(/TDCJ parole certificate/i),
+    )
+  })
+
+  it('points a halfway house resident to a facility letter when short', () => {
+    const result = assembleResult(answers({ housing: 'halfway' }))
+    expect(category(result, 'residency').get.map((d) => d.title)).toContainEqual(
+      expect.stringMatching(/halfway house for a letter/i),
+    )
+  })
+
+  it('offers concrete ways to make address mail when short', () => {
+    const result = assembleResult(answers({ housing: 'family' }))
+    const titles = category(result, 'residency').get.map((d) => d.title)
+    expect(titles).toContainEqual(expect.stringMatching(/open a free checking account/i))
+    expect(titles).toContainEqual(expect.stringMatching(/medicaid or snap/i))
+  })
+
+  it('links the SNAP step straight to the Texas benefits site', () => {
+    const snap = category(assembleResult(answers({ housing: 'family' })), 'residency').get.find((d) =>
+      /medicaid or snap/i.test(d.title),
+    )
+    expect(snap?.href).toBe('https://yourtexasbenefits.com/Learn/Home')
+  })
+})
+
+describe('assembleResult: slots (the card hand)', () => {
+  it('gives citizenship one slot, empty when nothing is held', () => {
+    const cit = category(assembleResult(answers({ birth: 'neither' })), 'citizenship')
+    expect(cit.slots).toHaveLength(1)
+    expect(cit.slots[0].filled).toBe(false)
+    expect(cit.slots[0].needLabel).toBeTruthy()
+  })
+
+  it('fills the citizenship slot when a passport is held', () => {
+    const cit = category(assembleResult(answers({ birth: 'passport' })), 'citizenship')
+    expect(cit.slots[0].filled).toBe(true)
+    expect(cit.slots[0].doc?.title).toMatch(/passport/i)
+  })
+
+  it('gives residency two slots and fills what is held', () => {
+    const res = category(assembleResult(answers({ housing: 'own' })), 'residency')
+    expect(res.slots).toHaveLength(2)
+    expect(res.slots.filter((s) => s.filled)).toHaveLength(1)
+    expect(res.slots.filter((s) => !s.filled)).toHaveLength(1)
+  })
+
+  it('shows identity as a single slot when a passport stands alone', () => {
+    const id = category(assembleResult(answers({ birth: 'passport' })), 'identity')
+    expect(id.slots).toHaveLength(1)
+    expect(id.slots[0].filled).toBe(true)
+  })
+
+  it('shows identity as a key paper plus two smaller papers otherwise', () => {
+    const id = category(assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' })), 'identity')
+    expect(id.slots).toHaveLength(3)
+    // Key paper slot empty (no birth certificate), two smaller slots filled.
+    expect(id.slots[0].filled).toBe(false)
+    expect(id.slots.filter((s) => s.filled)).toHaveLength(2)
+  })
+
+  it('marks an area met only when every slot is filled', () => {
     const result = assembleResult(
-      answers({ tdcj: 'no', housing: 'own', mail: ['utility', 'bank', 'govt', 'paystub'] }),
+      answers({ birth: 'passport', tdcj: 'parole', housing: 'own', mail: ['utility'] }),
     )
+    for (const c of result.categories) {
+      expect(c.met).toBe(c.slots.every((s) => s.filled))
+    }
+  })
+})
 
-    const titles = result.have.map((i) => i.title)
-    expect(titles).toContainEqual(expect.stringMatching(/utility or phone bill/i))
-    expect(titles).toContainEqual(expect.stringMatching(/bank or credit card statement/i))
-    expect(titles).toContainEqual(expect.stringMatching(/government agency letter/i))
-    expect(titles).toContainEqual(expect.stringMatching(/pay stub/i))
+describe('assembleResult: the single next step', () => {
+  it('leads with the birth certificate when citizenship is missing', () => {
+    const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
+    expect(result.nextStep.title).toMatch(/order your birth certificate/i)
+    expect(result.nextStep.href).toBe('https://ovra.txapps.texas.gov/ovra/order-birth-certificate')
   })
 
-  it('includes the extra documents a person already holds', () => {
+  it('links the birth certificate card straight to the Texas order page', () => {
+    const order = category(assembleResult(answers({ birth: 'neither' })), 'citizenship').get.find(
+      (d) => /order your birth certificate/i.test(d.title),
+    )
+    expect(order?.href).toBe('https://ovra.txapps.texas.gov/ovra/order-birth-certificate')
+  })
+
+  it('sends a fully covered person to DPS', () => {
     const result = assembleResult(
-      answers({ tdcj: 'no', housing: 'own', extras: ['voter', 'vehicle', 'military', 'insurance'] }),
+      answers({ birth: 'passport', tdcj: 'parole', housing: 'own', mail: ['utility'] }),
     )
-
-    const titles = result.have.map((i) => i.title)
-    expect(titles).toContainEqual(expect.stringMatching(/voter registration/i))
-    expect(titles).toContainEqual(expect.stringMatching(/vehicle or boat registration/i))
-    expect(titles).toContainEqual(expect.stringMatching(/military or VA document/i))
-    expect(titles).toContainEqual(expect.stringMatching(/insurance card or statement/i))
-  })
-
-  it('points a halfway house resident to a facility letter', () => {
-    const result = assembleResult(answers({ tdcj: 'no', housing: 'halfway' }))
-
-    expect(result.get.map((i) => i.title)).toContainEqual(
-      expect.stringMatching(/letter from your reentry facility/i),
-    )
-  })
-
-  it('offers a concrete next step when nothing qualifies yet', () => {
-    const result = assembleResult(answers({ tdcj: 'no', housing: 'family' }))
-
-    expect(result.have).toHaveLength(0)
-    expect(result.headline).toBe('Here is your next step.')
-    const getTitles = result.get.map((i) => i.title)
-    expect(getTitles).toContainEqual(expect.stringMatching(/open a bank account/i))
-    expect(getTitles).toContainEqual(expect.stringMatching(/medicaid or snap/i))
-  })
-
-  it('does not push fallback steps when the person already has a document', () => {
-    const result = assembleResult(answers({ tdcj: 'no', housing: 'family', mail: ['utility'] }))
-
-    expect(result.have).toHaveLength(1)
-    expect(result.get).toHaveLength(0)
+    expect(result.categories.every((c) => c.met)).toBe(true)
+    expect(result.headline).toBe('You have what you need.')
+    expect(result.nextStep.title).toMatch(/take your papers to dps/i)
   })
 })

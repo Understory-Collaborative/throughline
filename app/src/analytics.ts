@@ -10,14 +10,22 @@
  * See the privacy-as-safety pillar in the root CLAUDE.md and the Pendo snippet
  * in index.html.
  */
-import type { QuestionId } from './content/firstStepOut'
+import type { CategoryId, QuestionId } from './content/firstStepOut'
 
 export type AnalyticsEvent =
+  // Which way a person launched First Step Out from the landing page.
+  | { name: 'fso_start'; source: 'hero' | 'card' | 'nav' }
   | { name: 'fso_step_view'; step: QuestionId }
   | { name: 'fso_result_view' }
   | { name: 'fso_back'; from: QuestionId }
   | { name: 'fso_restart' }
-  | { name: 'fso_resume' }
+  | { name: 'fso_print' }
+  | { name: 'fso_share' }
+  // Which public resource a person opened from the result. This is the help
+  // signal, not personal data. We send the resource, never what they answered.
+  | { name: 'fso_link'; target: 'birth_cert' | 'snap' | 'other' }
+  // A person opened the "papers that count" list for an area to see options.
+  | { name: 'fso_options_open'; area: CategoryId }
 
 interface PendoAgent {
   track?: (name: string, properties?: Record<string, unknown>) => void
