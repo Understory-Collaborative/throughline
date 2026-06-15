@@ -75,6 +75,16 @@ describe('Throughline landing page', () => {
     expect(screen.getByRole('button', { name: /start first step out/i })).toBeInTheDocument()
   })
 
+  it('makes clear it is not a government site and links to the official one', () => {
+    render(<App />)
+
+    expect(
+      screen.getByText(/not part of the texas department of criminal justice/i),
+    ).toBeInTheDocument()
+    const official = screen.getByRole('link', { name: /tdcj\.texas\.gov/i })
+    expect(official).toHaveAttribute('href', 'https://www.tdcj.texas.gov/')
+  })
+
   it('leads its privacy promise with protecting privacy', () => {
     render(<App />)
 
