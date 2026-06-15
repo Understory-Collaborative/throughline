@@ -85,6 +85,35 @@ describe('First Step Out flow', () => {
     expect(within(identity).getByText(/not enough by themselves/i)).toBeInTheDocument()
   })
 
+  it('fills an area progress dots from the left, by count', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    // Parole plus a Social Security card is two smaller papers and no key
+    // paper, so identity sits at 2 of 3 with its empty slot in the middle.
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /do not have either one/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /i have the card/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /with family or a friend/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these right now/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('checkbox', { name: /none of these apply/i }))
+    await user.click(screen.getByRole('button', { name: /see my documents/i }))
+
+    const identity = screen.getByRole('region', { name: /proof of who you are/i })
+    const dots = within(identity).getByRole('img', { name: /2 of 3 collected/i })
+    const cells = Array.from(dots.children)
+    expect(cells).toHaveLength(3)
+    // The two filled dots lead, the empty one trails, regardless of which slot holds a paper.
+    expect(cells[0].className).toContain('bg-primary')
+    expect(cells[1].className).toContain('bg-primary')
+    expect(cells[2].className).toContain('border-dashed')
+  })
+
   it('always shows a single clear next step', async () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
