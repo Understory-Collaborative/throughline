@@ -15,6 +15,9 @@ async function completeFlow(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('radio', { name: /my birth certificate/i }))
   await user.click(screen.getByRole('button', { name: /continue/i }))
 
+  await user.click(screen.getByRole('radio', { name: /original or certified copy/i }))
+  await user.click(screen.getByRole('button', { name: /continue/i }))
+
   await user.click(screen.getByRole('radio', { name: /i have the card/i }))
   await user.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -33,7 +36,7 @@ describe('First Step Out flow', () => {
     render(<Flow onExit={noop} />)
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /on parole, or are you fully done/i }),
+      screen.getByRole('heading', { level: 1, name: /on parole, or are you finished/i }),
     ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /continue/i })).toBeDisabled()
   })
@@ -133,7 +136,7 @@ describe('First Step Out flow', () => {
     render(<Flow onExit={noop} />)
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /on parole, or are you fully done/i }),
+      screen.getByRole('heading', { level: 1, name: /on parole, or are you finished/i }),
     ).toBeInTheDocument()
   })
 
@@ -153,6 +156,8 @@ describe('First Step Out flow', () => {
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
     await user.click(screen.getByRole('radio', { name: /my birth certificate/i }))
+    await user.click(screen.getByRole('button', { name: /continue/i }))
+    await user.click(screen.getByRole('radio', { name: /original or certified copy/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
     await user.click(screen.getByRole('radio', { name: /i have the card/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
@@ -285,7 +290,8 @@ describe('First Step Out analytics', () => {
     await user.click(screen.getByRole('checkbox', { name: /none of these apply/i }))
     await user.click(screen.getByRole('button', { name: /see my documents/i }))
 
-    await user.click(screen.getByText('Add 1 paper'))
+    const citizenship = screen.getByRole('region', { name: /proof you are a u\.s\. citizen/i })
+    await user.click(within(citizenship).getByText('You still need 1 of these'))
 
     expect(pendoTrack).toHaveBeenCalledWith('fso_options_open', { area: 'citizenship' })
   })

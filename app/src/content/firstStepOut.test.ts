@@ -3,6 +3,7 @@ import {
   assembleResult,
   emptyAnswers,
   questions,
+  visibleQuestions,
   type Answers,
   type CategoryId,
   type Result,
@@ -23,11 +24,26 @@ describe('First Step Out question tree', () => {
     expect(questions.map((q) => q.id)).toEqual([
       'tdcj',
       'birth',
+      'passportValid',
+      'birthOriginal',
       'ssn',
       'housing',
       'mail',
       'extras',
     ])
+  })
+
+  it('only shows the passport date question after a person says they have a passport', () => {
+    const ids = (a: Partial<Answers>) => visibleQuestions(answers(a)).map((q) => q.id)
+
+    expect(ids({ birth: 'passport' })).toContain('passportValid')
+    expect(ids({ birth: 'passport' })).not.toContain('birthOriginal')
+
+    expect(ids({ birth: 'birth' })).toContain('birthOriginal')
+    expect(ids({ birth: 'birth' })).not.toContain('passportValid')
+
+    expect(ids({ birth: 'neither' })).not.toContain('passportValid')
+    expect(ids({ birth: 'neither' })).not.toContain('birthOriginal')
   })
 
   it('tells people their proof of address papers need their name on them', () => {
@@ -99,6 +115,26 @@ describe('assembleResult: citizenship', () => {
   it('points to ordering a birth certificate when neither is held', () => {
     const result = assembleResult(answers({ birth: 'neither' }))
     const cit = category(result, 'citizenship')
+    expect(cit.met).toBe(false)
+    expect(cit.get.map((d) => d.title)).toContainEqual(expect.stringMatching(/order your birth certificate/i))
+  })
+
+  it('does not count an expired passport', () => {
+    const valid = assembleResult(answers({ birth: 'passport', passportValid: 'yes' }))
+    expect(category(valid, 'citizenship').met).toBe(true)
+    expect(category(valid, 'identity').met).toBe(true)
+
+    const expired = assembleResult(answers({ birth: 'passport', passportValid: 'expired' }))
+    expect(category(expired, 'citizenship').met).toBe(false)
+    expect(category(expired, 'identity').met).toBe(false)
+  })
+
+  it('does not count a photocopy birth certificate', () => {
+    const original = assembleResult(answers({ birth: 'birth', birthOriginal: 'original' }))
+    expect(category(original, 'citizenship').met).toBe(true)
+
+    const copy = assembleResult(answers({ birth: 'birth', birthOriginal: 'copy' }))
+    const cit = category(copy, 'citizenship')
     expect(cit.met).toBe(false)
     expect(cit.get.map((d) => d.title)).toContainEqual(expect.stringMatching(/order your birth certificate/i))
   })
