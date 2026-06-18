@@ -645,14 +645,14 @@ export function assembleResult(answers: Answers): Result {
     const need = 2 - supporting
     identitySummary =
       need === 1
-        ? 'You have your birth certificate and 1 supporting paper. Add 1 more supporting paper and you are set.'
-        : 'You have your birth certificate. Add 2 supporting papers, like your Social Security card and a voter card, and you are set.'
+        ? 'You have your birth certificate and 1 supporting paper. Bring 1 more supporting paper and you are set.'
+        : 'You have your birth certificate. Bring 2 supporting papers, like your Social Security card and a voter card, and you are set.'
   } else if (supporting >= 2) {
     identitySummary =
-      'Your supporting papers count, but they are not enough by themselves. Add your birth certificate or a U.S. passport and you are set.'
+      'Your supporting papers count, but they are not enough by themselves. Bring your birth certificate or a U.S. passport and you are set.'
   } else if (supporting === 1) {
     identitySummary =
-      'You have 1 supporting paper. Add your birth certificate or a U.S. passport to finish this.'
+      'You have 1 supporting paper. Bring your birth certificate or a U.S. passport to finish this.'
   } else {
     identitySummary =
       'Bring a U.S. passport on its own, or your birth certificate plus 2 supporting papers.'
