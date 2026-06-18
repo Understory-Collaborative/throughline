@@ -33,7 +33,15 @@ export type IconName =
   | 'doc'
   | 'check'
 
-export type QuestionId = 'tdcj' | 'birth' | 'ssn' | 'housing' | 'mail' | 'extras'
+export type QuestionId =
+  | 'tdcj'
+  | 'birth'
+  | 'passportValid'
+  | 'birthOriginal'
+  | 'ssn'
+  | 'housing'
+  | 'mail'
+  | 'extras'
 
 export interface Option {
   value: string
@@ -60,6 +68,12 @@ export interface Question {
   notice?: string
   /** True when a person can pick more than one answer. */
   multi: boolean
+  /**
+   * When set, the question only shows if this returns true for the current
+   * answers. Used for follow-up questions that branch off an earlier pick, like
+   * checking a passport's date only after a person says they have one.
+   */
+  showIf?: (answers: Answers) => boolean
   options: Option[]
 }
 
@@ -68,6 +82,8 @@ export interface Question {
 export interface Answers {
   tdcj: string | null
   birth: string | null
+  passportValid: string | null
+  birthOriginal: string | null
   ssn: string | null
   housing: string | null
   mail: string[]
@@ -77,6 +93,8 @@ export interface Answers {
 export const emptyAnswers: Answers = {
   tdcj: null,
   birth: null,
+  passportValid: null,
+  birthOriginal: null,
   ssn: null,
   housing: null,
   mail: [],
@@ -88,10 +106,10 @@ export const questions: Question[] = [
     id: 'tdcj',
     stepLabel: 'Getting started',
     progress: 0,
-    prompt: 'Are you on parole, or are you fully done with your sentence?',
+    prompt: 'Are you on parole, or are you finished with your sentence?',
     help: 'Your answer tells us which release papers you have. They count for more than one thing on your list. First Step Out covers Texas for now.',
     notice:
-      'Whether you are on parole or fully done, your TDCJ papers count toward proving who you are and where you live. Hold on to them.',
+      'Whether you are on parole or have finished your sentence, your Texas Department of Criminal Justice papers count toward proving who you are and where you live. Hold on to them.',
     multi: false,
     options: [
       {
@@ -118,8 +136,8 @@ export const questions: Question[] = [
     id: 'birth',
     stepLabel: 'Step 1 of 5',
     progress: 16,
-    prompt: 'Do you have your birth certificate or a U.S. passport?',
-    help: 'Pick what you have. One of these is the strongest paper you can bring. It helps prove who you are and that you are a U.S. citizen.',
+    prompt: 'Do you have a hard copy of your birth certificate or a U.S. passport?',
+    help: 'Pick the one you have. If you have both, a passport does the most. It proves who you are on its own. A birth certificate costs less and is faster to get if you still need one.',
     multi: false,
     options: [
       {
@@ -131,7 +149,7 @@ export const questions: Question[] = [
       {
         value: 'birth',
         title: 'Yes, my birth certificate',
-        sub: 'The real one or a certified copy, not a photocopy',
+        sub: 'A certified copy, not a photocopy',
         icon: 'document',
       },
       {
@@ -143,18 +161,64 @@ export const questions: Question[] = [
     ],
   },
   {
+    id: 'passportValid',
+    stepLabel: 'Step 1 of 5, a bit more',
+    progress: 25,
+    prompt: 'Check the expiration date. Is your passport still valid?',
+    help: 'A passport only counts if it has not expired. The date is inside the cover of the book, or on the front of the card.',
+    multi: false,
+    showIf: (a) => a.birth === 'passport',
+    options: [
+      {
+        value: 'yes',
+        title: 'Yes, it is still valid',
+        sub: 'The expiration date has not passed',
+        icon: 'check',
+      },
+      {
+        value: 'expired',
+        title: 'No, it has expired',
+        sub: 'That is okay. We will show you another way',
+        icon: 'minusCircle',
+      },
+    ],
+  },
+  {
+    id: 'birthOriginal',
+    stepLabel: 'Step 1 of 5, a bit more',
+    progress: 25,
+    prompt: 'Is your birth certificate an original or a copy?',
+    help: 'It counts when it has an official government seal, a signature from the local or state registrar, and a file or certificate number. A plain photocopy will not work.',
+    multi: false,
+    showIf: (a) => a.birth === 'birth',
+    options: [
+      {
+        value: 'original',
+        title: 'It is an original or certified copy',
+        sub: 'It has the seal, the signature, and a file number',
+        icon: 'document',
+      },
+      {
+        value: 'copy',
+        title: 'No, I think it is a photocopy',
+        sub: 'That is okay. We will show you how to get a certified one',
+        icon: 'minusCircle',
+      },
+    ],
+  },
+  {
     id: 'ssn',
     stepLabel: 'Step 2 of 5',
     progress: 33,
     prompt: 'Do you have your Social Security card?',
-    help: 'DPS will ask for your Social Security number. The real card also helps prove who you are.',
+    help: 'Your Social Security number proves who you are, and you need it to get a state ID. The real card also helps prove who you are.',
     multi: false,
     options: [
       { value: 'yes', title: 'Yes, I have the card', icon: 'id' },
       {
         value: 'no',
         title: 'No, I do not have it',
-        sub: 'You can still go. A new one is free to order',
+        sub: 'No problem. We will include how to order a new one at the end',
         icon: 'minusCircle',
       },
     ],
@@ -164,7 +228,7 @@ export const questions: Question[] = [
     stepLabel: 'Step 3 of 5',
     progress: 50,
     prompt: 'Where are you staying right now?',
-    help: 'We will use this to figure out which papers are realistic for you to get quickly.',
+    help: 'This helps us figure out which papers you can use for your application.',
     multi: false,
     options: [
       {
@@ -176,13 +240,13 @@ export const questions: Question[] = [
       {
         value: 'family',
         title: 'With family or a friend',
-        sub: "At someone else's address",
+        sub: "At someone else's home, like a house or rental",
         icon: 'users',
       },
       {
         value: 'own',
         title: 'My own place',
-        sub: 'Apartment, house, or room I rent or own',
+        sub: 'Apartment, house, or room I rent',
         icon: 'key',
       },
       { value: 'unsure', title: 'Not sure yet', sub: 'Still figuring out my situation', icon: 'help' },
@@ -192,8 +256,8 @@ export const questions: Question[] = [
     id: 'mail',
     stepLabel: 'Step 4 of 5',
     progress: 66,
-    prompt: 'Do you have any of these coming to your address?',
-    help: 'Pick everything you have. These only count if they have your name on them, show your Texas address, and are from the last 6 months.',
+    prompt: 'In the last 6 months, has any of this come to you at your current address?',
+    help: 'Only pick the ones that have a Texas address, have your name on them, and are less than 6 months old.',
     multi: true,
     options: [
       {
@@ -211,7 +275,7 @@ export const questions: Question[] = [
       {
         value: 'govt',
         title: 'A letter from a government office',
-        sub: 'Federal, state, county, or city agency',
+        sub: 'From a federal, state, county, or city agency',
         icon: 'mail',
       },
       {
@@ -223,7 +287,7 @@ export const questions: Question[] = [
       {
         value: 'none',
         title: 'None of these right now',
-        sub: 'That is okay. There are other ways',
+        sub: 'That is okay. We can work with what you have',
         icon: 'minusCircle',
         exclusive: true,
       },
@@ -233,8 +297,8 @@ export const questions: Question[] = [
     id: 'extras',
     stepLabel: 'Step 5 of 5',
     progress: 83,
-    prompt: 'A couple more quick questions.',
-    help: 'These help us check a few more papers that might count for you. Pick all that apply.',
+    prompt: 'Last question. Pick all that apply to you.',
+    help: 'These help us check for other papers you might be able to use for your application.',
     multi: true,
     options: [
       {
@@ -245,7 +309,8 @@ export const questions: Question[] = [
       },
       {
         value: 'voter',
-        title: 'I am a registered Texas voter and have my card',
+        title: 'I am a registered Texas voter and have my voter registration card',
+        sub: 'The card mailed to you when you register to vote',
         icon: 'checkSquare',
       },
       {
@@ -263,12 +328,21 @@ export const questions: Question[] = [
   },
 ]
 
+/**
+ * The questions to show for a given set of answers. Follow-up questions only
+ * appear once their branch applies, so a person who has no passport never sees
+ * the passport date question. Everything else stays in its written order.
+ */
+export function visibleQuestions(answers: Answers): Question[] {
+  return questions.filter((q) => !q.showIf || q.showIf(answers))
+}
+
 export interface ResultDoc {
   icon: IconName
   title: string
   detail: string
   /**
-   * A short strength label, like "Strong on its own" or "Smaller paper". Used
+   * A short strength label, like "Strong on its own" or "Supporting paper". Used
    * where one paper alone may not be enough, so a person can see at a glance
    * which papers carry the most weight.
    */
@@ -331,7 +405,7 @@ export const acceptedByCategory: Record<CategoryId, AcceptedDocs> = {
   identity: {
     common: [
       'A U.S. passport, which counts on its own',
-      'Your birth certificate, with 2 smaller papers',
+      'Your birth certificate, with 2 supporting papers',
       'A Texas driver license or ID, even if expired up to 2 years',
     ],
     more: [
@@ -433,7 +507,7 @@ export interface Result {
  * to fill a gap. The next step names the single most useful move.
  *
  * DPS identity rule, in plain terms: one strong paper (a passport), or two
- * mid-level papers, or one mid-level paper plus two smaller ones. We classify
+ * mid-level papers, or one mid-level paper plus two supporting ones. We classify
  * each document by tier and check the combination.
  */
 export function assembleResult(answers: Answers): Result {
@@ -441,16 +515,22 @@ export function assembleResult(answers: Answers): Result {
   const mail = answers.mail ?? []
   const extras = answers.extras ?? []
 
+  // A passport only counts when it has not expired. A birth certificate only
+  // counts when it is an original or certified copy, not a plain photocopy. When
+  // a follow-up was not asked, we treat the paper as usable rather than block it.
+  const hasPassport = birth === 'passport' && answers.passportValid !== 'expired'
+  const hasBirthCert = birth === 'birth' && answers.birthOriginal !== 'copy'
+
   // ---- Proof of citizenship (need one) ----
   const citHave: ResultDoc[] = []
-  if (birth === 'passport') {
+  if (hasPassport) {
     citHave.push({
       icon: 'doc',
       title: 'Your U.S. passport',
       detail: 'A passport book or card that has not expired. This one paper also proves who you are.',
     })
   }
-  if (birth === 'birth') {
+  if (hasBirthCert) {
     citHave.push({
       icon: 'document',
       title: 'Your birth certificate',
@@ -479,7 +559,7 @@ export function assembleResult(answers: Answers): Result {
   let secondary = 0
   let supporting = 0
 
-  if (birth === 'passport') {
+  if (hasPassport) {
     idHave.push({
       icon: 'doc',
       title: 'Your U.S. passport',
@@ -488,11 +568,11 @@ export function assembleResult(answers: Answers): Result {
     })
     primary += 1
   }
-  if (birth === 'birth') {
+  if (hasBirthCert) {
     idHave.push({
       icon: 'document',
       title: 'Your birth certificate',
-      detail: 'A key paper. Bring it with 2 smaller papers and you are set.',
+      detail: 'A key paper. Bring it with 2 supporting papers and you are set.',
       tag: 'Key paper',
     })
     secondary += 1
@@ -501,8 +581,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your TDCJ parole certificate',
-      detail: 'Your parole or mandatory release certificate counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Your parole or mandatory release certificate counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -510,8 +590,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your TDCJ release papers',
-      detail: 'Your release or discharge papers count as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Your release or discharge papers count as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -519,8 +599,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'id',
       title: 'Your Social Security card',
-      detail: 'The real card counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'The real card counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -528,8 +608,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'check',
       title: 'Your Texas voter registration card',
-      detail: 'Counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -537,8 +617,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'car',
       title: 'Your Texas vehicle or boat registration',
-      detail: 'Counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -546,8 +626,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'star',
       title: 'Your military or VA ID',
-      detail: 'Counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -561,22 +641,22 @@ export function assembleResult(answers: Answers): Result {
   if (primary >= 1) {
     identitySummary = 'Your passport covers this on its own. You are set here.'
   } else if (secondary >= 1 && supporting >= 2) {
-    identitySummary = 'Your birth certificate plus your smaller papers cover this. You are set here.'
+    identitySummary = 'Your birth certificate plus your supporting papers cover this. You are set here.'
   } else if (secondary >= 1) {
     const need = 2 - supporting
     identitySummary =
       need === 1
-        ? 'You have your birth certificate and 1 smaller paper. Add 1 more smaller paper and you are set.'
-        : 'You have your birth certificate. Add 2 smaller papers, like your Social Security card and a voter card, and you are set.'
+        ? 'You have your birth certificate and 1 supporting paper. Bring 1 more supporting paper and you are set.'
+        : 'You have your birth certificate. Bring 2 supporting papers, like your Social Security card and a voter card, and you are set.'
   } else if (supporting >= 2) {
     identitySummary =
-      'Your smaller papers count, but they are not enough by themselves. Add your birth certificate or a U.S. passport and you are set.'
+      'Your supporting papers count, but they are not enough by themselves. Bring your birth certificate or a U.S. passport and you are set.'
   } else if (supporting === 1) {
     identitySummary =
-      'You have 1 smaller paper. Add your birth certificate or a U.S. passport to finish this.'
+      'You have 1 supporting paper. Bring your birth certificate or a U.S. passport to finish this.'
   } else {
     identitySummary =
-      'Bring a U.S. passport on its own, or your birth certificate plus 2 smaller papers.'
+      'Bring a U.S. passport on its own, or your birth certificate plus 2 supporting papers.'
   }
 
   if (!identityMet && ssn !== 'yes') {
@@ -584,7 +664,7 @@ export function assembleResult(answers: Answers): Result {
       icon: 'id',
       title: 'Order a new Social Security card',
       detail:
-        'It is free from the Social Security Administration. It counts as 1 smaller paper toward proving who you are.',
+        'It is free from the Social Security Administration. It counts as 1 supporting paper toward proving who you are.',
     })
   }
 
@@ -717,31 +797,31 @@ export function assembleResult(answers: Answers): Result {
   }
 
   // ---- Slots: a card hand per area, filled from what the person has ----
-  const citSlots = countSlots(citHave, 1, 'Add 1 paper', acceptedByCategory.citizenship)
-  const resSlots = countSlots(resHave, 2, 'Add a paper', acceptedByCategory.residency)
+  const citSlots = countSlots(citHave, 1, 'You still need 1 of these', acceptedByCategory.citizenship)
+  const resSlots = countSlots(resHave, 2, 'You still need 1 of these', acceptedByCategory.residency)
 
   // Identity is not a simple count. A passport stands alone. Otherwise the hand
-  // is a key paper plus 2 smaller papers, and each empty slot offers the right
+  // is a key paper plus 2 supporting papers, and each empty slot offers the right
   // set of papers to fill it.
   const idIdentity = acceptedByCategory.identity
   const keyOptions: AcceptedDocs = { common: idIdentity.common, more: [], rest: [] }
-  const smallerOptions: AcceptedDocs = { common: idIdentity.more, more: idIdentity.rest, rest: [] }
+  const supportingOptions: AcceptedDocs = { common: idIdentity.more, more: idIdentity.rest, rest: [] }
 
   const passportDoc = idHave.find((d) => d.tag === 'Strong on its own')
   const birthDoc = idHave.find((d) => d.tag === 'Key paper')
-  const smallerDocs = idHave.filter((d) => d.tag === 'Smaller paper')
+  const supportingDocs = idHave.filter((d) => d.tag === 'Supporting paper')
   const idSlots: Slot[] = passportDoc
     ? [{ filled: true, doc: passportDoc }]
     : [
         birthDoc
           ? { filled: true, doc: birthDoc }
-          : { filled: false, needLabel: 'Add a key paper', options: keyOptions },
-        smallerDocs[0]
-          ? { filled: true, doc: smallerDocs[0] }
-          : { filled: false, needLabel: 'Add a smaller paper', options: smallerOptions },
-        smallerDocs[1]
-          ? { filled: true, doc: smallerDocs[1] }
-          : { filled: false, needLabel: 'Add a smaller paper', options: smallerOptions },
+          : { filled: false, needLabel: 'You still need a main paper', options: keyOptions },
+        supportingDocs[0]
+          ? { filled: true, doc: supportingDocs[0] }
+          : { filled: false, needLabel: 'You still need a supporting paper', options: supportingOptions },
+        supportingDocs[1]
+          ? { filled: true, doc: supportingDocs[1] }
+          : { filled: false, needLabel: 'You still need a supporting paper', options: supportingOptions },
       ]
 
   const categories: Category[] = [
@@ -759,7 +839,7 @@ export function assembleResult(answers: Answers): Result {
     {
       id: 'identity',
       title: 'Proof of who you are',
-      rule: 'Bring a U.S. passport on its own, or your birth certificate plus 2 smaller papers.',
+      rule: 'Bring a U.S. passport on its own, or your birth certificate plus 2 supporting papers.',
       met: identityMet,
       summary: identitySummary,
       have: idHave,
@@ -827,7 +907,7 @@ export function assembleResult(answers: Answers): Result {
   const headline = allMet ? 'You have what you need.' : 'Here is your plan.'
   const subtext = allMet
     ? 'Bring the papers below to your nearest DPS office. You are ready.'
-    : 'Here is what counts, what you already have, and the one thing to do next.'
+    : 'Based on your answers, here are the papers you can use, the ones you still need, and how to get some of them. You do not upload anything. This is a checklist to gather and bring to DPS.'
 
   return { headline, subtext, categories, nextStep }
 }

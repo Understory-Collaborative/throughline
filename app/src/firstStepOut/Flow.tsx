@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   assembleResult,
   emptyAnswers,
-  questions,
+  visibleQuestions,
   type Answers,
   type QuestionId,
 } from '../content/firstStepOut'
@@ -56,20 +56,22 @@ export function Flow({ onExit }: FlowProps) {
     setState(freshState())
   }
 
-  const onResult = step >= questions.length
+  // The flow branches, so the list of questions depends on the answers so far.
+  const active = visibleQuestions(answers)
+  const onResult = step >= active.length
 
   return (
     <div className="mx-auto w-full max-w-xl rounded-3xl border border-line bg-surface/70 p-6 shadow-sm sm:p-8 print:max-w-none print:rounded-none print:border-0 print:bg-transparent print:p-0 print:shadow-none">
       {onResult ? (
         <ResultScreen
           result={assembleResult(answers)}
-          onBack={() => goTo(questions.length - 1)}
+          onBack={() => goTo(active.length - 1)}
           onRestart={restart}
         />
       ) : (
         (() => {
-          const question = questions[step]
-          const isLast = step === questions.length - 1
+          const question = active[step]
+          const isLast = step === active.length - 1
           return (
             <QuestionScreen
               question={question}

@@ -193,13 +193,13 @@ function SlotCard({ slot, area }: { slot: Slot; area: CategoryId }) {
         <summary className="flex cursor-pointer list-none items-center gap-3 rounded-2xl border-2 border-dashed border-leather/60 bg-paper/30 p-3 text-support marker:hidden [&::-webkit-details-marker]:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
           <span
             aria-hidden="true"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-leather/60 text-xl font-bold leading-none text-leather"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-leather/60 text-leather"
           >
-            +
+            <Icon name="document" className="h-[18px] w-[18px]" />
           </span>
           <span className="flex-1 text-base font-medium">{slot.needLabel}</span>
           <span className="shrink-0 text-sm font-semibold text-primary">
-            <span className="group-open:hidden">See options</span>
+            <span className="group-open:hidden">See what counts</span>
             <span className="hidden group-open:inline">Hide</span>
           </span>
           <svg

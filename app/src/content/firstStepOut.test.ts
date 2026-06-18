@@ -3,6 +3,7 @@ import {
   assembleResult,
   emptyAnswers,
   questions,
+  visibleQuestions,
   type Answers,
   type CategoryId,
   type Result,
@@ -23,11 +24,26 @@ describe('First Step Out question tree', () => {
     expect(questions.map((q) => q.id)).toEqual([
       'tdcj',
       'birth',
+      'passportValid',
+      'birthOriginal',
       'ssn',
       'housing',
       'mail',
       'extras',
     ])
+  })
+
+  it('only shows the passport date question after a person says they have a passport', () => {
+    const ids = (a: Partial<Answers>) => visibleQuestions(answers(a)).map((q) => q.id)
+
+    expect(ids({ birth: 'passport' })).toContain('passportValid')
+    expect(ids({ birth: 'passport' })).not.toContain('birthOriginal')
+
+    expect(ids({ birth: 'birth' })).toContain('birthOriginal')
+    expect(ids({ birth: 'birth' })).not.toContain('passportValid')
+
+    expect(ids({ birth: 'neither' })).not.toContain('passportValid')
+    expect(ids({ birth: 'neither' })).not.toContain('birthOriginal')
   })
 
   it('tells people their proof of address papers need their name on them', () => {
@@ -103,6 +119,26 @@ describe('assembleResult: citizenship', () => {
     expect(cit.get.map((d) => d.title)).toContainEqual(expect.stringMatching(/order your birth certificate/i))
   })
 
+  it('does not count an expired passport', () => {
+    const valid = assembleResult(answers({ birth: 'passport', passportValid: 'yes' }))
+    expect(category(valid, 'citizenship').met).toBe(true)
+    expect(category(valid, 'identity').met).toBe(true)
+
+    const expired = assembleResult(answers({ birth: 'passport', passportValid: 'expired' }))
+    expect(category(expired, 'citizenship').met).toBe(false)
+    expect(category(expired, 'identity').met).toBe(false)
+  })
+
+  it('does not count a photocopy birth certificate', () => {
+    const original = assembleResult(answers({ birth: 'birth', birthOriginal: 'original' }))
+    expect(category(original, 'citizenship').met).toBe(true)
+
+    const copy = assembleResult(answers({ birth: 'birth', birthOriginal: 'copy' }))
+    const cit = category(copy, 'citizenship')
+    expect(cit.met).toBe(false)
+    expect(cit.get.map((d) => d.title)).toContainEqual(expect.stringMatching(/order your birth certificate/i))
+  })
+
   it('lists the papers that count, so "1 of these" is never empty', () => {
     const cit = category(assembleResult(answers({ birth: 'neither' })), 'citizenship')
     expect(cit.accepted.common.length).toBeGreaterThan(0)
@@ -130,8 +166,8 @@ describe('assembleResult: identity', () => {
     expect(category(result, 'identity').met).toBe(false)
   })
 
-  it('explains the gap when smaller papers are held but no key paper is', () => {
-    // Two smaller papers (TDCJ + Social Security) but no birth certificate.
+  it('explains the gap when supporting papers are held but no key paper is', () => {
+    // Two supporting papers (TDCJ + Social Security) but no birth certificate.
     const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
     const identity = category(result, 'identity')
 
@@ -145,7 +181,7 @@ describe('assembleResult: identity', () => {
     const tags = category(result, 'identity').have.map((d) => d.tag)
 
     expect(tags).toContain('Strong on its own')
-    expect(tags).toContain('Smaller paper')
+    expect(tags).toContain('Supporting paper')
   })
 
   it('tells a passport holder they are set on identity', () => {
@@ -153,7 +189,7 @@ describe('assembleResult: identity', () => {
     expect(category(result, 'identity').summary).toMatch(/on its own/i)
   })
 
-  it('is met by a birth certificate plus two smaller papers', () => {
+  it('is met by a birth certificate plus two supporting papers', () => {
     const result = assembleResult(answers({ birth: 'birth', tdcj: 'parole', ssn: 'yes' }))
     expect(category(result, 'identity').met).toBe(true)
   })
@@ -277,10 +313,10 @@ describe('assembleResult: slots (the card hand)', () => {
     expect(id.slots[0].filled).toBe(true)
   })
 
-  it('shows identity as a key paper plus two smaller papers otherwise', () => {
+  it('shows identity as a key paper plus two supporting papers otherwise', () => {
     const id = category(assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' })), 'identity')
     expect(id.slots).toHaveLength(3)
-    // Key paper slot empty (no birth certificate), two smaller slots filled.
+    // Key paper slot empty (no birth certificate), two supporting slots filled.
     expect(id.slots[0].filled).toBe(false)
     expect(id.slots.filter((s) => s.filled)).toHaveLength(2)
   })
