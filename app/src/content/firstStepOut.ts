@@ -140,7 +140,6 @@ export const introScreens: IntroScreen[] = [
     closing: [
       'Answer a few easy questions. We will tell you which papers you already have that can be used for your application.',
       'We will also give you a plan for the papers you are still missing.',
-      "Ready? Let's get started.",
     ],
     cta: "Let's get started",
   },
