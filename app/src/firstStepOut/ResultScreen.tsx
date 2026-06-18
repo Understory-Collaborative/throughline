@@ -138,12 +138,12 @@ function Pips({ slots }: { slots: Slot[] }) {
       role="img"
       aria-label={`${filled} of ${slots.length} collected`}
     >
-      {slots.map((slot, i) => (
+      {slots.map((_, i) => (
         <span
           key={i}
           aria-hidden="true"
           className={`h-3 w-3 rounded-full ${
-            slot.filled ? 'bg-primary' : 'border-2 border-dashed border-leather'
+            i < filled ? 'bg-primary' : 'border-2 border-dashed border-leather'
           }`}
         />
       ))}

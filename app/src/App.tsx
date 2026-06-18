@@ -164,6 +164,29 @@ function FeatureCard({ feature, onStart }: { feature: Feature; onStart: () => vo
   )
 }
 
+/**
+ * Says plainly that Throughline is independent, and points to the official
+ * state site. Our audience has every reason to want the real source, so we name
+ * it and link it.
+ */
+function OfficialNote() {
+  return (
+    <p className="mt-2">
+      Throughline is not part of the Texas Department of Criminal Justice, the Texas Department of
+      Public Safety, or any government office. For official information, visit{' '}
+      <a
+        href="https://www.dps.texas.gov/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-primary underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      >
+        dps.texas.gov
+      </a>
+      .
+    </p>
+  )
+}
+
 function App() {
   const [view, setView] = useState<View>('home')
 
@@ -188,6 +211,7 @@ function App() {
         <footer className="border-t border-line print:hidden">
           <div className="mx-auto w-full max-w-3xl px-5 py-6 text-sm text-support">
             First Step Out is a free tool. Your answers are never stored off your phone or shared.
+            <OfficialNote />
           </div>
         </footer>
       </div>
@@ -257,6 +281,7 @@ function App() {
       <footer className="border-t border-line">
         <div className="mx-auto w-full max-w-3xl px-5 py-6 text-sm text-support">
           Throughline. Built with people who have been through reentry. Texas first.
+          <OfficialNote />
         </div>
       </footer>
     </div>

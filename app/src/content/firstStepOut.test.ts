@@ -30,6 +30,11 @@ describe('First Step Out question tree', () => {
     ])
   })
 
+  it('tells people their proof of address papers need their name on them', () => {
+    const mail = questions.find((q) => q.id === 'mail')
+    expect(mail?.help).toMatch(/your name/i)
+  })
+
   it('marks the mail and extras questions as multi-select', () => {
     const byId = Object.fromEntries(questions.map((q) => [q.id, q]))
     expect(byId.tdcj.multi).toBe(false)
@@ -165,6 +170,41 @@ describe('assembleResult: identity', () => {
     expect(category(result, 'identity').have.map((d) => d.title)).toContainEqual(
       expect.stringMatching(/TDCJ release papers/i),
     )
+  })
+})
+
+describe('assembleResult: content edge cases', () => {
+  it('warns that a Puerto Rico birth certificate from before July 2010 will not count', () => {
+    const cit = category(assembleResult(answers({ birth: 'birth' })), 'citizenship')
+    const text = [
+      ...cit.have.map((d) => d.detail),
+      ...cit.get.map((d) => d.detail),
+      ...cit.accepted.common,
+      ...cit.accepted.more,
+      ...cit.accepted.rest,
+    ].join(' ')
+    expect(text).toMatch(/puerto rico/i)
+    expect(text).toMatch(/2010/)
+  })
+
+  it('tells someone ordering a birth certificate that older Puerto Rico copies do not count', () => {
+    const order = category(assembleResult(answers({ birth: 'neither' })), 'citizenship').get.find(
+      (d) => /order your birth certificate/i.test(d.title),
+    )
+    expect(order?.detail).toMatch(/puerto rico/i)
+    expect(order?.detail).toMatch(/2010/)
+  })
+
+  it('says proof of residency has to be in the person own name', () => {
+    const res = category(assembleResult(answers({ housing: 'family' })), 'residency')
+    expect(res.summary).toMatch(/your name/i)
+  })
+
+  it('reminds someone staying with family that a bill in the host name will not count', () => {
+    const res = category(assembleResult(answers({ housing: 'family' })), 'residency')
+    const getText = res.get.map((d) => `${d.title} ${d.detail}`).join(' ')
+    expect(getText).toMatch(/your name/i)
+    expect(getText).toMatch(/someone else/i)
   })
 })
 
