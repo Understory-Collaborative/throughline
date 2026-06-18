@@ -137,7 +137,7 @@ export const questions: Question[] = [
     stepLabel: 'Step 1 of 5',
     progress: 16,
     prompt: 'Do you have a hard copy of your birth certificate or a U.S. passport?',
-    help: 'Pick the one you have. If you have both, choose your birth certificate. It is the strongest proof of who you are.',
+    help: 'Pick the one you have. If you have both, a passport does the most. It proves who you are on its own. A birth certificate costs less and is faster to get if you still need one.',
     multi: false,
     options: [
       {
