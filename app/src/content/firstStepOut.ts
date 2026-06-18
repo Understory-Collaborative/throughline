@@ -162,7 +162,7 @@ export const questions: Question[] = [
   },
   {
     id: 'passportValid',
-    stepLabel: 'Step 1 of 5',
+    stepLabel: 'Step 1 of 5, a bit more',
     progress: 25,
     prompt: 'Check the expiration date. Is your passport still valid?',
     help: 'A passport only counts if it has not expired. The date is inside the cover of the book, or on the front of the card.',
@@ -185,7 +185,7 @@ export const questions: Question[] = [
   },
   {
     id: 'birthOriginal',
-    stepLabel: 'Step 1 of 5',
+    stepLabel: 'Step 1 of 5, a bit more',
     progress: 25,
     prompt: 'Is your birth certificate an original or a copy?',
     help: 'It counts when it has an official government seal, a signature from the local or state registrar, and a file or certificate number. A plain photocopy will not work.',
@@ -309,7 +309,8 @@ export const questions: Question[] = [
       },
       {
         value: 'voter',
-        title: 'I am a registered Texas voter and have a Texas Election Identification Certificate',
+        title: 'I am a registered Texas voter and have my voter registration card',
+        sub: 'The card mailed to you when you register to vote',
         icon: 'checkSquare',
       },
       {
