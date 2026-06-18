@@ -166,8 +166,8 @@ describe('assembleResult: identity', () => {
     expect(category(result, 'identity').met).toBe(false)
   })
 
-  it('explains the gap when smaller papers are held but no key paper is', () => {
-    // Two smaller papers (TDCJ + Social Security) but no birth certificate.
+  it('explains the gap when supporting papers are held but no key paper is', () => {
+    // Two supporting papers (TDCJ + Social Security) but no birth certificate.
     const result = assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' }))
     const identity = category(result, 'identity')
 
@@ -181,7 +181,7 @@ describe('assembleResult: identity', () => {
     const tags = category(result, 'identity').have.map((d) => d.tag)
 
     expect(tags).toContain('Strong on its own')
-    expect(tags).toContain('Smaller paper')
+    expect(tags).toContain('Supporting paper')
   })
 
   it('tells a passport holder they are set on identity', () => {
@@ -189,7 +189,7 @@ describe('assembleResult: identity', () => {
     expect(category(result, 'identity').summary).toMatch(/on its own/i)
   })
 
-  it('is met by a birth certificate plus two smaller papers', () => {
+  it('is met by a birth certificate plus two supporting papers', () => {
     const result = assembleResult(answers({ birth: 'birth', tdcj: 'parole', ssn: 'yes' }))
     expect(category(result, 'identity').met).toBe(true)
   })
@@ -313,10 +313,10 @@ describe('assembleResult: slots (the card hand)', () => {
     expect(id.slots[0].filled).toBe(true)
   })
 
-  it('shows identity as a key paper plus two smaller papers otherwise', () => {
+  it('shows identity as a key paper plus two supporting papers otherwise', () => {
     const id = category(assembleResult(answers({ tdcj: 'parole', ssn: 'yes', birth: 'neither' })), 'identity')
     expect(id.slots).toHaveLength(3)
-    // Key paper slot empty (no birth certificate), two smaller slots filled.
+    // Key paper slot empty (no birth certificate), two supporting slots filled.
     expect(id.slots[0].filled).toBe(false)
     expect(id.slots.filter((s) => s.filled)).toHaveLength(2)
   })

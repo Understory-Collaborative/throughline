@@ -341,7 +341,7 @@ export interface ResultDoc {
   title: string
   detail: string
   /**
-   * A short strength label, like "Strong on its own" or "Smaller paper". Used
+   * A short strength label, like "Strong on its own" or "Supporting paper". Used
    * where one paper alone may not be enough, so a person can see at a glance
    * which papers carry the most weight.
    */
@@ -404,7 +404,7 @@ export const acceptedByCategory: Record<CategoryId, AcceptedDocs> = {
   identity: {
     common: [
       'A U.S. passport, which counts on its own',
-      'Your birth certificate, with 2 smaller papers',
+      'Your birth certificate, with 2 supporting papers',
       'A Texas driver license or ID, even if expired up to 2 years',
     ],
     more: [
@@ -506,7 +506,7 @@ export interface Result {
  * to fill a gap. The next step names the single most useful move.
  *
  * DPS identity rule, in plain terms: one strong paper (a passport), or two
- * mid-level papers, or one mid-level paper plus two smaller ones. We classify
+ * mid-level papers, or one mid-level paper plus two supporting ones. We classify
  * each document by tier and check the combination.
  */
 export function assembleResult(answers: Answers): Result {
@@ -571,7 +571,7 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'document',
       title: 'Your birth certificate',
-      detail: 'A key paper. Bring it with 2 smaller papers and you are set.',
+      detail: 'A key paper. Bring it with 2 supporting papers and you are set.',
       tag: 'Key paper',
     })
     secondary += 1
@@ -580,8 +580,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your TDCJ parole certificate',
-      detail: 'Your parole or mandatory release certificate counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Your parole or mandatory release certificate counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -589,8 +589,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'doc',
       title: 'Your TDCJ release papers',
-      detail: 'Your release or discharge papers count as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Your release or discharge papers count as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -598,8 +598,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'id',
       title: 'Your Social Security card',
-      detail: 'The real card counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'The real card counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -607,8 +607,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'check',
       title: 'Your Texas voter registration card',
-      detail: 'Counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -616,8 +616,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'car',
       title: 'Your Texas vehicle or boat registration',
-      detail: 'Counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -625,8 +625,8 @@ export function assembleResult(answers: Answers): Result {
     idHave.push({
       icon: 'star',
       title: 'Your military or VA ID',
-      detail: 'Counts as 1 smaller paper.',
-      tag: 'Smaller paper',
+      detail: 'Counts as 1 supporting paper.',
+      tag: 'Supporting paper',
     })
     supporting += 1
   }
@@ -640,22 +640,22 @@ export function assembleResult(answers: Answers): Result {
   if (primary >= 1) {
     identitySummary = 'Your passport covers this on its own. You are set here.'
   } else if (secondary >= 1 && supporting >= 2) {
-    identitySummary = 'Your birth certificate plus your smaller papers cover this. You are set here.'
+    identitySummary = 'Your birth certificate plus your supporting papers cover this. You are set here.'
   } else if (secondary >= 1) {
     const need = 2 - supporting
     identitySummary =
       need === 1
-        ? 'You have your birth certificate and 1 smaller paper. Add 1 more smaller paper and you are set.'
-        : 'You have your birth certificate. Add 2 smaller papers, like your Social Security card and a voter card, and you are set.'
+        ? 'You have your birth certificate and 1 supporting paper. Add 1 more supporting paper and you are set.'
+        : 'You have your birth certificate. Add 2 supporting papers, like your Social Security card and a voter card, and you are set.'
   } else if (supporting >= 2) {
     identitySummary =
-      'Your smaller papers count, but they are not enough by themselves. Add your birth certificate or a U.S. passport and you are set.'
+      'Your supporting papers count, but they are not enough by themselves. Add your birth certificate or a U.S. passport and you are set.'
   } else if (supporting === 1) {
     identitySummary =
-      'You have 1 smaller paper. Add your birth certificate or a U.S. passport to finish this.'
+      'You have 1 supporting paper. Add your birth certificate or a U.S. passport to finish this.'
   } else {
     identitySummary =
-      'Bring a U.S. passport on its own, or your birth certificate plus 2 smaller papers.'
+      'Bring a U.S. passport on its own, or your birth certificate plus 2 supporting papers.'
   }
 
   if (!identityMet && ssn !== 'yes') {
@@ -663,7 +663,7 @@ export function assembleResult(answers: Answers): Result {
       icon: 'id',
       title: 'Order a new Social Security card',
       detail:
-        'It is free from the Social Security Administration. It counts as 1 smaller paper toward proving who you are.',
+        'It is free from the Social Security Administration. It counts as 1 supporting paper toward proving who you are.',
     })
   }
 
@@ -800,27 +800,27 @@ export function assembleResult(answers: Answers): Result {
   const resSlots = countSlots(resHave, 2, 'You still need 1 of these', acceptedByCategory.residency)
 
   // Identity is not a simple count. A passport stands alone. Otherwise the hand
-  // is a key paper plus 2 smaller papers, and each empty slot offers the right
+  // is a key paper plus 2 supporting papers, and each empty slot offers the right
   // set of papers to fill it.
   const idIdentity = acceptedByCategory.identity
   const keyOptions: AcceptedDocs = { common: idIdentity.common, more: [], rest: [] }
-  const smallerOptions: AcceptedDocs = { common: idIdentity.more, more: idIdentity.rest, rest: [] }
+  const supportingOptions: AcceptedDocs = { common: idIdentity.more, more: idIdentity.rest, rest: [] }
 
   const passportDoc = idHave.find((d) => d.tag === 'Strong on its own')
   const birthDoc = idHave.find((d) => d.tag === 'Key paper')
-  const smallerDocs = idHave.filter((d) => d.tag === 'Smaller paper')
+  const supportingDocs = idHave.filter((d) => d.tag === 'Supporting paper')
   const idSlots: Slot[] = passportDoc
     ? [{ filled: true, doc: passportDoc }]
     : [
         birthDoc
           ? { filled: true, doc: birthDoc }
           : { filled: false, needLabel: 'You still need a main paper', options: keyOptions },
-        smallerDocs[0]
-          ? { filled: true, doc: smallerDocs[0] }
-          : { filled: false, needLabel: 'You still need a smaller paper', options: smallerOptions },
-        smallerDocs[1]
-          ? { filled: true, doc: smallerDocs[1] }
-          : { filled: false, needLabel: 'You still need a smaller paper', options: smallerOptions },
+        supportingDocs[0]
+          ? { filled: true, doc: supportingDocs[0] }
+          : { filled: false, needLabel: 'You still need a supporting paper', options: supportingOptions },
+        supportingDocs[1]
+          ? { filled: true, doc: supportingDocs[1] }
+          : { filled: false, needLabel: 'You still need a supporting paper', options: supportingOptions },
       ]
 
   const categories: Category[] = [
@@ -838,7 +838,7 @@ export function assembleResult(answers: Answers): Result {
     {
       id: 'identity',
       title: 'Proof of who you are',
-      rule: 'Bring a U.S. passport on its own, or your birth certificate plus 2 smaller papers.',
+      rule: 'Bring a U.S. passport on its own, or your birth certificate plus 2 supporting papers.',
       met: identityMet,
       summary: identitySummary,
       have: idHave,

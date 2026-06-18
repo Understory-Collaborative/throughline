@@ -70,7 +70,7 @@ describe('First Step Out flow', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
-    // A path that leaves identity short: smaller papers but no key paper.
+    // A path that leaves identity short: supporting papers but no key paper.
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
     await user.click(screen.getByRole('radio', { name: /do not have either one/i }))
@@ -92,7 +92,7 @@ describe('First Step Out flow', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
-    // Parole plus a Social Security card is two smaller papers and no key
+    // Parole plus a Social Security card is two supporting papers and no key
     // paper, so identity sits at 2 of 3 with its empty slot in the middle.
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
