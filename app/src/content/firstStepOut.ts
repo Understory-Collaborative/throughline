@@ -101,6 +101,50 @@ export const emptyAnswers: Answers = {
   extras: [],
 }
 
+export type IntroId = 'welcome' | 'whatYouNeed'
+
+/**
+ * A welcome screen shown before the questions. These set expectations in plain
+ * words: what the tool does, and what proof a state ID asks for. They collect
+ * nothing.
+ */
+export interface IntroScreen {
+  id: IntroId
+  /** The heading for the screen. */
+  title: string
+  /** Body paragraphs shown under the heading. */
+  paragraphs: string[]
+  /** A short numbered list, like the three kinds of proof. */
+  list?: string[]
+  /** Paragraphs shown after the list. */
+  closing?: string[]
+  /** The button that moves forward. */
+  cta: string
+}
+
+export const introScreens: IntroScreen[] = [
+  {
+    id: 'welcome',
+    title: 'Getting a state ID can be hard',
+    paragraphs: [
+      'It is even harder when you do not know which papers to turn in with your application.',
+      'If you live in Texas, Throughline can help you figure that out.',
+    ],
+    cta: 'Continue',
+  },
+  {
+    id: 'whatYouNeed',
+    title: 'What you need',
+    paragraphs: ['To get a state ID, you need papers that prove three things.'],
+    list: ['That you are a U.S. citizen', 'Who you are', 'Where you live'],
+    closing: [
+      'Answer a few easy questions. We will tell you which papers you already have that can be used for your application.',
+      'We will also give you a plan for the papers you are still missing.',
+    ],
+    cta: "Let's get started",
+  },
+]
+
 export const questions: Question[] = [
   {
     id: 'tdcj',

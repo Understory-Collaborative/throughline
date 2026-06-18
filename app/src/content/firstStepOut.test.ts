@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   assembleResult,
   emptyAnswers,
+  introScreens,
   questions,
   visibleQuestions,
   type Answers,
@@ -69,6 +70,23 @@ describe('First Step Out question tree', () => {
         q.notice ?? '',
         ...q.options.flatMap((o) => [o.title, o.sub ?? '']),
       ])
+      .join(' ')
+    expect(allCopy).not.toContain('—')
+  })
+})
+
+describe('First Step Out intro screens', () => {
+  it('welcomes the person and explains the three kinds of proof, in order', () => {
+    expect(introScreens.map((s) => s.id)).toEqual(['welcome', 'whatYouNeed'])
+
+    const whatYouNeed = introScreens.find((s) => s.id === 'whatYouNeed')
+    expect(whatYouNeed?.list).toHaveLength(3)
+    expect(whatYouNeed?.list?.join(' ')).toMatch(/citizen/i)
+  })
+
+  it('follows house style, with no em dashes in any intro copy', () => {
+    const allCopy = introScreens
+      .flatMap((s) => [s.title, ...s.paragraphs, ...(s.list ?? []), ...(s.closing ?? []), s.cta])
       .join(' ')
     expect(allCopy).not.toContain('—')
   })

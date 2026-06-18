@@ -7,8 +7,16 @@ function noop() {}
 
 type PendoWindow = typeof window & { pendo?: { track?: (...args: unknown[]) => void } }
 
+/** Click past the two welcome screens to reach the first question. */
+async function startQuestions(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole('button', { name: /^continue$/i }))
+  await user.click(screen.getByRole('button', { name: /let's get started/i }))
+}
+
 /** Walk through every question with a set of answers that fully covers DPS. */
 async function completeFlow(user: ReturnType<typeof userEvent.setup>) {
+  await startQuestions(user)
+
   await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
   await user.click(screen.getByRole('button', { name: /continue/i }))
 
@@ -32,8 +40,34 @@ async function completeFlow(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe('First Step Out flow', () => {
-  it('starts on the first question with Continue disabled until a choice is made', () => {
+  it('opens on the welcome screen before any questions', () => {
     render(<Flow onExit={noop} />)
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: /getting a state id can be hard/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('moves through the welcome screens into the first question', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    await user.click(screen.getByRole('button', { name: /^continue$/i }))
+    expect(
+      screen.getByRole('heading', { level: 1, name: /what you need/i }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /let's get started/i }))
+    expect(
+      screen.getByRole('heading', { level: 1, name: /on parole, or are you finished/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('starts on the first question with Continue disabled until a choice is made', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    await startQuestions(user)
 
     expect(
       screen.getByRole('heading', { level: 1, name: /on parole, or are you finished/i }),
@@ -42,9 +76,11 @@ describe('First Step Out flow', () => {
   })
 
   it('enables Continue once an answer is picked', async () => {
+    const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
-    await userEvent.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
+    await startQuestions(user)
+    await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
 
     expect(screen.getByRole('button', { name: /continue/i })).toBeEnabled()
   })
@@ -70,6 +106,7 @@ describe('First Step Out flow', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
+    await startQuestions(user)
     // A path that leaves identity short: supporting papers but no key paper.
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
@@ -92,6 +129,7 @@ describe('First Step Out flow', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
+    await startQuestions(user)
     // Parole plus a Social Security card is two supporting papers and no key
     // paper, so identity sits at 2 of 3 with its empty slot in the middle.
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
@@ -136,15 +174,15 @@ describe('First Step Out flow', () => {
     render(<Flow onExit={noop} />)
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /on parole, or are you finished/i }),
+      screen.getByRole('heading', { level: 1, name: /getting a state id can be hard/i }),
     ).toBeInTheDocument()
   })
 
-  it('lets a person back out of the first question to the landing page', async () => {
+  it('lets a person back out of the first screen to the landing page', async () => {
     let exited = false
     render(<Flow onExit={() => (exited = true)} />)
 
-    await userEvent.click(screen.getByRole('button', { name: /back/i }))
+    await userEvent.click(screen.getByRole('button', { name: /back to home/i }))
 
     expect(exited).toBe(true)
   })
@@ -153,6 +191,7 @@ describe('First Step Out flow', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
+    await startQuestions(user)
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
     await user.click(screen.getByRole('radio', { name: /my birth certificate/i }))
@@ -229,6 +268,7 @@ describe('First Step Out analytics', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
+    await startQuestions(user)
     expect(pendoTrack).toHaveBeenCalledWith('fso_step_view', { step: 'tdcj' })
 
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
@@ -254,6 +294,7 @@ describe('First Step Out analytics', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
+    await startQuestions(user)
     // A path that leaves citizenship missing, so the birth certificate link shows.
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
@@ -277,6 +318,7 @@ describe('First Step Out analytics', () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)
 
+    await startQuestions(user)
     await user.click(screen.getByRole('radio', { name: /on parole or supervision/i }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
     await user.click(screen.getByRole('radio', { name: /do not have either one/i }))
