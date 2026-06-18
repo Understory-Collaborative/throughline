@@ -10,11 +10,12 @@
  * See the privacy-as-safety pillar in the root CLAUDE.md and the Pendo snippet
  * in index.html.
  */
-import type { CategoryId, QuestionId } from './content/firstStepOut'
+import type { CategoryId, IntroId, QuestionId } from './content/firstStepOut'
 
 export type AnalyticsEvent =
   // Which way a person launched First Step Out from the landing page.
   | { name: 'fso_start'; source: 'hero' | 'card' | 'nav' }
+  | { name: 'fso_intro_view'; screen: IntroId }
   | { name: 'fso_step_view'; step: QuestionId }
   | { name: 'fso_result_view' }
   | { name: 'fso_back'; from: QuestionId }
