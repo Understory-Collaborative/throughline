@@ -81,8 +81,9 @@ describe('Throughline landing page', () => {
     expect(
       screen.getByText(/not part of the texas department of criminal justice/i),
     ).toBeInTheDocument()
-    const official = screen.getByRole('link', { name: /tdcj\.texas\.gov/i })
-    expect(official).toHaveAttribute('href', 'https://www.tdcj.texas.gov/')
+    expect(screen.getByText(/texas department of public safety/i)).toBeInTheDocument()
+    const official = screen.getByRole('link', { name: /dps\.texas\.gov/i })
+    expect(official).toHaveAttribute('href', 'https://www.dps.texas.gov/')
   })
 
   it('leads its privacy promise with protecting privacy', () => {

@@ -172,15 +172,15 @@ function FeatureCard({ feature, onStart }: { feature: Feature; onStart: () => vo
 function OfficialNote() {
   return (
     <p className="mt-2">
-      Throughline is not part of the Texas Department of Criminal Justice or any government office.
-      For official information, visit{' '}
+      Throughline is not part of the Texas Department of Criminal Justice, the Texas Department of
+      Public Safety, or any government office. For official information, visit{' '}
       <a
-        href="https://www.tdcj.texas.gov/"
+        href="https://www.dps.texas.gov/"
         target="_blank"
         rel="noopener noreferrer"
         className="font-medium text-primary underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
-        tdcj.texas.gov
+        dps.texas.gov
       </a>
       .
     </p>

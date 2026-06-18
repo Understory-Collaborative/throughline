@@ -72,8 +72,8 @@ export function PrintableSheet({ result, returnUrl }: { result: Result; returnUr
           This is a plain-language guide. Check the latest rules at dps.texas.gov.
         </p>
         <p className="mt-1">
-          Throughline is not part of the Texas Department of Criminal Justice or any government
-          office. For official information, visit tdcj.texas.gov.
+          Throughline is not part of the Texas Department of Criminal Justice, the Texas Department
+          of Public Safety, or any government office. For official information, visit dps.texas.gov.
         </p>
       </footer>
     </div>
