@@ -12,6 +12,9 @@ one type system and the warm cream background, so the clips feel like one family
   thesis ("Software supports the work. People deliver it."), a slide for the
   product address (throughline.understorycollab.com) in the brand green, then a
   closing Understory Collaborative card with a vine that grows in.
+- **`understory-card.html`** — the closing Understory Collaborative card on its
+  own, with the growing vine and understorycollab.com. The same card as the last
+  scene of the pieces clip, so you can capture it by itself.
 
 Final Cut Pro brings in **images** (PNG) and **video** (`.mov`), not web pages.
 So you capture a page as one of those, then drag it onto your timeline. Two
