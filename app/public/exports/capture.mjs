@@ -37,7 +37,9 @@ const is4k = args.includes('--4k')
 const width = is4k ? 3840 : 1920
 const height = is4k ? 2160 : 1080
 const fps = 30
-const seconds = 5 // covers the reveal plus a calm hold
+// Match DURATION in marcus-card.html, so the render covers the full reveal plus
+// the calm hold at the end.
+const seconds = 24
 
 async function shoot(page, file, { transparent } = {}) {
   await page.screenshot({

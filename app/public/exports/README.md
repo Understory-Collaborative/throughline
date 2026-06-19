@@ -33,6 +33,14 @@ Keys, shown bottom-left:
 For a transparent PNG to lay over your own footage, press `T` first, then
 screenshot. (Browser screenshots of a transparent page keep the alpha.)
 
+## Timing
+
+The reveal runs about 24 seconds: the lines appear one at a time with reading
+room, then the card holds for the last few seconds. To match a different clip
+length, change `DURATION` near the top of the script in `marcus-card.html` (and
+`seconds` in `capture.mjs` if you use it). Every line repaces itself from that
+one number.
+
 ## 2. Animation (screen recording)
 
 1. Open `marcus-card.html` and press `H` to hide the help.

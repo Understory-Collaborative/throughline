@@ -308,30 +308,30 @@
   <body>
     <main class="stage" data-size="1080" data-bg="cream" data-play="on">
       <article class="card">
-        <p class="eyebrow reveal" style="--delay: 0s">Meet Marcus</p>
-        <p class="age reveal" style="--delay: 0.25s">He is 34.</p>
-        <p class="intro reveal" style="--delay: 0.5s">
+        <p class="eyebrow reveal">Meet Marcus</p>
+        <p class="age reveal">He is 34.</p>
+        <p class="intro reveal">
           He left TDCJ three weeks ago, after a four-year sentence. He has a job
           lined up if he can get an I-9 done.
         </p>
         <dl class="facts">
-          <div class="fact reveal" style="--delay: 0.9s">
+          <div class="fact reveal">
             <dt>Where he sleeps</dt>
             <dd>His sister's couch in Arlington.</dd>
           </div>
-          <div class="fact reveal" style="--delay: 1.1s">
+          <div class="fact reveal">
             <dt>What he has</dt>
             <dd>His old paper Social Security card.</dd>
           </div>
-          <div class="fact reveal" style="--delay: 1.3s">
+          <div class="fact reveal">
             <dt>What expired</dt>
             <dd>His state ID, during his sentence.</dd>
           </div>
-          <div class="fact reveal" style="--delay: 1.5s">
+          <div class="fact reveal">
             <dt>What's gone</dt>
             <dd>His birth certificate.</dd>
           </div>
-          <div class="fact reveal" style="--delay: 1.7s">
+          <div class="fact reveal">
             <dt>What it costs</dt>
             <dd>He cannot afford the bus to DPS twice.</dd>
           </div>
@@ -360,6 +360,25 @@
       const help = document.getElementById('help')
       const state = document.getElementById('state')
 
+      // Total length of the reveal, in seconds. Set this to your Final Cut clip
+      // length and the lines will pace themselves across it, with a calm hold at
+      // the end. The whole timeline below is a fraction of this number.
+      const DURATION = 24
+
+      // When each line begins, as a fraction of DURATION, in document order:
+      // eyebrow, age, intro, then the five facts. The gaps after the intro give
+      // reading time. The last fact lands near 0.80 so the card holds for a few
+      // unhurried seconds before the clip ends.
+      const schedule = [0, 0.06, 0.14, 0.3, 0.42, 0.54, 0.66, 0.8]
+
+      function pace() {
+        const lines = stage.querySelectorAll('.reveal')
+        lines.forEach((el, i) => {
+          const frac = schedule[Math.min(i, schedule.length - 1)]
+          el.style.setProperty('--delay', (frac * DURATION).toFixed(2) + 's')
+        })
+      }
+
       // Fit the stage inside the window for preview. Recording quality follows
       // your display, so use a screen recorder at full size, or the puppeteer
       // script for exact pixels.
@@ -372,7 +391,7 @@
           (window.innerHeight / h) * pad,
         )
         stage.style.transform = `scale(${scale})`
-        state.textContent = `${w}x${h} · preview ${(scale * 100).toFixed(0)}%`
+        state.textContent = `${w}x${h} · ${DURATION}s · preview ${(scale * 100).toFixed(0)}%`
       }
 
       function replay() {
@@ -396,6 +415,7 @@
         fit()
       })
 
+      pace()
       fit()
     </script>
   </body>
