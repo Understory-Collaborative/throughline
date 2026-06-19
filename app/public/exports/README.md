@@ -9,8 +9,9 @@ one type system and the warm cream background, so the clips feel like one family
   `product/personas/marcus.md` and `product/design-system/brand-direction.md`.
 - **`throughline-pieces.html`** — simple text cards naming the four pieces of
   Throughline (First Step Out, On Time, Clear Path, Good People), a beat on the
-  thesis ("Software supports the work. People deliver it."), then a closing
-  Understory Collaborative card with a vine that grows in and understorycollab.com.
+  thesis ("Software supports the work. People deliver it."), a slide for the
+  product address (throughline.understorycollab.com) in the brand green, then a
+  closing Understory Collaborative card with a vine that grows in.
 
 Final Cut Pro brings in **images** (PNG) and **video** (`.mov`), not web pages.
 So you render a page to one of those, then drag it onto your timeline. Three
@@ -82,7 +83,7 @@ Both clips pace themselves so each line has reading room, then hold at the end.
 - **Marcus card:** runs about 24 seconds. Change `DURATION` near the top of the
   script in `marcus-card.html` to match a different clip length. Every line
   repaces itself from that one number.
-- **Pieces clip:** runs about 30 seconds and ends on the Understory
+- **Pieces clip:** runs about 33 seconds and ends on the Understory
   Collaborative card. Each scene has a `data-secs` value in the markup. Edit
   those to retime a scene. To match your voiceover, set each scene's seconds to
   its line in the audio.
