@@ -33,6 +33,8 @@
         --leather: #b5895c;
         --honey: #ce8c36;
         --support: #6e5b49;
+        --primary: #41705a;
+        --sage: #5b8a70;
         --font-sans: 'Atkinson Hyperlegible', system-ui, -apple-system,
           'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
@@ -159,8 +161,9 @@
         max-width: 22ch;
       }
 
-      /* The thesis. Line one sets it up, line two holds to the end. */
-      .scene--thesis {
+      /* The thesis holds for a beat, then hands off to the closing card. */
+      .scene--thesis,
+      .scene--end {
         opacity: 1;
       }
       .thesis-1 {
@@ -176,6 +179,38 @@
         font-weight: 600;
         line-height: 1.12;
         max-width: 20ch;
+      }
+
+      /* The closing card: Understory Collaborative, with a vine that grows in. */
+      .vine {
+        width: 230px;
+        height: 260px;
+        margin-bottom: 18px;
+        overflow: visible;
+      }
+      .org {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 84px;
+        font-weight: 600;
+        line-height: 1.05;
+      }
+      .url {
+        margin: 22px 0 0;
+        font-size: 38px;
+        letter-spacing: 0.02em;
+        color: var(--primary);
+      }
+      .stage[data-size='4k'] .vine {
+        width: 460px;
+        height: 520px;
+        margin-bottom: 36px;
+      }
+      .stage[data-size='4k'] .org {
+        font-size: 168px;
+      }
+      .stage[data-size='4k'] .url {
+        font-size: 76px;
       }
 
       .stage[data-size='4k'] .eyebrow {
@@ -220,7 +255,7 @@
           filter: blur(4px);
         }
       }
-      /* A line that rises in and stays, for the held thesis. */
+      /* A line that rises in and stays, for the thesis and closing card. */
       @keyframes rise {
         from {
           opacity: 0;
@@ -233,42 +268,116 @@
           filter: none;
         }
       }
+      /* The thesis holds, then fades so the closing card can take over. */
+      @keyframes holdOut {
+        0%,
+        78% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      /* The vine draws itself, stem first, then each leaf opens. */
+      @keyframes grow {
+        from {
+          stroke-dashoffset: 1;
+        }
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes leafIn {
+        from {
+          opacity: 0;
+          transform: scale(0);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
 
-      .stage[data-play='on'] .scene:not(.scene--thesis) {
+      /* Name cards rise in, hold, settle out. */
+      .stage[data-play='on'] .scene:not(.scene--thesis):not(.scene--end) {
         animation: sceneShow var(--show) var(--ease) var(--start) forwards;
       }
-      .scene--thesis .reveal {
+
+      /* Thesis and closing card reveal their lines. */
+      .scene--thesis .reveal,
+      .scene--end .reveal {
         opacity: 0;
         transform: translateY(18px);
         filter: blur(6px);
       }
-      .stage[data-play='on'] .scene--thesis .reveal {
+      .stage[data-play='on'] .scene--thesis .reveal,
+      .stage[data-play='on'] .scene--end .reveal {
         animation: rise 1.4s var(--ease) var(--delay) forwards;
       }
+      .stage[data-play='on'] .scene--thesis {
+        animation: holdOut var(--show) var(--ease) var(--start) forwards;
+      }
 
-      /* End mode and reduced motion both rest on the held thesis. */
-      .stage[data-play='end'] .scene:not(.scene--thesis) {
+      /* The growing vine on the closing card. */
+      .scene--end .stem {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+      }
+      .stage[data-play='on'] .scene--end .stem {
+        animation: grow 2.6s var(--ease) var(--vine-start) forwards;
+      }
+      .scene--end .leaf {
+        opacity: 0;
+        transform: scale(0);
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      .stage[data-play='on'] .scene--end .leaf {
+        animation: leafIn 0.7s var(--ease)
+          calc(var(--vine-start) + var(--lt)) forwards;
+      }
+
+      /* End mode and reduced motion both rest on the held closing card. */
+      .stage[data-play='end'] .scene:not(.scene--end) {
         opacity: 0;
         animation: none;
       }
-      .stage[data-play='end'] .scene--thesis .reveal {
+      .stage[data-play='end'] .scene--end .reveal {
         opacity: 1;
         transform: none;
         filter: none;
+        animation: none;
+      }
+      .stage[data-play='end'] .scene--end .stem {
+        stroke-dashoffset: 0;
+        animation: none;
+      }
+      .stage[data-play='end'] .scene--end .leaf {
+        opacity: 1;
+        transform: none;
         animation: none;
       }
       @media (prefers-reduced-motion: reduce) {
         .stage::after {
           animation: none;
         }
-        .stage .scene:not(.scene--thesis) {
+        .stage .scene:not(.scene--end) {
           opacity: 0 !important;
           animation: none !important;
         }
-        .stage .scene--thesis .reveal {
+        .stage .scene--end .reveal {
           opacity: 1 !important;
           transform: none !important;
           filter: none !important;
+          animation: none !important;
+        }
+        .stage .scene--end .stem {
+          stroke-dashoffset: 0 !important;
+          animation: none !important;
+        }
+        .stage .scene--end .leaf {
+          opacity: 1 !important;
+          transform: none !important;
           animation: none !important;
         }
       }
@@ -337,9 +446,53 @@
         <p class="name">Knowing who to trust</p>
       </section>
 
-      <section class="scene scene--thesis" data-secs="9">
+      <section class="scene scene--thesis" data-secs="8">
         <p class="thesis-1 reveal">We are building a tool. Not a community.</p>
         <p class="thesis-2 reveal">Software supports the work. People deliver it.</p>
+      </section>
+
+      <section class="scene scene--end" data-secs="7.5">
+        <svg class="vine" viewBox="0 0 220 260" fill="none" aria-hidden="true">
+          <path
+            class="stem"
+            d="M110 252 C 92 216, 128 190, 110 154 C 92 118, 128 94, 110 58 C 100 38, 104 26, 110 12"
+            pathLength="1"
+            stroke="var(--primary)"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          <!-- Leaves open in order as the stem grows past each one. -->
+          <g transform="rotate(-42 96 214)">
+            <ellipse class="leaf" cx="96" cy="214" rx="19" ry="9"
+              fill="var(--primary)" style="--lt: 0.5s" />
+          </g>
+          <g transform="rotate(44 124 184)">
+            <ellipse class="leaf" cx="124" cy="184" rx="18" ry="9"
+              fill="var(--sage)" style="--lt: 0.8s" />
+          </g>
+          <g transform="rotate(-46 95 150)">
+            <ellipse class="leaf" cx="95" cy="150" rx="17" ry="8.5"
+              fill="var(--primary)" style="--lt: 1.1s" />
+          </g>
+          <g transform="rotate(46 125 118)">
+            <ellipse class="leaf" cx="125" cy="118" rx="16" ry="8"
+              fill="var(--sage)" style="--lt: 1.4s" />
+          </g>
+          <g transform="rotate(-40 99 84)">
+            <ellipse class="leaf" cx="99" cy="84" rx="14" ry="7"
+              fill="var(--primary)" style="--lt: 1.7s" />
+          </g>
+          <g transform="rotate(40 120 56)">
+            <ellipse class="leaf" cx="120" cy="56" rx="12" ry="6"
+              fill="var(--sage)" style="--lt: 2s" />
+          </g>
+          <g transform="rotate(0 110 26)">
+            <ellipse class="leaf" cx="110" cy="26" rx="9" ry="5"
+              fill="var(--primary)" style="--lt: 2.3s" />
+          </g>
+        </svg>
+        <p class="org reveal">Understory Collaborative</p>
+        <p class="url reveal">understorycollab.com</p>
       </section>
     </main>
 
@@ -354,8 +507,8 @@
         <kbd>H</kbd> hide this
       </div>
       <div class="meta">
-        Hide this, then screen record and press R. The card holds on the last
-        line. See exports/README.md.
+        Hide this, then screen record and press R. The clip ends on the
+        Understory Collaborative card. See exports/README.md.
       </div>
     </aside>
 
@@ -378,16 +531,24 @@
           const secs = parseFloat(scene.dataset.secs)
           scene.style.setProperty('--start', start.toFixed(2) + 's')
           scene.style.setProperty('--show', secs.toFixed(2) + 's')
-          if (scene.classList.contains('scene--thesis')) {
-            scene
-              .querySelectorAll('.reveal')
-              .forEach((el, i) =>
-                el.style.setProperty(
-                  '--delay',
-                  (start + i * THESIS_GAP).toFixed(2) + 's',
-                ),
-              )
+
+          const reveals = scene.querySelectorAll('.reveal')
+          if (reveals.length) {
+            // The closing card's words wait for the vine to start drawing.
+            const isEnd = scene.classList.contains('scene--end')
+            const lead = isEnd ? 1.4 : 0
+            const gap = isEnd ? 0.9 : THESIS_GAP
+            reveals.forEach((el, i) =>
+              el.style.setProperty(
+                '--delay',
+                (start + lead + i * gap).toFixed(2) + 's',
+              ),
+            )
           }
+          if (scene.classList.contains('scene--end')) {
+            scene.style.setProperty('--vine-start', start.toFixed(2) + 's')
+          }
+
           total = start + secs
           start += secs - OVERLAP
         })

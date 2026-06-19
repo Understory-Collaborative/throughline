@@ -52,7 +52,7 @@ const height = is4k ? 2160 : 1080
 const fps = 30
 // Long enough to cover the full reveal plus the hold at the end. Override with
 // --seconds to match a page whose timing you changed.
-const seconds = Number(flag('--seconds', base === 'throughline-pieces' ? 27 : 24))
+const seconds = Number(flag('--seconds', base === 'throughline-pieces' ? 31 : 24))
 
 async function shoot(page, file, { transparent } = {}) {
   await page.screenshot({
