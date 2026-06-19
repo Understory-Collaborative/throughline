@@ -46,7 +46,7 @@ describe('Throughline landing page', () => {
     expect(within(nav).getByRole('button', { name: /first step out/i })).toBeInTheDocument()
     expect(within(nav).getByText(/on time/i)).toBeInTheDocument()
     expect(within(nav).getByText(/clear path/i)).toBeInTheDocument()
-    expect(within(nav).getByText(/fair shot/i)).toBeInTheDocument()
+    expect(within(nav).getByText(/good people/i)).toBeInTheDocument()
   })
 
   it('marks the upcoming features as coming soon and not yet startable', () => {
@@ -62,7 +62,7 @@ describe('Throughline landing page', () => {
 
     expect(screen.getByText(/never miss a court date/i)).toBeInTheDocument()
     expect(screen.getByText(/we point you to real legal help/i)).toBeInTheDocument()
-    expect(screen.getByText(/employers who actually hire people with records/i)).toBeInTheDocument()
+    expect(screen.getByText(/people and groups you can trust/i)).toBeInTheDocument()
   })
 
   it('returns to the home page when the brand mark is clicked from the flow', async () => {
