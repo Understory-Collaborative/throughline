@@ -102,6 +102,17 @@ describe('First Step Out flow', () => {
     expect(within(residency).getByText(/lease or mortgage/i)).toBeInTheDocument()
   })
 
+  it('warns a birth certificate holder that older Puerto Rico copies do not count', async () => {
+    const user = userEvent.setup()
+    render(<Flow onExit={noop} />)
+
+    await completeFlow(user)
+
+    const citizenship = screen.getByRole('region', { name: /proof you are a u\.s\. citizen/i })
+    expect(within(citizenship).getByText(/puerto rico/i)).toBeInTheDocument()
+    expect(within(citizenship).getByText(/2010/)).toBeInTheDocument()
+  })
+
   it('shows the plain-language status line for an area on screen', async () => {
     const user = userEvent.setup()
     render(<Flow onExit={noop} />)

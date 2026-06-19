@@ -160,7 +160,12 @@ function SlotCard({ slot, area }: { slot: Slot; area: CategoryId }) {
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Icon name={doc.icon} className="h-[18px] w-[18px]" />
         </span>
-        <span className="min-w-0 flex-1 text-base font-medium text-ink">{doc.title}</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-base font-medium text-ink">{doc.title}</span>
+          {doc.note && (
+            <span className="mt-1 block text-sm leading-relaxed text-mahogany">{doc.note}</span>
+          )}
+        </span>
         {doc.tag && (
           <span className="hidden shrink-0 rounded-full bg-paper px-2 py-0.5 text-xs font-semibold text-support sm:inline">
             {doc.tag}
