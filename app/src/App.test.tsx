@@ -45,22 +45,24 @@ describe('Throughline landing page', () => {
     const nav = screen.getByRole('navigation', { name: /throughline features/i })
     expect(within(nav).getByRole('button', { name: /first step out/i })).toBeInTheDocument()
     expect(within(nav).getByText(/on time/i)).toBeInTheDocument()
-    expect(within(nav).getByText(/fair shot/i)).toBeInTheDocument()
+    expect(within(nav).getByText(/clear path/i)).toBeInTheDocument()
+    expect(within(nav).getByText(/good people/i)).toBeInTheDocument()
   })
 
   it('marks the upcoming features as coming soon and not yet startable', () => {
     render(<App />)
 
-    // Two features carry a "Soon" badge in the nav and "Coming soon" on cards.
-    expect(screen.getAllByText(/^soon$/i).length).toBeGreaterThanOrEqual(2)
-    expect(screen.getAllByText(/coming soon/i)).toHaveLength(2)
+    // Three features carry a "Soon" badge in the nav and "Coming soon" on cards.
+    expect(screen.getAllByText(/^soon$/i).length).toBeGreaterThanOrEqual(3)
+    expect(screen.getAllByText(/coming soon/i)).toHaveLength(3)
   })
 
   it('explains what each feature does', () => {
     render(<App />)
 
     expect(screen.getByText(/never miss a court date/i)).toBeInTheDocument()
-    expect(screen.getByText(/employers who actually hire people with records/i)).toBeInTheDocument()
+    expect(screen.getByText(/we point you to real legal help/i)).toBeInTheDocument()
+    expect(screen.getByText(/people and groups you can trust/i)).toBeInTheDocument()
   })
 
   it('returns to the home page when the brand mark is clicked from the flow', async () => {

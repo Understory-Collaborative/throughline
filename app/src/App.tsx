@@ -44,10 +44,17 @@ const features: Feature[] = [
     status: 'soon',
   },
   {
-    id: 'fairshot',
-    name: 'Fair Shot',
-    tagline: 'Find work that is open to you',
-    body: 'A list of employers who actually hire people with records, so you do not waste a day on a closed door.',
+    id: 'clearpath',
+    name: 'Clear Path',
+    tagline: 'Clear your record',
+    body: 'Find out if you can clear your record and where to start. We point you to real legal help for the rest.',
+    status: 'soon',
+  },
+  {
+    id: 'goodpeople',
+    name: 'Good People',
+    tagline: 'Know who to trust',
+    body: 'A short list of people and groups you can trust for help after prison, so you know where to turn and who to skip.',
     status: 'soon',
   },
 ]
@@ -132,7 +139,10 @@ function NavBar({ onHome, onStart }: { onHome: () => void; onStart: () => void }
             On Time <SoonBadge />
           </li>
           <li className="inline-flex items-center gap-1.5 text-support">
-            Fair Shot <SoonBadge />
+            Clear Path <SoonBadge />
+          </li>
+          <li className="inline-flex items-center gap-1.5 text-support">
+            Good People <SoonBadge />
           </li>
         </ul>
       </nav>
