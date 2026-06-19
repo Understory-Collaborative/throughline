@@ -44,6 +44,13 @@ const features: Feature[] = [
     status: 'soon',
   },
   {
+    id: 'clearpath',
+    name: 'Clear Path',
+    tagline: 'Clear your record',
+    body: 'Find out if you can clear your record and where to start. We point you to real legal help for the rest.',
+    status: 'soon',
+  },
+  {
     id: 'fairshot',
     name: 'Fair Shot',
     tagline: 'Find work that is open to you',
@@ -130,6 +137,9 @@ function NavBar({ onHome, onStart }: { onHome: () => void; onStart: () => void }
           </li>
           <li className="inline-flex items-center gap-1.5 text-support">
             On Time <SoonBadge />
+          </li>
+          <li className="inline-flex items-center gap-1.5 text-support">
+            Clear Path <SoonBadge />
           </li>
           <li className="inline-flex items-center gap-1.5 text-support">
             Fair Shot <SoonBadge />
