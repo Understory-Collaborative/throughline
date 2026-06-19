@@ -1,19 +1,21 @@
-// Optional: render the Marcus card to exact-pixel files for Final Cut Pro.
+// Optional: render an export page to exact-pixel files for Final Cut Pro.
 //
-// The marcus-card.html page is enough on its own (screenshot or screen record).
-// Use this only when you want pixel-perfect output without screen recording.
+// The HTML pages are enough on their own (screenshot or screen record). Use this
+// only when you want pixel-perfect output without screen recording.
 //
-// What it makes, in ./out next to this script:
-//   marcus-card.png              the held frame, on cream, 1920x1080
-//   marcus-card-transparent.png  the held frame with an alpha background
-//   frames/0001.png ...          one PNG per animation frame (optional, -f)
-//   marcus-card.mov              ProRes 4444 with alpha, if ffmpeg is present
+// What it makes, in ./out next to this script (NAME is the page's base name):
+//   NAME.png              the held frame, on cream, 1920x1080
+//   NAME-transparent.png  the held frame with an alpha background
+//   frames/0001.png ...   one PNG per animation frame (optional, -f)
+//   NAME.mov              ProRes 4444 with alpha, if ffmpeg is present
 //
 // Run from app/ (the dev server does not need to be running):
 //   npm i -D puppeteer
-//   node public/exports/capture.mjs            still PNGs only
-//   node public/exports/capture.mjs -f         also render the animation frames
-//   node public/exports/capture.mjs -f --4k    4K (3840x2160)
+//   node public/exports/capture.mjs                            Marcus card
+//   node public/exports/capture.mjs --page throughline-pieces.html
+//   node public/exports/capture.mjs -f                         also the frames
+//   node public/exports/capture.mjs -f --4k                    4K (3840x2160)
+//   node public/exports/capture.mjs --seconds 27               override length
 //
 // ProRes 4444 keeps the alpha channel, so the transparent version drops onto
 // your own footage in Final Cut Pro with no green screen. Assembling frames into
@@ -21,7 +23,7 @@
 // are left in place and you can import the sequence yourself.
 
 import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
+import { dirname, join, basename } from 'node:path'
 import { mkdir, rm } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import puppeteer from 'puppeteer'
@@ -34,12 +36,23 @@ const args = process.argv.slice(2)
 const wantFrames = args.includes('-f') || args.includes('--frames')
 const is4k = args.includes('--4k')
 
+function flag(name, fallback) {
+  const i = args.indexOf(name)
+  return i >= 0 && args[i + 1] ? args[i + 1] : fallback
+}
+
+const pageFile = flag('--page', 'marcus-card.html')
+const base = basename(pageFile, '.html')
+// The data-play value that shows the held frame. The pieces clip holds on its
+// end card, the Marcus card holds on its still.
+const held = base === 'throughline-pieces' ? 'end' : 'still'
+
 const width = is4k ? 3840 : 1920
 const height = is4k ? 2160 : 1080
 const fps = 30
-// Match DURATION in marcus-card.html, so the render covers the full reveal plus
-// the calm hold at the end.
-const seconds = 24
+// Long enough to cover the full reveal plus the hold at the end. Override with
+// --seconds to match a page whose timing you changed.
+const seconds = Number(flag('--seconds', base === 'throughline-pieces' ? 27 : 24))
 
 async function shoot(page, file, { transparent } = {}) {
   await page.screenshot({
@@ -58,7 +71,7 @@ async function main() {
   })
   const page = await browser.newPage()
 
-  await page.goto('file://' + join(here, 'marcus-card.html'), {
+  await page.goto('file://' + join(here, pageFile), {
     waitUntil: 'networkidle0',
   })
 
@@ -79,14 +92,14 @@ async function main() {
   }
 
   // Held frame on cream.
-  await configure({ play: 'still', bg: 'cream' })
+  await configure({ play: held, bg: 'cream' })
   await new Promise((r) => setTimeout(r, 300))
-  await shoot(page, 'marcus-card.png')
+  await shoot(page, `${base}.png`)
 
   // Held frame with alpha, for compositing.
-  await configure({ play: 'still', bg: 'transparent' })
+  await configure({ play: held, bg: 'transparent' })
   await new Promise((r) => setTimeout(r, 300))
-  await shoot(page, 'marcus-card-transparent.png', { transparent: true })
+  await shoot(page, `${base}-transparent.png`, { transparent: true })
   console.log('Wrote still PNGs to', outDir)
 
   if (wantFrames) {
@@ -125,11 +138,11 @@ async function main() {
           '-c:v', 'prores_ks',
           '-profile:v', '4',
           '-pix_fmt', 'yuva444p10le',
-          join(outDir, 'marcus-card.mov'),
+          join(outDir, `${base}.mov`),
         ],
         { stdio: 'inherit' },
       )
-      console.log('Wrote marcus-card.mov (ProRes 4444)')
+      console.log(`Wrote ${base}.mov (ProRes 4444)`)
     } else {
       console.log(
         'ffmpeg not found. The PNG frames are in',
