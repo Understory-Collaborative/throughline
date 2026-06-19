@@ -14,7 +14,7 @@ one type system and the warm cream background, so the clips feel like one family
   closing Understory Collaborative card with a vine that grows in.
 
 Final Cut Pro brings in **images** (PNG) and **video** (`.mov`), not web pages.
-So you render a page to one of those, then drag it onto your timeline. Three
+So you capture a page as one of those, then drag it onto your timeline. Two
 ways, easiest first. The steps are the same for both pages.
 
 ## Opening a page
@@ -48,33 +48,7 @@ screenshot. (Browser screenshots of a transparent page keep the alpha.)
    final frame.
 4. QuickTime saves a `.mov`. Drag it into Final Cut Pro and trim.
 
-QuickTime is built into macOS and its `.mov` drops straight into Final Cut. This
-is the no-install path and it is plenty for a hackathon cut.
-
-## 3. Exact pixels or alpha video (optional, cleanest)
-
-`capture.mjs` renders a page to exact 1920x1080 (or 4K) files with no screen
-recording. Run it from the `app/` folder.
-
-```bash
-npm i -D puppeteer
-node public/exports/capture.mjs                            # Marcus card
-node public/exports/capture.mjs --page throughline-pieces.html
-node public/exports/capture.mjs -f                         # also the frames
-node public/exports/capture.mjs -f --4k                    # 4K
-node public/exports/capture.mjs --seconds 27               # override length
-```
-
-Output lands in `public/exports/out/`, named after the page (`NAME`):
-
-- `NAME.png` the held frame on cream
-- `NAME-transparent.png` the held frame with alpha
-- `frames/` one PNG per frame of the reveal (with `-f`)
-- `NAME.mov` ProRes 4444 with alpha, if `ffmpeg` is on your PATH
-
-ProRes 4444 keeps the alpha channel, so the transparent version composites in
-Final Cut Pro with no green screen. `ffmpeg` is only needed for that last `.mov`
-step (`brew install ffmpeg`). Without it you still get the PNGs and frames.
+QuickTime is built into macOS and its `.mov` drops straight into Final Cut.
 
 ## Timing
 
@@ -87,8 +61,6 @@ Both clips pace themselves so each line has reading room, then hold at the end.
   Collaborative card. Each scene has a `data-secs` value in the markup. Edit
   those to retime a scene. To match your voiceover, set each scene's seconds to
   its line in the audio.
-
-If you use `capture.mjs` after retiming, pass `--seconds` to match.
 
 ## Changing the words
 

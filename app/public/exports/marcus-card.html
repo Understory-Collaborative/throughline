@@ -68,8 +68,8 @@
 
       /*
         The stage is the exact pixel canvas you record or screenshot. It is
-        scaled to fit your window for preview. Record the stage at full size with
-        a screen recording, or use the puppeteer script for exact pixels.
+        scaled to fit your window for preview. For best quality, record at full
+        size on a display that fits 1920x1080.
       */
       .stage {
         position: relative;
@@ -380,8 +380,7 @@
       }
 
       // Fit the stage inside the window for preview. Recording quality follows
-      // your display, so use a screen recorder at full size, or the puppeteer
-      // script for exact pixels.
+      // your display, so record at full size on a screen that fits the stage.
       function fit() {
         const w = stage.dataset.size === '4k' ? 3840 : 1920
         const h = stage.dataset.size === '4k' ? 2160 : 1080
