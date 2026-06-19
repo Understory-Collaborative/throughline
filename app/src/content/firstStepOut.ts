@@ -386,6 +386,13 @@ export interface ResultDoc {
   title: string
   detail: string
   /**
+   * A short, important caveat that has to ride along with the paper even when
+   * the on-screen card is compact, like a rule that quietly makes the document
+   * not count. Filled slot cards show this so a person does not arrive at DPS
+   * with a paper that fails.
+   */
+  note?: string
+  /**
    * A short strength label, like "Strong on its own" or "Supporting paper". Used
    * where one paper alone may not be enough, so a person can see at a glance
    * which papers carry the most weight.
@@ -580,6 +587,7 @@ export function assembleResult(answers: Answers): Result {
       title: 'Your birth certificate',
       detail:
         'The real one or a certified copy from the state. A photocopy will not work. If yours is from Puerto Rico, it has to be a copy issued on or after July 1, 2010. Older Puerto Rico ones no longer count.',
+      note: 'From Puerto Rico? It has to be a copy issued on or after July 1, 2010. Older ones do not count.',
     })
   }
   const citizenshipMet = citHave.length >= 1
